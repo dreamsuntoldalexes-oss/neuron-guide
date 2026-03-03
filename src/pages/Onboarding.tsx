@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, BarChart3, MessageCircle, Play, ChevronRight } from "lucide-react";
+import { Sparkles, BarChart3, MessageCircle, Play, ChevronRight, ChevronLeft } from "lucide-react";
 
 const slides = [
   {
@@ -39,10 +39,34 @@ export default function Onboarding() {
     else navigate("/login");
   };
 
+  const prev = () => {
+    if (current > 0) setCurrent(current - 1);
+  };
+
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6 relative overflow-hidden">
       {/* Background glow */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full bg-primary/5 blur-[120px] pointer-events-none" />
+
+      {/* Left Arrow */}
+      {current > 0 && (
+        <button
+          onClick={prev}
+          className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-muted/60 border border-border/50 flex items-center justify-center text-foreground hover:bg-muted transition"
+        >
+          <ChevronLeft className="w-5 h-5" />
+        </button>
+      )}
+
+      {/* Right Arrow */}
+      {current < slides.length - 1 && (
+        <button
+          onClick={next}
+          className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-muted/60 border border-border/50 flex items-center justify-center text-foreground hover:bg-muted transition"
+        >
+          <ChevronRight className="w-5 h-5" />
+        </button>
+      )}
 
       <AnimatePresence mode="wait">
         <motion.div
