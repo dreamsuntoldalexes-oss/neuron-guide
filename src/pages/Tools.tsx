@@ -1,13 +1,14 @@
 import { useState, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Search, SlidersHorizontal } from "lucide-react";
+import { Search, SlidersHorizontal, Crown } from "lucide-react";
 import Layout from "@/components/Layout";
 import ToolCard from "@/components/ToolCard";
-import { tools, categories, type Category } from "@/data/tools";
+import { tools, categories, type Category, getUserTier, getCategoryCounts } from "@/data/tools";
 import { useFavorites } from "@/hooks/useFavorites";
 
 type SortBy = "rating" | "newest" | "popular" | "name";
+type TierFilter = "all" | "free" | "pro" | "enterprise";
 
 export default function Tools() {
   const [searchParams] = useSearchParams();
@@ -17,11 +18,14 @@ export default function Tools() {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<Category>(initialCategory);
   const [sortBy, setSortBy] = useState<SortBy>(initialSort);
+  const [tierFilter, setTierFilter] = useState<TierFilter>("all");
   const [showFilters, setShowFilters] = useState(false);
   const { isFavorite, toggleFavorite } = useFavorites();
+  const categoryCounts = useMemo(() => getCategoryCounts(), []);
 
   const filtered = useMemo(() => {
     let result = category === "All" ? [...tools] : tools.filter((t) => t.category === category);
+    if (tierFilter !== "all") result = result.filter((t) => t.tier === tierFilter);
     if (query) {
       const q = query.toLowerCase();
       result = result.filter((t) => t.name.toLowerCase().includes(q) || t.description.toLowerCase().includes(q));
@@ -33,7 +37,7 @@ export default function Tools() {
       case "name": result.sort((a, b) => a.name.localeCompare(b.name)); break;
     }
     return result;
-  }, [query, category, sortBy]);
+  }, [query, category, sortBy, tierFilter]);
 
   const sorts: { value: SortBy; label: string }[] = [
     { value: "popular", label: "Most Popular" },
@@ -42,12 +46,20 @@ export default function Tools() {
     { value: "name", label: "A-Z" },
   ];
 
+  const tiers: { value: TierFilter; label: string }[] = [
+    { value: "all", label: "All Tiers" },
+    { value: "free", label: "Free" },
+    { value: "pro", label: "Pro" },
+    { value: "enterprise", label: "Enterprise" },
+  ];
+
   return (
     <Layout>
       <div className="px-4 pt-6 pb-4 space-y-4">
-        <motion.h1 initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-2xl font-heading font-bold text-foreground">
-          All AI Tools
-        </motion.h1>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center justify-between">
+          <h1 className="text-2xl font-heading font-bold text-foreground">All AI Tools</h1>
+          <span className="text-xs text-muted-foreground">{tools.length} tools</span>
+        </motion.div>
 
         {/* Search + Filter toggle */}
         <div className="flex gap-2">
@@ -76,6 +88,18 @@ export default function Tools() {
                 ))}
               </div>
             </div>
+            <div>
+              <p className="text-xs text-muted-foreground mb-2">Plan tier</p>
+              <div className="flex gap-2 flex-wrap">
+                {tiers.map((t) => (
+                  <button key={t.value} onClick={() => setTierFilter(t.value)}
+                    className={`px-3 py-1.5 rounded-lg text-xs transition flex items-center gap-1 ${tierFilter === t.value ? "bg-primary/15 text-primary border border-primary/30" : "bg-muted/50 text-muted-foreground border border-border hover:text-foreground"}`}>
+                    {t.value !== "all" && t.value !== "free" && <Crown className="w-3 h-3" />}
+                    {t.label}
+                  </button>
+                ))}
+              </div>
+            </div>
           </motion.div>
         )}
 
@@ -83,10 +107,10 @@ export default function Tools() {
         <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1">
           {categories.map((cat) => (
             <button key={cat} onClick={() => setCategory(cat)}
-              className={`flex-shrink-0 px-3.5 py-1.5 rounded-xl text-sm transition-all ${
+              className={`flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs transition-all whitespace-nowrap ${
                 category === cat ? "bg-primary/15 text-primary border border-primary/30" : "bg-muted/50 text-muted-foreground border border-border hover:text-foreground"
               }`}>
-              {cat}
+              {cat}{cat !== "All" && categoryCounts[cat] ? ` (${categoryCounts[cat]})` : ""}
             </button>
           ))}
         </div>
