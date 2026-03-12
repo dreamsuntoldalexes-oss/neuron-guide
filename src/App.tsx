@@ -13,6 +13,7 @@ import Favorites from "./pages/Favorites";
 import Chatbot from "./pages/Chatbot";
 import HowItWorks from "./pages/HowItWorks";
 import Profile from "./pages/Profile";
+import Pricing from "./pages/Pricing";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
