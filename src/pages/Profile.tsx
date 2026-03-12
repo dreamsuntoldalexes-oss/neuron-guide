@@ -24,6 +24,7 @@ export default function Profile() {
 
   const menuItems = [
     { icon: Heart, label: "Saved Tools", value: `${favorites.length} tools`, onClick: () => navigate("/favorites") },
+    { icon: CreditCard, label: "Upgrade & Pay", value: "", onClick: () => navigate("/pricing") },
     { icon: BookOpen, label: "How It Works", value: "", onClick: () => navigate("/how-it-works") },
     { icon: Info, label: "About", value: "v1.0.0", onClick: undefined },
   ];

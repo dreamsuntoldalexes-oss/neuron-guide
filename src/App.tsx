@@ -35,6 +35,7 @@ const App = () => (
           <Route path="/chatbot" element={<Chatbot />} />
           <Route path="/how-it-works" element={<HowItWorks />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/pricing" element={<Pricing />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
