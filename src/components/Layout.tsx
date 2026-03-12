@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { Home, Search, Heart, MessageCircle, User } from "lucide-react";
+import ContactWidget from "./ContactWidget";
 
 const navItems = [
   { to: "/home", icon: Home, label: "Home" },
