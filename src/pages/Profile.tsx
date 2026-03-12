@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { User, Mail, LogOut, BookOpen, Info, Heart } from "lucide-react";
+import { User, Mail, LogOut, BookOpen, Info, Heart, CreditCard } from "lucide-react";
 import Layout from "@/components/Layout";
 import { useFavorites } from "@/hooks/useFavorites";
 
@@ -24,6 +24,7 @@ export default function Profile() {
 
   const menuItems = [
     { icon: Heart, label: "Saved Tools", value: `${favorites.length} tools`, onClick: () => navigate("/favorites") },
+    { icon: CreditCard, label: "Upgrade & Pay", value: "", onClick: () => navigate("/pricing") },
     { icon: BookOpen, label: "How It Works", value: "", onClick: () => navigate("/how-it-works") },
     { icon: Info, label: "About", value: "v1.0.0", onClick: undefined },
   ];

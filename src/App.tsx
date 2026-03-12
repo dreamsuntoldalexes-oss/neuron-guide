@@ -13,6 +13,7 @@ import Favorites from "./pages/Favorites";
 import Chatbot from "./pages/Chatbot";
 import HowItWorks from "./pages/HowItWorks";
 import Profile from "./pages/Profile";
+import Pricing from "./pages/Pricing";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -34,6 +35,7 @@ const App = () => (
           <Route path="/chatbot" element={<Chatbot />} />
           <Route path="/how-it-works" element={<HowItWorks />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/pricing" element={<Pricing />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
