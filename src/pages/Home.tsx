@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Search, TrendingUp, Clock, Sparkles } from "lucide-react";
+import { Search, TrendingUp, Clock, Sparkles, Crown } from "lucide-react";
 import Layout from "@/components/Layout";
 import ToolCard from "@/components/ToolCard";
-import { categories, getTrendingTools, getRecentTools, searchTools } from "@/data/tools";
+import { categories, getTrendingTools, getRecentTools, searchTools, getUserTier, tools } from "@/data/tools";
 import { useFavorites } from "@/hooks/useFavorites";
 
 export default function Home() {
@@ -13,17 +13,24 @@ export default function Home() {
   const trending = getTrendingTools();
   const recent = getRecentTools();
   const searchResults = query.length > 1 ? searchTools(query) : [];
+  const tier = getUserTier();
 
   return (
     <Layout>
       <div className="px-4 pt-6 pb-4 space-y-6">
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="space-y-1">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-primary" />
-            <span className="text-sm text-primary font-medium">AI Tools Directory</span>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-primary" />
+              <span className="text-sm text-primary font-medium">AI Tools Directory</span>
+            </div>
+            <Link to="/pricing" className="flex items-center gap-1 text-xs px-2.5 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
+              <Crown className="w-3 h-3" />
+              <span className="capitalize font-medium">{tier}</span>
+            </Link>
           </div>
-          <h1 className="text-2xl font-heading font-bold text-foreground">Discover AI Tools</h1>
+          <h1 className="text-2xl font-heading font-bold text-foreground">Discover {tools.length}+ AI Tools</h1>
         </motion.div>
 
         {/* Search */}
@@ -43,12 +50,15 @@ export default function Home() {
             <h2 className="text-lg font-heading font-semibold text-foreground">
               Results for "{query}" ({searchResults.length})
             </h2>
-            <div className="grid gap-3">
-              {searchResults.map((tool, i) => (
+            <div className="grid gap-3 sm:grid-cols-2">
+              {searchResults.slice(0, 20).map((tool, i) => (
                 <ToolCard key={tool.id} tool={tool} index={i} isFavorite={isFavorite(tool.id)} onToggleFavorite={toggleFavorite} />
               ))}
               {searchResults.length === 0 && (
-                <p className="text-muted-foreground text-sm py-8 text-center">No tools found. Try a different search.</p>
+                <p className="text-muted-foreground text-sm py-8 text-center col-span-full">No tools found. Try a different search.</p>
+              )}
+              {searchResults.length > 20 && (
+                <p className="text-xs text-muted-foreground text-center col-span-full">Showing 20 of {searchResults.length} results. Use filters for more.</p>
               )}
             </div>
           </div>
@@ -62,7 +72,7 @@ export default function Home() {
                   <Link
                     key={cat}
                     to={`/tools?category=${cat}`}
-                    className="flex-shrink-0 px-4 py-2 rounded-xl bg-muted/50 border border-border text-sm text-foreground hover:border-primary/30 hover:bg-primary/5 transition-all"
+                    className="flex-shrink-0 px-4 py-2 rounded-xl bg-muted/50 border border-border text-xs text-foreground hover:border-primary/30 hover:bg-primary/5 transition-all whitespace-nowrap"
                   >
                     {cat}
                   </Link>
