@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { User, Mail, LogOut, BookOpen, Info, Heart } from "lucide-react";
+import { User, Mail, LogOut, BookOpen, Info, Heart, CreditCard } from "lucide-react";
 import Layout from "@/components/Layout";
 import { useFavorites } from "@/hooks/useFavorites";
 
