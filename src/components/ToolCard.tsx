@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Heart, Star, ExternalLink, Lock, Crown, X, Zap } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { AITool } from "@/data/tools";
-import { getUserTier, canAccessTool } from "@/data/tools";
+import { getUserTier, canAccessTool, getCredits, useCredit } from "@/data/tools";
 
 interface ToolCardProps {
   tool: AITool;
@@ -23,6 +23,7 @@ export default function ToolCard({ tool, index = 0, isFavorite, onToggleFavorite
   const locked = !canAccessTool(tool.tier, userTier);
   const badge = tierBadge[tool.tier];
   const [showUpgrade, setShowUpgrade] = useState(false);
+  const [showCredits, setShowCredits] = useState(false);
 
   const handleLockedClick = (e: React.MouseEvent) => {
     e.preventDefault();
