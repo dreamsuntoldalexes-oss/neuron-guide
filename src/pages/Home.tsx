@@ -4,15 +4,15 @@ import { motion } from "framer-motion";
 import { Search, TrendingUp, Clock, Sparkles, Crown } from "lucide-react";
 import Layout from "@/components/Layout";
 import ToolCard from "@/components/ToolCard";
-import { categories, getTrendingTools, getRecentTools, searchTools, getUserTier, tools } from "@/data/tools";
+import { categories, getUserTier, tools } from "@/data/tools";
 import { useFavorites } from "@/hooks/useFavorites";
 
 export default function Home() {
   const [query, setQuery] = useState("");
   const { isFavorite, toggleFavorite } = useFavorites();
-  const trending = getTrendingTools();
-  const recent = getRecentTools();
-  const searchResults = query.length > 1 ? searchTools(query) : [];
+  const trending = [...tools].sort((a, b) => b.views - a.views).slice(0, 6);
+  const recent = [...tools].sort((a, b) => new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime()).slice(0, 6);
+  const searchResults = query.length > 1 ? tools.filter(t => t.name.toLowerCase().includes(query.toLowerCase()) || t.shortDescription.toLowerCase().includes(query.toLowerCase())).slice(0, 10) : [];
   const tier = getUserTier();
 
   return (

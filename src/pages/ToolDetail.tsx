@@ -36,7 +36,7 @@ export default function ToolDetail() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass-card p-6 space-y-4">
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-4">
-              <span className="text-5xl">{tool.icon}</span>
+              <img src={tool.logo} alt={tool.name} className="w-14 h-14 rounded-xl object-contain bg-muted/50 p-1.5" onError={(e) => { (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(tool.name)}&background=6366f1&color=fff&size=64`; }} />
               <div>
                 <h1 className="text-2xl font-heading font-bold text-foreground">{tool.name}</h1>
                 <div className="flex items-center gap-3 mt-1">
