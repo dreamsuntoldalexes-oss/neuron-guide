@@ -1,21 +1,38 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { User, Mail, LogOut, BookOpen, Info, Heart, CreditCard } from "lucide-react";
+import { User, Mail, LogOut, BookOpen, Info, Heart, CreditCard, Pencil, Check, X } from "lucide-react";
 import Layout from "@/components/Layout";
 import { useFavorites } from "@/hooks/useFavorites";
 
 export default function Profile() {
   const navigate = useNavigate();
   const { favorites } = useFavorites();
+  const [editing, setEditing] = useState(false);
 
-  const user = (() => {
+  const getUser = () => {
     try {
       const stored = localStorage.getItem("ai-tools-user");
       return stored ? JSON.parse(stored) : { name: "Guest User", email: "guest@example.com" };
     } catch {
       return { name: "Guest User", email: "guest@example.com" };
     }
-  })();
+  };
+
+  const [user, setUser] = useState(getUser);
+  const [draft, setDraft] = useState({ name: user.name, email: user.email });
+
+  const handleSave = () => {
+    const updated = { ...user, name: draft.name, email: draft.email };
+    localStorage.setItem("ai-tools-user", JSON.stringify(updated));
+    setUser(updated);
+    setEditing(false);
+  };
+
+  const handleCancel = () => {
+    setDraft({ name: user.name, email: user.email });
+    setEditing(false);
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("ai-tools-user");
@@ -37,14 +54,48 @@ export default function Profile() {
         </motion.h1>
 
         {/* User Card */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass-card p-6 flex items-center gap-4">
-          <div className="w-16 h-16 rounded-2xl gradient-primary flex items-center justify-center">
-            <User className="w-8 h-8 text-primary-foreground" />
-          </div>
-          <div>
-            <h2 className="font-heading font-semibold text-lg text-foreground">{user.name}</h2>
-            <p className="text-sm text-muted-foreground flex items-center gap-1"><Mail className="w-3 h-3" /> {user.email}</p>
-          </div>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass-card p-6">
+          {editing ? (
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-xs text-muted-foreground">Name</label>
+                <input
+                  value={draft.name}
+                  onChange={(e) => setDraft({ ...draft, name: e.target.value })}
+                  className="w-full bg-muted/50 border border-border rounded-xl py-2.5 px-3 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary/50 transition"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-xs text-muted-foreground">Email</label>
+                <input
+                  value={draft.email}
+                  onChange={(e) => setDraft({ ...draft, email: e.target.value })}
+                  className="w-full bg-muted/50 border border-border rounded-xl py-2.5 px-3 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary/50 transition"
+                />
+              </div>
+              <div className="flex gap-2 pt-1">
+                <button onClick={handleSave} className="flex-1 py-2.5 rounded-xl text-sm font-medium gradient-primary text-primary-foreground flex items-center justify-center gap-1.5 hover:opacity-90 transition active:scale-[0.97]">
+                  <Check className="w-4 h-4" /> Save
+                </button>
+                <button onClick={handleCancel} className="flex-1 py-2.5 rounded-xl text-sm font-medium bg-muted border border-border text-foreground flex items-center justify-center gap-1.5 hover:bg-muted/80 transition active:scale-[0.97]">
+                  <X className="w-4 h-4" /> Cancel
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 rounded-2xl gradient-primary flex items-center justify-center">
+                <User className="w-8 h-8 text-primary-foreground" />
+              </div>
+              <div className="flex-1">
+                <h2 className="font-heading font-semibold text-lg text-foreground">{user.name}</h2>
+                <p className="text-sm text-muted-foreground flex items-center gap-1"><Mail className="w-3 h-3" /> {user.email}</p>
+              </div>
+              <button onClick={() => setEditing(true)} className="p-2 rounded-lg hover:bg-muted transition-colors">
+                <Pencil className="w-4 h-4 text-muted-foreground" />
+              </button>
+            </div>
+          )}
         </motion.div>
 
         {/* Menu */}
