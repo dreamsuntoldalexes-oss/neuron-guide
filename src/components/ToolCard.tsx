@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Heart, Star, ExternalLink, Lock, Crown, X, Zap } from "lucide-react";
+import { Heart, Star, ExternalLink, Lock, Crown, X, Zap, AlertCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { AITool } from "@/data/tools";
 import { getUserTier, canAccessTool, getCredits, useCredit } from "@/data/tools";
@@ -30,6 +30,16 @@ export default function ToolCard({ tool, index = 0, isFavorite, onToggleFavorite
     setShowUpgrade(true);
   };
 
+  const handleViewTool = (e: React.MouseEvent) => {
+    const credits = getCredits();
+    if (credits <= 0) {
+      e.preventDefault();
+      setShowCredits(true);
+      return;
+    }
+    useCredit();
+  };
+
   return (
     <>
       <motion.div
@@ -46,7 +56,12 @@ export default function ToolCard({ tool, index = 0, isFavorite, onToggleFavorite
         )}
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
-            <span className="text-3xl">{tool.icon}</span>
+            <img
+              src={tool.logo}
+              alt={tool.name}
+              className="w-9 h-9 rounded-lg object-contain bg-muted/50 p-1"
+              onError={(e) => { (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(tool.name)}&background=6366f1&color=fff&size=64`; }}
+            />
             <div>
               <h3 className="font-heading font-semibold text-foreground text-sm">{tool.name}</h3>
               <div className="flex items-center gap-1.5 mt-0.5">
@@ -95,6 +110,7 @@ export default function ToolCard({ tool, index = 0, isFavorite, onToggleFavorite
           ) : (
             <Link
               to={`/tools/${tool.id}`}
+              onClick={handleViewTool}
               className="flex items-center gap-1 text-xs font-medium text-primary hover:underline"
             >
               View Tool <ExternalLink className="w-3 h-3" />
@@ -107,16 +123,12 @@ export default function ToolCard({ tool, index = 0, isFavorite, onToggleFavorite
       <AnimatePresence>
         {showUpgrade && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 flex items-center justify-center px-6 bg-black/60 backdrop-blur-sm"
             onClick={() => setShowUpgrade(false)}
           >
             <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              initial={{ opacity: 0, scale: 0.9, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9, y: 20 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
               className="glass-card p-6 max-w-sm w-full space-y-4 relative"
               onClick={(e) => e.stopPropagation()}
@@ -124,7 +136,6 @@ export default function ToolCard({ tool, index = 0, isFavorite, onToggleFavorite
               <button onClick={() => setShowUpgrade(false)} className="absolute top-3 right-3 p-1 rounded-lg hover:bg-muted transition">
                 <X className="w-4 h-4 text-muted-foreground" />
               </button>
-
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-2xl bg-neon-purple/15 border border-neon-purple/20 flex items-center justify-center">
                   <Zap className="w-6 h-6 text-neon-purple" />
@@ -134,27 +145,64 @@ export default function ToolCard({ tool, index = 0, isFavorite, onToggleFavorite
                   <p className="text-xs text-muted-foreground capitalize">{tool.tier} plan needed</p>
                 </div>
               </div>
-
               <p className="text-sm text-muted-foreground">
                 <span className="font-semibold text-foreground">{tool.name}</span> is a {tool.tier}-tier tool. Upgrade your plan to unlock it and many more premium tools.
               </p>
-
               <div className="flex flex-col gap-2 pt-1">
-                <Link
-                  to="/pricing"
-                  onClick={() => setShowUpgrade(false)}
-                  className="w-full py-3 rounded-xl text-sm font-semibold gradient-primary text-primary-foreground text-center hover:opacity-90 transition active:scale-[0.97]"
-                >
+                <Link to="/pricing" onClick={() => setShowUpgrade(false)}
+                  className="w-full py-3 rounded-xl text-sm font-semibold gradient-primary text-primary-foreground text-center hover:opacity-90 transition active:scale-[0.97]">
                   View Plans & Upgrade
                 </Link>
-                <a
-                  href="https://wa.me/2348033962964?text=Hi%2C%20I%20want%20to%20upgrade%20my%20plan%20to%20access%20premium%20AI%20tools"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full py-3 rounded-xl text-sm font-medium border border-border bg-muted/30 text-foreground text-center hover:bg-muted/50 transition active:scale-[0.97]"
-                >
+                <a href="https://wa.me/2348033962964?text=Hi%2C%20I%20want%20to%20upgrade%20my%20plan%20to%20access%20premium%20AI%20tools"
+                  target="_blank" rel="noopener noreferrer"
+                  className="w-full py-3 rounded-xl text-sm font-medium border border-border bg-muted/30 text-foreground text-center hover:bg-muted/50 transition active:scale-[0.97]">
                   Chat on WhatsApp to Pay
                 </a>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* 0 Credits Popup */}
+      <AnimatePresence>
+        {showCredits && (
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center px-6 bg-black/60 backdrop-blur-sm"
+            onClick={() => setShowCredits(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="glass-card p-6 max-w-sm w-full space-y-4 relative"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button onClick={() => setShowCredits(false)} className="absolute top-3 right-3 p-1 rounded-lg hover:bg-muted transition">
+                <X className="w-4 h-4 text-muted-foreground" />
+              </button>
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-2xl bg-destructive/15 border border-destructive/20 flex items-center justify-center">
+                  <AlertCircle className="w-6 h-6 text-destructive" />
+                </div>
+                <div>
+                  <h3 className="font-heading font-bold text-foreground">0 Credits Left</h3>
+                  <p className="text-xs text-muted-foreground">You've used all your free views</p>
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                You've reached your <span className="font-semibold text-foreground">free limit of 3 tool views</span>. Upgrade now to enjoy unlimited access to <span className="font-semibold text-foreground">500+ AI tools</span> and premium features.
+              </p>
+              <div className="flex flex-col gap-2 pt-1">
+                <a href="https://wa.me/2348033962964?text=Hi%2C%20I%20want%20to%20upgrade%20my%20plan%20to%20get%20unlimited%20AI%20tool%20access"
+                  target="_blank" rel="noopener noreferrer"
+                  className="w-full py-3 rounded-xl text-sm font-semibold gradient-primary text-primary-foreground text-center hover:opacity-90 transition active:scale-[0.97]">
+                  💬 Upgrade via WhatsApp
+                </a>
+                <Link to="/pricing" onClick={() => setShowCredits(false)}
+                  className="w-full py-3 rounded-xl text-sm font-medium border border-border bg-muted/30 text-foreground text-center hover:bg-muted/50 transition active:scale-[0.97]">
+                  View Plans & Pricing
+                </Link>
               </div>
             </motion.div>
           </motion.div>
