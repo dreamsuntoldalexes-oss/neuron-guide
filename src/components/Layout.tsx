@@ -1,4 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
+// NEURON VIEW - Layout component
 import { Home, Search, Heart, MessageCircle, User } from "lucide-react";
 import ContactWidget from "./ContactWidget";
 
