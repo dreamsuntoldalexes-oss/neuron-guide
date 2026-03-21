@@ -102,7 +102,7 @@ export default function Index() {
                 onMouseEnter={() => setUpgradeTooltip(true)}
                 onMouseLeave={() => setUpgradeTooltip(false)}
                 onClick={() => window.open("https://wa.me/2348033962964?text=I%20want%20to%20upgrade%20my%20Neuron%20View%20account", "_blank")}
-                className="px-4 py-2 text-sm font-semibold rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:opacity-90 transition active:scale-[0.97] flex items-center gap-1.5"
+                className="px-4 py-2 text-sm font-semibold rounded-xl bg-gradient-to-r from-[hsl(38,92%,50%)] to-[hsl(25,95%,53%)] text-primary-foreground hover:opacity-90 transition active:scale-[0.97] flex items-center gap-1.5"
               >
                 <Crown className="w-3.5 h-3.5" />
                 Upgrade
