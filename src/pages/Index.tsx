@@ -289,7 +289,7 @@ export default function Index() {
           {testimonials.map((t, i) => (
             <FadeIn key={t.name} delay={i * 0.08}>
               <div className="glass-card-hover p-5 space-y-3">
-                <div className="flex items-center gap-1 text-amber-400">
+                <div className="flex items-center gap-1 text-[hsl(38,92%,50%)]">
                   {[...Array(5)].map((_, j) => <Star key={j} className="w-3.5 h-3.5 fill-current" />)}
                 </div>
                 <p className="text-sm text-foreground/90 leading-relaxed italic">"{t.text}"</p>
