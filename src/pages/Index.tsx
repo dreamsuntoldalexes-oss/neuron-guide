@@ -407,10 +407,19 @@ export default function Index() {
             <div>
               <h4 className="font-heading font-semibold text-foreground text-sm mb-3">Support</h4>
               <div className="space-y-2">
-                <a href="tel:09029837829" className="block text-xs text-muted-foreground hover:text-primary transition">Call: 09029837829</a>
-                <a href="https://wa.me/2348033962964" target="_blank" rel="noopener noreferrer" className="block text-xs text-muted-foreground hover:text-primary transition">WhatsApp: 08033962964</a>
-                <a href="https://wa.me/2349029837829" target="_blank" rel="noopener noreferrer" className="block text-xs text-muted-foreground hover:text-primary transition">WhatsApp: 09029837829</a>
-                <a href="mailto:adekanmbiadekanmbi5@gmail.com" className="block text-xs text-muted-foreground hover:text-primary transition">Email Us</a>
+                <a href="tel:08033962964" className="block text-xs text-muted-foreground hover:text-primary transition">📞 Call: 08033962964</a>
+                <a href="https://wa.me/2348033962964" target="_blank" rel="noopener noreferrer" className="block text-xs text-muted-foreground hover:text-primary transition">💬 WhatsApp: 08033962964</a>
+                <a href="mailto:adekanmbiadekanmbi5@gmail.com" className="block text-xs text-muted-foreground hover:text-primary transition">✉️ adekanmbiadekanmbi5@gmail.com</a>
+              </div>
+              <div className="flex gap-2 mt-3">
+                <a href="https://wa.me/2348033962964?text=Hello%20NEURON%20VIEW!" target="_blank" rel="noopener noreferrer"
+                  className="px-3 py-1.5 rounded-lg text-xs font-medium gradient-primary text-primary-foreground hover:opacity-90 transition active:scale-95">
+                  Chat on WhatsApp
+                </a>
+                <a href="mailto:adekanmbiadekanmbi5@gmail.com?subject=Hello%20NEURON%20VIEW"
+                  className="px-3 py-1.5 rounded-lg text-xs font-medium border border-border bg-muted/30 text-foreground hover:bg-muted/50 transition active:scale-95">
+                  Send Email
+                </a>
               </div>
             </div>
             <div>
