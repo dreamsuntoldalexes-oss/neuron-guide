@@ -30,7 +30,7 @@ export default function Home() {
               <span className="capitalize font-medium">{tier}</span>
             </Link>
           </div>
-          <h1 className="text-2xl font-heading font-bold text-foreground">Discover {tools.length}+ AI Tools</h1>
+          <h1 className="text-2xl font-heading font-bold text-foreground">NEURON VIEW — {tools.length}+ AI Tools</h1>
         </motion.div>
 
         {/* Search */}
