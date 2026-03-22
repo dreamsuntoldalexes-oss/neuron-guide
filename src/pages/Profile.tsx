@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { User, Mail, LogOut, BookOpen, Info, Heart, CreditCard, Pencil, Check, X } from "lucide-react";
+import { User, Mail, LogOut, BookOpen, Info, Heart, CreditCard, Pencil, Check, X, Camera } from "lucide-react";
 import Layout from "@/components/Layout";
 import { useFavorites } from "@/hooks/useFavorites";
 
@@ -9,13 +9,14 @@ export default function Profile() {
   const navigate = useNavigate();
   const { favorites } = useFavorites();
   const [editing, setEditing] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const getUser = () => {
     try {
       const stored = localStorage.getItem("ai-tools-user");
-      return stored ? JSON.parse(stored) : { name: "Guest User", email: "guest@example.com" };
+      return stored ? JSON.parse(stored) : { name: "Guest User", email: "guest@example.com", avatar: "" };
     } catch {
-      return { name: "Guest User", email: "guest@example.com" };
+      return { name: "Guest User", email: "guest@example.com", avatar: "" };
     }
   };
 
@@ -37,6 +38,23 @@ export default function Profile() {
   const handleLogout = () => {
     localStorage.removeItem("ai-tools-user");
     navigate("/login");
+  };
+
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      alert("Image must be under 2MB");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const avatar = ev.target?.result as string;
+      const updated = { ...user, avatar };
+      localStorage.setItem("ai-tools-user", JSON.stringify(updated));
+      setUser(updated);
+    };
+    reader.readAsDataURL(file);
   };
 
   const menuItems = [
@@ -84,8 +102,32 @@ export default function Profile() {
             </div>
           ) : (
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-2xl gradient-primary flex items-center justify-center">
-                <User className="w-8 h-8 text-primary-foreground" />
+              {/* Avatar with upload */}
+              <div className="relative group">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp"
+                  className="hidden"
+                  onChange={handleAvatarChange}
+                />
+                {user.avatar ? (
+                  <img
+                    src={user.avatar}
+                    alt={user.name}
+                    className="w-16 h-16 rounded-2xl object-cover"
+                  />
+                ) : (
+                  <div className="w-16 h-16 rounded-2xl gradient-primary flex items-center justify-center">
+                    <User className="w-8 h-8 text-primary-foreground" />
+                  </div>
+                )}
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="absolute inset-0 rounded-2xl bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+                >
+                  <Camera className="w-5 h-5 text-white" />
+                </button>
               </div>
               <div className="flex-1">
                 <h2 className="font-heading font-semibold text-lg text-foreground">{user.name}</h2>
