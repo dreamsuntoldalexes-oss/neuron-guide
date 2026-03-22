@@ -4,11 +4,12 @@ import {
   Sparkles, Zap, Brain, MessageCircle, Heart, ArrowRight, Crown,
   Shield, Lock, BellOff, Star, Users, TrendingUp, Play,
   CheckCircle2, Cpu, Database, Globe, Layers, Rocket,
-  Award, BookOpen, Lightbulb, Target, BarChart3
+  Award, BookOpen, Lightbulb, Target, BarChart3, Phone, Mail
 } from "lucide-react";
 import { useRef, useState } from "react";
 import neuronLogo from "@/assets/neuron-logo.png";
 import landingHero from "@/assets/landing-hero.jpg";
+import heroPerson from "@/assets/hero-person.png";
 import demoScreenshot1 from "@/assets/demo-screenshot-1.jpg";
 import demoScreenshot2 from "@/assets/demo-screenshot-2.jpg";
 
@@ -56,6 +57,21 @@ const trustItems = [
   { icon: BellOff, title: "No Spam Ever", desc: "We respect your inbox. Only useful updates, unsubscribe anytime." },
 ];
 
+const whyChooseUs = [
+  { icon: Award, title: "Largest AI Directory in Africa", desc: "500+ verified tools — more than any other platform. Updated weekly with the latest AI innovations." },
+  { icon: Lightbulb, title: "AI That Understands You", desc: "Our chatbot doesn't just list tools — it learns your workflow and recommends what actually fits your needs." },
+  { icon: BookOpen, title: "Learn While You Discover", desc: "Every tool comes with guides, tutorials, and real user reviews so you can master it faster." },
+  { icon: TrendingUp, title: "Stay Ahead of the Curve", desc: "While others search Google for hours, Neuron View users find the right AI tool in seconds." },
+];
+
+const fascinatingFacts = [
+  "🧠 97% of our users discover tools they never knew existed",
+  "⚡ Save 10+ hours per week by finding the right AI tool instantly",
+  "🏆 Rated #1 AI directory by students, creators, and developers",
+  "🌍 Users in 30+ countries trust NEURON VIEW daily",
+  "🔥 New tools added every single week — never fall behind",
+];
+
 const FadeIn = ({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) => (
   <motion.div
     initial={{ opacity: 0, y: 30 }}
@@ -73,6 +89,7 @@ export default function Index() {
   const { scrollYProgress } = useScroll({ target: containerRef });
   const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
   const [upgradeTooltip, setUpgradeTooltip] = useState(false);
+  const [showUpgradePopup, setShowUpgradePopup] = useState(false);
 
   return (
     <div ref={containerRef} className="min-h-screen bg-background relative">
@@ -90,22 +107,22 @@ export default function Index() {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="relative z-10 flex items-center justify-between px-6 py-5"
+          className="relative z-10 flex items-center justify-between px-4 sm:px-6 py-4 sm:py-5"
         >
-          <div className="flex items-center gap-2">
-            <img src={neuronLogo} alt="NEURON VIEW" className="w-8 h-8" />
-            <span className="font-heading font-bold text-lg text-foreground">NEURON VIEW</span>
+          <div className="flex items-center gap-1.5">
+            <img src={neuronLogo} alt="NEURON VIEW" className="w-6 h-6 sm:w-8 sm:h-8" />
+            <span className="font-heading font-bold text-sm sm:text-lg text-foreground">NEURON VIEW</span>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <div className="relative">
               <button
                 onMouseEnter={() => setUpgradeTooltip(true)}
                 onMouseLeave={() => setUpgradeTooltip(false)}
-                onClick={() => window.open("https://wa.me/2348033962964?text=I%20want%20to%20upgrade%20my%20Neuron%20View%20account", "_blank")}
-                className="px-4 py-2 text-sm font-semibold rounded-xl bg-gradient-to-r from-[hsl(38,92%,50%)] to-[hsl(25,95%,53%)] text-primary-foreground hover:opacity-90 transition active:scale-[0.97] flex items-center gap-1.5"
+                onClick={() => setShowUpgradePopup(true)}
+                className="px-2.5 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-xl bg-gradient-to-r from-[hsl(38,92%,50%)] to-[hsl(25,95%,53%)] text-primary-foreground hover:opacity-90 transition active:scale-[0.97] flex items-center gap-1"
               >
-                <Crown className="w-3.5 h-3.5" />
-                Upgrade
+                <Crown className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                <span className="hidden sm:inline">Upgrade</span>
               </button>
               {upgradeTooltip && (
                 <motion.div
@@ -117,26 +134,26 @@ export default function Index() {
                 </motion.div>
               )}
             </div>
-            <Link to="/login" className="px-4 py-2 text-sm font-medium text-foreground hover:text-primary transition-colors">Log In</Link>
-            <Link to="/signup" className="px-5 py-2 text-sm font-semibold rounded-xl gradient-primary text-primary-foreground hover:opacity-90 transition active:scale-[0.97]">Sign Up</Link>
+            <Link to="/login" className="px-2.5 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-foreground hover:text-primary transition-colors">Log In</Link>
+            <Link to="/signup" className="px-3 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-xl gradient-primary text-primary-foreground hover:opacity-90 transition active:scale-[0.97]">Sign Up</Link>
           </div>
         </motion.nav>
 
-        {/* Hero content */}
-        <div className="relative z-10 px-6 pt-8 pb-16 max-w-2xl">
+        {/* Hero content — side-by-side with person image */}
+        <div className="relative z-10 px-6 pt-8 pb-16 flex items-center justify-between max-w-6xl mx-auto gap-6">
           <motion.div
             initial={{ opacity: 0, y: 30, filter: "blur(6px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="space-y-5"
+            className="space-y-5 flex-1 max-w-lg"
           >
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-medium">
               <Sparkles className="w-3.5 h-3.5" /> Trusted by 50,000+ users worldwide
             </div>
-            <h1 className="text-4xl sm:text-5xl font-heading font-bold text-foreground leading-[1.1]">
+            <h1 className="text-3xl sm:text-5xl font-heading font-bold text-foreground leading-[1.1]">
               Your Ultimate<br />AI Tools Hub
             </h1>
-            <p className="text-muted-foreground text-lg leading-relaxed max-w-md">
+            <p className="text-muted-foreground text-base sm:text-lg leading-relaxed">
               Discover, compare, and master 500+ AI tools — all in one beautifully curated directory.
             </p>
             <div className="flex gap-3 pt-2">
@@ -147,6 +164,16 @@ export default function Index() {
                 Log In
               </Link>
             </div>
+          </motion.div>
+
+          {/* Person image */}
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="hidden md:block flex-shrink-0"
+          >
+            <img src={heroPerson} alt="Person working with AI tools" className="w-72 lg:w-96 drop-shadow-2xl" />
           </motion.div>
         </div>
       </section>
@@ -166,6 +193,37 @@ export default function Index() {
               );
             })}
           </div>
+        </FadeIn>
+      </section>
+
+      {/* ───── FASCINATING FACTS (no boxes) ───── */}
+      <section className="relative z-10 px-6 py-16 max-w-3xl mx-auto">
+        <FadeIn className="text-center mb-8">
+          <h2 className="text-2xl sm:text-3xl font-heading font-bold text-foreground">Why 50,000+ Users Choose Us</h2>
+        </FadeIn>
+        <div className="space-y-4">
+          {fascinatingFacts.map((fact, i) => (
+            <FadeIn key={i} delay={i * 0.08}>
+              <p className="text-sm sm:text-base text-foreground/90 leading-relaxed text-center py-2 border-b border-border/30 last:border-0">
+                {fact}
+              </p>
+            </FadeIn>
+          ))}
+        </div>
+      </section>
+
+      {/* ───── BOLD STATEMENT (unboxed) ───── */}
+      <section className="relative z-10 px-6 py-20 text-center">
+        <FadeIn>
+          <p className="text-primary text-sm font-medium uppercase tracking-wider mb-3">The difference is clear</p>
+          <h2 className="text-3xl sm:text-4xl font-heading font-bold text-foreground max-w-3xl mx-auto leading-tight">
+            Stop Wasting Hours Searching for AI Tools.<br />
+            <span className="gradient-text">Let NEURON VIEW Do It in Seconds.</span>
+          </h2>
+          <p className="text-muted-foreground mt-4 max-w-xl mx-auto text-sm sm:text-base leading-relaxed">
+            Other directories give you lists. We give you <span className="text-foreground font-semibold">intelligence</span> — 
+            smart recommendations, real reviews, and a chatbot that actually understands what you need.
+          </p>
         </FadeIn>
       </section>
 
@@ -220,6 +278,16 @@ export default function Index() {
             })}
           </div>
         </div>
+      </section>
+
+      {/* ───── QUOTE BANNER (unboxed) ───── */}
+      <section className="relative z-10 px-6 py-16 text-center">
+        <FadeIn>
+          <p className="text-xl sm:text-2xl font-heading italic text-foreground/80 max-w-2xl mx-auto leading-relaxed">
+            "The future belongs to those who learn to use AI before everyone else."
+          </p>
+          <p className="text-primary text-sm font-medium mt-3">— NEURON VIEW</p>
+        </FadeIn>
       </section>
 
       {/* ───── CATEGORIES PREVIEW ───── */}
@@ -279,48 +347,68 @@ export default function Index() {
         </div>
       </section>
 
-      {/* ───── SOCIAL PROOF / TESTIMONIALS ───── */}
-      <section className="relative z-10 px-6 py-20 max-w-5xl mx-auto">
-        <FadeIn className="text-center mb-12">
-          <p className="text-primary text-sm font-medium uppercase tracking-wider mb-2">Loved by thousands</p>
-          <h2 className="text-3xl font-heading font-bold text-foreground">What Our Users Say</h2>
+      {/* ───── COMPELLING STATEMENT (unboxed) ───── */}
+      <section className="relative z-10 px-6 py-20 text-center">
+        <FadeIn>
+          <h2 className="text-2xl sm:text-3xl font-heading font-bold text-foreground max-w-2xl mx-auto">
+            Don't Just Use AI. <span className="gradient-text">Master It.</span>
+          </h2>
+          <p className="text-muted-foreground mt-4 max-w-lg mx-auto text-sm leading-relaxed">
+            Whether you're a student acing exams, a creator building content, or an entrepreneur scaling your business — 
+            NEURON VIEW is the only platform that gives you <span className="text-foreground font-medium">every AI tool</span> at your fingertips.
+          </p>
+          <div className="flex flex-wrap gap-4 justify-center mt-8">
+            {["✅ Free to start", "✅ No credit card needed", "✅ Cancel anytime"].map((item) => (
+              <span key={item} className="text-sm text-foreground/80">{item}</span>
+            ))}
+          </div>
         </FadeIn>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {testimonials.map((t, i) => (
-            <FadeIn key={t.name} delay={i * 0.08}>
-              <div className="glass-card-hover p-5 space-y-3">
-                <div className="flex items-center gap-1 text-[hsl(38,92%,50%)]">
-                  {[...Array(5)].map((_, j) => <Star key={j} className="w-3.5 h-3.5 fill-current" />)}
-                </div>
-                <p className="text-sm text-foreground/90 leading-relaxed italic">"{t.text}"</p>
-                <div className="flex items-center gap-3 pt-1">
-                  <div className="w-9 h-9 rounded-full gradient-primary flex items-center justify-center text-xs font-bold text-primary-foreground">
-                    {t.avatar}
+      </section>
+
+      {/* ───── SOCIAL PROOF / TESTIMONIALS ───── */}
+      <section className="relative z-10 px-6 py-20 bg-muted/20">
+        <div className="max-w-5xl mx-auto">
+          <FadeIn className="text-center mb-12">
+            <p className="text-primary text-sm font-medium uppercase tracking-wider mb-2">Loved by thousands</p>
+            <h2 className="text-3xl font-heading font-bold text-foreground">What Our Users Say</h2>
+          </FadeIn>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {testimonials.map((t, i) => (
+              <FadeIn key={t.name} delay={i * 0.08}>
+                <div className="glass-card-hover p-5 space-y-3">
+                  <div className="flex items-center gap-1 text-[hsl(38,92%,50%)]">
+                    {[...Array(5)].map((_, j) => <Star key={j} className="w-3.5 h-3.5 fill-current" />)}
                   </div>
-                  <div>
-                    <p className="text-sm font-semibold text-foreground">{t.name}</p>
-                    <p className="text-xs text-muted-foreground">{t.role}</p>
+                  <p className="text-sm text-foreground/90 leading-relaxed italic">"{t.text}"</p>
+                  <div className="flex items-center gap-3 pt-1">
+                    <div className="w-9 h-9 rounded-full gradient-primary flex items-center justify-center text-xs font-bold text-primary-foreground">
+                      {t.avatar}
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-foreground">{t.name}</p>
+                      <p className="text-xs text-muted-foreground">{t.role}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </FadeIn>
-          ))}
+              </FadeIn>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* ───── TRUST & SECURITY ───── */}
-      <section className="relative z-10 px-6 py-20 bg-muted/20">
+      {/* ───── TRUST & SECURITY (unboxed text + icons) ───── */}
+      <section className="relative z-10 px-6 py-20">
         <div className="max-w-4xl mx-auto">
           <FadeIn className="text-center mb-12">
             <p className="text-primary text-sm font-medium uppercase tracking-wider mb-2">Your privacy matters</p>
             <h2 className="text-3xl font-heading font-bold text-foreground">Trust & Security</h2>
           </FadeIn>
-          <div className="grid sm:grid-cols-3 gap-5">
+          <div className="grid sm:grid-cols-3 gap-8">
             {trustItems.map((item, i) => {
               const Icon = item.icon;
               return (
                 <FadeIn key={item.title} delay={i * 0.1}>
-                  <div className="glass-card p-6 text-center space-y-3">
+                  <div className="text-center space-y-3">
                     <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto">
                       <Icon className="w-7 h-7 text-primary" />
                     </div>
@@ -335,34 +423,41 @@ export default function Index() {
       </section>
 
       {/* ───── WHY CHOOSE US ───── */}
-      <section className="relative z-10 px-6 py-20 max-w-5xl mx-auto">
-        <FadeIn className="text-center mb-12">
-          <p className="text-primary text-sm font-medium uppercase tracking-wider mb-2">Stand out</p>
-          <h2 className="text-3xl font-heading font-bold text-foreground">Why Choose NEURON VIEW?</h2>
-        </FadeIn>
-        <div className="grid sm:grid-cols-2 gap-5">
-          {[
-            { icon: Award, title: "Largest AI Directory", desc: "500+ verified tools — more than any other platform." },
-            { icon: Lightbulb, title: "Smart Recommendations", desc: "Our AI chatbot learns your needs and suggests the perfect tools." },
-            { icon: BookOpen, title: "Tutorials & Guides", desc: "Learn how to use every tool with step-by-step tutorials." },
-            { icon: TrendingUp, title: "Always Updated", desc: "New tools added weekly. Never miss the latest AI innovation." },
-          ].map((item, i) => {
-            const Icon = item.icon;
-            return (
-              <FadeIn key={item.title} delay={i * 0.1}>
-                <div className="flex gap-4 items-start glass-card p-5">
-                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <Icon className="w-5 h-5 text-primary" />
+      <section className="relative z-10 px-6 py-20 bg-muted/20">
+        <div className="max-w-5xl mx-auto">
+          <FadeIn className="text-center mb-12">
+            <p className="text-primary text-sm font-medium uppercase tracking-wider mb-2">Stand out</p>
+            <h2 className="text-3xl font-heading font-bold text-foreground">Why Choose NEURON VIEW?</h2>
+          </FadeIn>
+          <div className="grid sm:grid-cols-2 gap-8">
+            {whyChooseUs.map((item, i) => {
+              const Icon = item.icon;
+              return (
+                <FadeIn key={item.title} delay={i * 0.1}>
+                  <div className="flex gap-4 items-start">
+                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                      <Icon className="w-5 h-5 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="font-heading font-semibold text-foreground mb-1">{item.title}</h3>
+                      <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-heading font-semibold text-foreground mb-1">{item.title}</h3>
-                    <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
-                  </div>
-                </div>
-              </FadeIn>
-            );
-          })}
+                </FadeIn>
+              );
+            })}
+          </div>
         </div>
+      </section>
+
+      {/* ───── POWER STATEMENT (unboxed) ───── */}
+      <section className="relative z-10 px-6 py-16 text-center">
+        <FadeIn>
+          <p className="text-muted-foreground text-sm max-w-lg mx-auto leading-relaxed">
+            🚀 Every week, <span className="text-foreground font-semibold">thousands of new users</span> sign up. 
+            Every day, new AI tools are added. If you're not on NEURON VIEW yet, you're already behind.
+          </p>
+        </FadeIn>
       </section>
 
       {/* ───── CTA SECTION ───── */}
@@ -440,6 +535,56 @@ export default function Index() {
           </div>
         </div>
       </footer>
+
+      {/* ───── UPGRADE POPUP ───── */}
+      {showUpgradePopup && (
+        <motion.div
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+          className="fixed inset-0 z-50 flex items-center justify-center px-6 bg-black/60 backdrop-blur-sm"
+          onClick={() => setShowUpgradePopup(false)}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            className="glass-card p-6 max-w-sm w-full space-y-4 relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button onClick={() => setShowUpgradePopup(false)} className="absolute top-3 right-3 p-1 rounded-lg hover:bg-muted transition">
+              <span className="text-muted-foreground text-lg">✕</span>
+            </button>
+            <div className="text-center space-y-3">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[hsl(38,92%,50%)] to-[hsl(25,95%,53%)] flex items-center justify-center mx-auto">
+                <Crown className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="font-heading font-bold text-xl text-foreground">Upgrade to Premium</h3>
+              <p className="text-sm text-muted-foreground">Unlock unlimited access to 500+ AI tools, priority chatbot, and exclusive features.</p>
+            </div>
+            <div className="space-y-2 text-sm">
+              {["Unlimited tool views", "Priority AI chatbot access", "Exclusive premium tools", "No ads, ever"].map((f) => (
+                <div key={f} className="flex items-center gap-2 text-foreground">
+                  <CheckCircle2 className="w-4 h-4 text-primary flex-shrink-0" />
+                  <span>{f}</span>
+                </div>
+              ))}
+            </div>
+            <div className="flex flex-col gap-2 pt-2">
+              <a href="https://wa.me/2348033962964?text=Hi%2C%20I%20want%20to%20upgrade%20my%20NEURON%20VIEW%20plan%20to%20premium"
+                target="_blank" rel="noopener noreferrer"
+                className="w-full py-3 rounded-xl text-sm font-semibold gradient-primary text-primary-foreground text-center hover:opacity-90 transition active:scale-[0.97]">
+                💬 Upgrade via WhatsApp
+              </a>
+              <a href="mailto:adekanmbiadekanmbi5@gmail.com?subject=I%20want%20to%20upgrade%20my%20NEURON%20VIEW%20plan"
+                className="w-full py-3 rounded-xl text-sm font-medium border border-border bg-muted/30 text-foreground text-center hover:bg-muted/50 transition active:scale-[0.97]">
+                ✉️ Upgrade via Email
+              </a>
+              <Link to="/pricing" onClick={() => setShowUpgradePopup(false)}
+                className="w-full py-2 text-sm text-primary text-center hover:underline">
+                View All Plans
+              </Link>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
     </div>
   );
 }
