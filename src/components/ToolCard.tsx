@@ -148,16 +148,40 @@ export default function ToolCard({ tool, index = 0, isFavorite, onToggleFavorite
               <p className="text-sm text-muted-foreground">
                 <span className="font-semibold text-foreground">{tool.name}</span> is a {tool.tier}-tier tool. Upgrade your plan to unlock it and many more premium tools.
               </p>
+              <div className="glass-card p-3 space-y-1 text-xs text-muted-foreground">
+                <p className="font-heading font-semibold text-foreground text-center text-sm">Pay via Bank Transfer</p>
+                <p><span className="text-foreground font-medium">Bank:</span> PalmPay</p>
+                <p><span className="text-foreground font-medium">Account:</span> 8033962964</p>
+                <p><span className="text-foreground font-medium">Name:</span> MARIAM AINA ADEKANMBI</p>
+              </div>
               <div className="flex flex-col gap-2 pt-1">
-                <Link to="/pricing" onClick={() => setShowUpgrade(false)}
-                  className="w-full py-3 rounded-xl text-sm font-semibold gradient-primary text-primary-foreground text-center hover:opacity-90 transition active:scale-[0.97]">
-                  View Plans & Upgrade
-                </Link>
-                <a href="https://wa.me/2348033962964?text=Hi%2C%20I%20want%20to%20upgrade%20my%20plan%20to%20access%20premium%20AI%20tools"
+                <a href="https://wa.me/2348033962964?text=Hi%2C%20I%20just%20paid%20for%20NEURON%20VIEW%20Premium.%20Here%20is%20my%20receipt.%20Please%20activate%20my%20account."
                   target="_blank" rel="noopener noreferrer"
-                  className="w-full py-3 rounded-xl text-sm font-medium border border-border bg-muted/30 text-foreground text-center hover:bg-muted/50 transition active:scale-[0.97]">
-                  Chat on WhatsApp to Pay
+                  onClick={() => {
+                    const user = JSON.parse(localStorage.getItem("ai-tools-user") || '{"name":"Guest","email":""}');
+                    user.tier = "pro";
+                    user.premiumExpiry = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+                    localStorage.setItem("ai-tools-user", JSON.stringify(user));
+                    localStorage.setItem("ai-tools-credits", "9999");
+                  }}
+                  className="w-full py-3 rounded-xl text-sm font-semibold gradient-primary text-primary-foreground text-center hover:opacity-90 transition active:scale-[0.97]">
+                  💬 Send Receipt via WhatsApp
                 </a>
+                <a href="mailto:adekanmbiadekanmbi5@gmail.com?subject=NEURON%20VIEW%20Premium%20Payment%20Receipt&body=Hi%2C%20I%20just%20made%20payment%20for%20NEURON%20VIEW%20Premium.%20Please%20activate%20my%20account."
+                  onClick={() => {
+                    const user = JSON.parse(localStorage.getItem("ai-tools-user") || '{"name":"Guest","email":""}');
+                    user.tier = "pro";
+                    user.premiumExpiry = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+                    localStorage.setItem("ai-tools-user", JSON.stringify(user));
+                    localStorage.setItem("ai-tools-credits", "9999");
+                  }}
+                  className="w-full py-3 rounded-xl text-sm font-medium border border-border bg-muted/30 text-foreground text-center hover:bg-muted/50 transition active:scale-[0.97]">
+                  ✉️ Send Receipt via Email
+                </a>
+                <Link to="/pricing" onClick={() => setShowUpgrade(false)}
+                  className="w-full py-2 text-sm text-primary text-center hover:underline">
+                  View Plans & Pricing
+                </Link>
               </div>
             </motion.div>
           </motion.div>
