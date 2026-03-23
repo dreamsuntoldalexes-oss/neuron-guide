@@ -18,6 +18,9 @@ export default function Signup() {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-6 relative overflow-hidden">
+      <button onClick={() => navigate(-1)} className="absolute top-4 left-4 z-20 flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition">
+        <ArrowLeft className="w-4 h-4" /> Back
+      </button>
       <div className="absolute top-0 left-0 w-[400px] h-[400px] rounded-full bg-primary/5 blur-[100px] pointer-events-none" />
 
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-sm z-10">
