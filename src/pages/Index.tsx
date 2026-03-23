@@ -466,7 +466,7 @@ export default function Index() {
           <div className="max-w-2xl mx-auto text-center glass-card p-10 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 pointer-events-none" />
             <div className="relative z-10">
-              <img src={neuronLogo} alt="" className="w-16 h-16 mx-auto mb-4" />
+              <img src={neuronLogo} alt="" className="w-20 h-20 mx-auto mb-4" />
               <h2 className="text-3xl font-heading font-bold text-foreground mb-3">Ready to Explore 500+ AI Tools?</h2>
               <p className="text-muted-foreground mb-8 max-w-md mx-auto">Join 50,000+ users who discover, compare, and master AI tools with NEURON VIEW.</p>
               <div className="flex gap-3 justify-center">
