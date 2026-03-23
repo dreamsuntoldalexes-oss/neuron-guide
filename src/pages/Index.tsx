@@ -156,7 +156,7 @@ export default function Index() {
             <p className="text-muted-foreground text-base sm:text-lg leading-relaxed">
               Discover, compare, and master 500+ AI tools — all in one beautifully curated directory.
             </p>
-            <div className="flex gap-3 pt-2 justify-end">
+            <div className="flex gap-3 pt-2">
               <Link to="/onboarding" className="px-6 py-3.5 rounded-xl font-heading font-semibold gradient-primary text-primary-foreground flex items-center gap-2 hover:opacity-90 transition active:scale-[0.97]">
                 Get Started <ArrowRight className="w-4 h-4" />
               </Link>
