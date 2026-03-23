@@ -140,12 +140,12 @@ export default function Index() {
         </motion.nav>
 
         {/* Hero content — side-by-side with person image */}
-        <div className="relative z-10 px-6 pt-8 pb-16 flex items-center justify-between max-w-6xl mx-auto gap-6">
+        <div className="relative z-10 px-4 sm:px-6 pt-4 pb-10 flex items-center justify-between max-w-6xl mx-auto gap-4">
           <motion.div
             initial={{ opacity: 0, y: 30, filter: "blur(6px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="space-y-5 flex-1 max-w-lg ml-8 sm:ml-16"
+            className="space-y-4 flex-1 max-w-lg ml-4 sm:ml-10"
           >
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-medium">
               <Sparkles className="w-3.5 h-3.5" /> Trusted by 50,000+ users worldwide
@@ -156,7 +156,7 @@ export default function Index() {
             <p className="text-muted-foreground text-base sm:text-lg leading-relaxed">
               Discover, compare, and master 500+ AI tools — all in one beautifully curated directory.
             </p>
-            <div className="flex gap-3 pt-2">
+            <div className="flex gap-3 pt-1">
               <Link to="/onboarding" className="px-6 py-3.5 rounded-xl font-heading font-semibold gradient-primary text-primary-foreground flex items-center gap-2 hover:opacity-90 transition active:scale-[0.97]">
                 Get Started <ArrowRight className="w-4 h-4" />
               </Link>
@@ -166,14 +166,27 @@ export default function Index() {
             </div>
           </motion.div>
 
-          {/* Person image */}
+          {/* Person image with working animation */}
           <motion.div
             initial={{ opacity: 0, x: 40 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="hidden md:block flex-shrink-0"
+            className="hidden md:block flex-shrink-0 relative"
           >
-            <img src={heroPerson} alt="Person working with AI tools" className="w-72 lg:w-96 drop-shadow-2xl" />
+            <motion.img
+              src={heroPerson}
+              alt="Person working with AI tools"
+              className="w-72 lg:w-96 drop-shadow-2xl"
+              animate={{
+                y: [0, -6, 0, -3, 0],
+                rotate: [0, 0.5, -0.5, 0.3, 0],
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            />
           </motion.div>
         </div>
       </section>
