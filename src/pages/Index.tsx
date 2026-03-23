@@ -567,15 +567,24 @@ export default function Index() {
                 </div>
               ))}
             </div>
+            <div className="glass-card p-4 space-y-2 text-sm">
+              <p className="font-heading font-semibold text-foreground text-center">Pay via Bank Transfer</p>
+              <div className="space-y-1 text-muted-foreground text-xs">
+                <p><span className="text-foreground font-medium">Bank:</span> PalmPay</p>
+                <p><span className="text-foreground font-medium">Account:</span> 8033962964</p>
+                <p><span className="text-foreground font-medium">Name:</span> MARIAM AINA ADEKANMBI</p>
+              </div>
+              <p className="text-[10px] text-muted-foreground text-center pt-1">After payment, send receipt via WhatsApp for activation</p>
+            </div>
             <div className="flex flex-col gap-2 pt-2">
-              <a href="https://wa.me/2348033962964?text=Hi%2C%20I%20want%20to%20upgrade%20my%20NEURON%20VIEW%20plan%20to%20premium"
+              <a href="https://wa.me/2348033962964?text=Hi%2C%20I%20just%20paid%20for%20NEURON%20VIEW%20Premium.%20Here%20is%20my%20receipt."
                 target="_blank" rel="noopener noreferrer"
                 className="w-full py-3 rounded-xl text-sm font-semibold gradient-primary text-primary-foreground text-center hover:opacity-90 transition active:scale-[0.97]">
-                💬 Upgrade via WhatsApp
+                💬 Send Receipt via WhatsApp
               </a>
-              <a href="mailto:adekanmbiadekanmbi5@gmail.com?subject=I%20want%20to%20upgrade%20my%20NEURON%20VIEW%20plan"
+              <a href="mailto:adekanmbiadekanmbi5@gmail.com?subject=NEURON%20VIEW%20Premium%20Payment%20Receipt"
                 className="w-full py-3 rounded-xl text-sm font-medium border border-border bg-muted/30 text-foreground text-center hover:bg-muted/50 transition active:scale-[0.97]">
-                ✉️ Upgrade via Email
+                ✉️ Send Receipt via Email
               </a>
               <Link to="/pricing" onClick={() => setShowUpgradePopup(false)}
                 className="w-full py-2 text-sm text-primary text-center hover:underline">
