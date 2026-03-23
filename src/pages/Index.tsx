@@ -145,7 +145,7 @@ export default function Index() {
             initial={{ opacity: 0, y: 30, filter: "blur(6px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="space-y-5 flex-1 max-w-lg"
+            className="space-y-5 flex-1 max-w-lg ml-auto text-right"
           >
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-medium">
               <Sparkles className="w-3.5 h-3.5" /> Trusted by 50,000+ users worldwide
@@ -156,7 +156,7 @@ export default function Index() {
             <p className="text-muted-foreground text-base sm:text-lg leading-relaxed">
               Discover, compare, and master 500+ AI tools — all in one beautifully curated directory.
             </p>
-            <div className="flex gap-3 pt-2">
+            <div className="flex gap-3 pt-2 justify-end">
               <Link to="/onboarding" className="px-6 py-3.5 rounded-xl font-heading font-semibold gradient-primary text-primary-foreground flex items-center gap-2 hover:opacity-90 transition active:scale-[0.97]">
                 Get Started <ArrowRight className="w-4 h-4" />
               </Link>
