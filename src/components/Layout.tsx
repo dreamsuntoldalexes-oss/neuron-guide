@@ -1,6 +1,6 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 // NEURON VIEW - Layout component
-import { Home, Search, Heart, MessageCircle, User } from "lucide-react";
+import { Home, Search, Heart, MessageCircle, User, ArrowLeft } from "lucide-react";
 import ContactWidget from "./ContactWidget";
 
 const navItems = [
