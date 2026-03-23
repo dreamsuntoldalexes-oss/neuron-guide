@@ -109,9 +109,9 @@ export default function Index() {
           transition={{ duration: 0.5 }}
           className="relative z-10 flex items-center justify-between px-4 sm:px-6 py-4 sm:py-5"
         >
-          <div className="flex items-center gap-1.5">
-            <img src={neuronLogo} alt="NEURON VIEW" className="w-6 h-6 sm:w-8 sm:h-8" />
-            <span className="font-heading font-bold text-sm sm:text-lg text-foreground">NEURON VIEW</span>
+          <div className="flex items-center gap-2">
+            <img src={neuronLogo} alt="NEURON VIEW" className="w-9 h-9 sm:w-12 sm:h-12" />
+            <span className="font-heading font-bold text-lg sm:text-2xl text-foreground">NEURON VIEW</span>
           </div>
           <div className="flex items-center gap-2 sm:gap-3">
             <div className="relative">
