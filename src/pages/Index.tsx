@@ -485,8 +485,8 @@ export default function Index() {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 mb-10">
             <div className="col-span-2 sm:col-span-1">
               <div className="flex items-center gap-2 mb-3">
-                <img src={neuronLogo} alt="NEURON VIEW" className="w-7 h-7" />
-                <span className="font-heading font-bold text-foreground">NEURON VIEW</span>
+                <img src={neuronLogo} alt="NEURON VIEW" className="w-10 h-10" />
+                <span className="font-heading font-bold text-lg text-foreground">NEURON VIEW</span>
               </div>
               <p className="text-xs text-muted-foreground leading-relaxed">Your ultimate AI tools directory. Discover, compare, and master 500+ tools.</p>
             </div>
