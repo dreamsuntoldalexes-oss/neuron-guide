@@ -218,13 +218,31 @@ export default function ToolCard({ tool, index = 0, isFavorite, onToggleFavorite
                 You've reached your <span className="font-semibold text-foreground">free limit of 3 tool views</span>. Upgrade now to enjoy unlimited access to <span className="font-semibold text-foreground">500+ AI tools</span> and premium features.
               </p>
               <div className="flex flex-col gap-2 pt-1">
-                <a href="https://wa.me/2348033962964?text=Hi%2C%20I%20want%20to%20upgrade%20my%20plan%20to%20get%20unlimited%20AI%20tool%20access"
+                <a href="https://wa.me/2348033962964?text=Hi%2C%20I%20want%20to%20upgrade%20my%20plan%20to%20get%20unlimited%20AI%20tool%20access.%20Here%20is%20my%20receipt."
                   target="_blank" rel="noopener noreferrer"
+                  onClick={() => {
+                    const user = JSON.parse(localStorage.getItem("ai-tools-user") || '{"name":"Guest","email":""}');
+                    user.tier = "pro";
+                    user.premiumExpiry = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+                    localStorage.setItem("ai-tools-user", JSON.stringify(user));
+                    localStorage.setItem("ai-tools-credits", "9999");
+                  }}
                   className="w-full py-3 rounded-xl text-sm font-semibold gradient-primary text-primary-foreground text-center hover:opacity-90 transition active:scale-[0.97]">
                   💬 Upgrade via WhatsApp
                 </a>
-                <Link to="/pricing" onClick={() => setShowCredits(false)}
+                <a href="mailto:adekanmbiadekanmbi5@gmail.com?subject=NEURON%20VIEW%20Upgrade%20Payment%20Receipt&body=Hi%2C%20I%20just%20paid%20for%20NEURON%20VIEW%20upgrade.%20Please%20activate%20my%20account."
+                  onClick={() => {
+                    const user = JSON.parse(localStorage.getItem("ai-tools-user") || '{"name":"Guest","email":""}');
+                    user.tier = "pro";
+                    user.premiumExpiry = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+                    localStorage.setItem("ai-tools-user", JSON.stringify(user));
+                    localStorage.setItem("ai-tools-credits", "9999");
+                  }}
                   className="w-full py-3 rounded-xl text-sm font-medium border border-border bg-muted/30 text-foreground text-center hover:bg-muted/50 transition active:scale-[0.97]">
+                  ✉️ Send Receipt via Email
+                </a>
+                <Link to="/pricing" onClick={() => setShowCredits(false)}
+                  className="w-full py-2 text-sm text-primary text-center hover:underline">
                   View Plans & Pricing
                 </Link>
               </div>
