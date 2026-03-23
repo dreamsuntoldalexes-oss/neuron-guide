@@ -587,15 +587,30 @@ export default function Index() {
                 <p><span className="text-foreground font-medium">Account:</span> 8033962964</p>
                 <p><span className="text-foreground font-medium">Name:</span> MARIAM AINA ADEKANMBI</p>
               </div>
-              <p className="text-[10px] text-muted-foreground text-center pt-1">After payment, send receipt via WhatsApp for activation</p>
+              <p className="text-[10px] text-muted-foreground text-center pt-1">After payment, send receipt via WhatsApp or Email for instant activation</p>
             </div>
             <div className="flex flex-col gap-2 pt-2">
-              <a href="https://wa.me/2348033962964?text=Hi%2C%20I%20just%20paid%20for%20NEURON%20VIEW%20Premium.%20Here%20is%20my%20receipt."
+              <a href="https://wa.me/2348033962964?text=Hi%2C%20I%20just%20paid%20for%20NEURON%20VIEW%20Premium.%20Here%20is%20my%20receipt.%20Please%20activate%20my%20account."
                 target="_blank" rel="noopener noreferrer"
+                onClick={() => {
+                  // Grant premium access for 30 days on clicking to send receipt
+                  const user = JSON.parse(localStorage.getItem("ai-tools-user") || '{"name":"Guest","email":""}');
+                  user.tier = "pro";
+                  user.premiumExpiry = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+                  localStorage.setItem("ai-tools-user", JSON.stringify(user));
+                  localStorage.setItem("ai-tools-credits", "9999");
+                }}
                 className="w-full py-3 rounded-xl text-sm font-semibold gradient-primary text-primary-foreground text-center hover:opacity-90 transition active:scale-[0.97]">
                 💬 Send Receipt via WhatsApp
               </a>
-              <a href="mailto:adekanmbiadekanmbi5@gmail.com?subject=NEURON%20VIEW%20Premium%20Payment%20Receipt"
+              <a href="mailto:adekanmbiadekanmbi5@gmail.com?subject=NEURON%20VIEW%20Premium%20Payment%20Receipt&body=Hi%2C%20I%20just%20made%20payment%20for%20NEURON%20VIEW%20Premium.%20Please%20find%20my%20receipt%20attached.%20Activate%20my%20account.%20Thank%20you!"
+                onClick={() => {
+                  const user = JSON.parse(localStorage.getItem("ai-tools-user") || '{"name":"Guest","email":""}');
+                  user.tier = "pro";
+                  user.premiumExpiry = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+                  localStorage.setItem("ai-tools-user", JSON.stringify(user));
+                  localStorage.setItem("ai-tools-credits", "9999");
+                }}
                 className="w-full py-3 rounded-xl text-sm font-medium border border-border bg-muted/30 text-foreground text-center hover:bg-muted/50 transition active:scale-[0.97]">
                 ✉️ Send Receipt via Email
               </a>
