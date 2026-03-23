@@ -145,7 +145,7 @@ export default function Index() {
             initial={{ opacity: 0, y: 30, filter: "blur(6px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="space-y-5 flex-1 max-w-lg ml-auto text-right"
+            className="space-y-5 flex-1 max-w-lg ml-8 sm:ml-16"
           >
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-medium">
               <Sparkles className="w-3.5 h-3.5" /> Trusted by 50,000+ users worldwide
