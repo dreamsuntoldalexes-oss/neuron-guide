@@ -109,9 +109,9 @@ export default function Index() {
           transition={{ duration: 0.5 }}
           className="relative z-10 flex items-center justify-between px-4 sm:px-6 py-4 sm:py-5"
         >
-          <div className="flex items-center gap-1.5">
-            <img src={neuronLogo} alt="NEURON VIEW" className="w-6 h-6 sm:w-8 sm:h-8" />
-            <span className="font-heading font-bold text-sm sm:text-lg text-foreground">NEURON VIEW</span>
+          <div className="flex items-center gap-2">
+            <img src={neuronLogo} alt="NEURON VIEW" className="w-9 h-9 sm:w-12 sm:h-12" />
+            <span className="font-heading font-bold text-lg sm:text-2xl text-foreground">NEURON VIEW</span>
           </div>
           <div className="flex items-center gap-2 sm:gap-3">
             <div className="relative">
@@ -466,7 +466,7 @@ export default function Index() {
           <div className="max-w-2xl mx-auto text-center glass-card p-10 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 pointer-events-none" />
             <div className="relative z-10">
-              <img src={neuronLogo} alt="" className="w-16 h-16 mx-auto mb-4" />
+              <img src={neuronLogo} alt="" className="w-20 h-20 mx-auto mb-4" />
               <h2 className="text-3xl font-heading font-bold text-foreground mb-3">Ready to Explore 500+ AI Tools?</h2>
               <p className="text-muted-foreground mb-8 max-w-md mx-auto">Join 50,000+ users who discover, compare, and master AI tools with NEURON VIEW.</p>
               <div className="flex gap-3 justify-center">
@@ -485,8 +485,8 @@ export default function Index() {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 mb-10">
             <div className="col-span-2 sm:col-span-1">
               <div className="flex items-center gap-2 mb-3">
-                <img src={neuronLogo} alt="NEURON VIEW" className="w-7 h-7" />
-                <span className="font-heading font-bold text-foreground">NEURON VIEW</span>
+                <img src={neuronLogo} alt="NEURON VIEW" className="w-10 h-10" />
+                <span className="font-heading font-bold text-lg text-foreground">NEURON VIEW</span>
               </div>
               <p className="text-xs text-muted-foreground leading-relaxed">Your ultimate AI tools directory. Discover, compare, and master 500+ tools.</p>
             </div>
@@ -567,15 +567,24 @@ export default function Index() {
                 </div>
               ))}
             </div>
+            <div className="glass-card p-4 space-y-2 text-sm">
+              <p className="font-heading font-semibold text-foreground text-center">Pay via Bank Transfer</p>
+              <div className="space-y-1 text-muted-foreground text-xs">
+                <p><span className="text-foreground font-medium">Bank:</span> PalmPay</p>
+                <p><span className="text-foreground font-medium">Account:</span> 8033962964</p>
+                <p><span className="text-foreground font-medium">Name:</span> MARIAM AINA ADEKANMBI</p>
+              </div>
+              <p className="text-[10px] text-muted-foreground text-center pt-1">After payment, send receipt via WhatsApp for activation</p>
+            </div>
             <div className="flex flex-col gap-2 pt-2">
-              <a href="https://wa.me/2348033962964?text=Hi%2C%20I%20want%20to%20upgrade%20my%20NEURON%20VIEW%20plan%20to%20premium"
+              <a href="https://wa.me/2348033962964?text=Hi%2C%20I%20just%20paid%20for%20NEURON%20VIEW%20Premium.%20Here%20is%20my%20receipt."
                 target="_blank" rel="noopener noreferrer"
                 className="w-full py-3 rounded-xl text-sm font-semibold gradient-primary text-primary-foreground text-center hover:opacity-90 transition active:scale-[0.97]">
-                💬 Upgrade via WhatsApp
+                💬 Send Receipt via WhatsApp
               </a>
-              <a href="mailto:adekanmbiadekanmbi5@gmail.com?subject=I%20want%20to%20upgrade%20my%20NEURON%20VIEW%20plan"
+              <a href="mailto:adekanmbiadekanmbi5@gmail.com?subject=NEURON%20VIEW%20Premium%20Payment%20Receipt"
                 className="w-full py-3 rounded-xl text-sm font-medium border border-border bg-muted/30 text-foreground text-center hover:bg-muted/50 transition active:scale-[0.97]">
-                ✉️ Upgrade via Email
+                ✉️ Send Receipt via Email
               </a>
               <Link to="/pricing" onClick={() => setShowUpgradePopup(false)}
                 className="w-full py-2 text-sm text-primary text-center hover:underline">

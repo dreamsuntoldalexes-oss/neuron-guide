@@ -43,12 +43,12 @@ export default function Splash() {
         <motion.img
           src={neuronLogo}
           alt="NEURON VIEW"
-          className="w-24 h-24 mb-6"
+          className="w-36 h-36 sm:w-44 sm:h-44 mb-6"
           animate={{ rotate: [0, 5, -5, 0] }}
           transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
         />
-        <h1 className="text-3xl font-heading font-bold gradient-text mb-2">NEURON VIEW</h1>
-        <p className="text-xs text-muted-foreground tracking-widest uppercase mb-10">AI Tools Directory</p>
+        <h1 className="text-4xl sm:text-5xl font-heading font-bold gradient-text mb-2">NEURON VIEW</h1>
+        <p className="text-sm sm:text-base text-muted-foreground tracking-widest uppercase mb-10">AI Tools Directory</p>
 
         <div className="h-12 flex items-center">
           <AnimatePresence mode="wait">
