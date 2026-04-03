@@ -574,7 +574,7 @@ export default function Index() {
         <motion.div
           initial={{ opacity: 0 }} animate={{ opacity: 1 }}
           className="fixed inset-0 z-50 flex items-center justify-center px-6 bg-black/60 backdrop-blur-sm"
-          onClick={() => setShowUpgradePopup(false)}
+          onClick={() => { setShowUpgradePopup(false); setShowCodeInput(false); setCodeError(""); }}
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -582,63 +582,84 @@ export default function Index() {
             className="glass-card p-6 max-w-sm w-full space-y-4 relative"
             onClick={(e) => e.stopPropagation()}
           >
-            <button onClick={() => setShowUpgradePopup(false)} className="absolute top-3 right-3 p-1 rounded-lg hover:bg-muted transition">
+            <button onClick={() => { setShowUpgradePopup(false); setShowCodeInput(false); setCodeError(""); }} className="absolute top-3 right-3 p-1 rounded-lg hover:bg-muted transition">
               <span className="text-muted-foreground text-lg">✕</span>
             </button>
-            <div className="text-center space-y-3">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[hsl(38,92%,50%)] to-[hsl(25,95%,53%)] flex items-center justify-center mx-auto">
-                <Crown className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="font-heading font-bold text-xl text-foreground">Upgrade to Premium</h3>
-              <p className="text-sm text-muted-foreground">Unlock unlimited access to 500+ AI tools, priority chatbot, and exclusive features.</p>
-            </div>
-            <div className="space-y-2 text-sm">
-              {["Unlimited tool views", "Priority AI chatbot access", "Exclusive premium tools", "No ads, ever"].map((f) => (
-                <div key={f} className="flex items-center gap-2 text-foreground">
-                  <CheckCircle2 className="w-4 h-4 text-primary flex-shrink-0" />
-                  <span>{f}</span>
+
+            {!showCodeInput ? (
+              <>
+                <div className="text-center space-y-3">
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[hsl(38,92%,50%)] to-[hsl(25,95%,53%)] flex items-center justify-center mx-auto">
+                    <Crown className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="font-heading font-bold text-xl text-foreground">Upgrade to Premium</h3>
+                  <p className="text-sm text-muted-foreground">₦500 for 3 days — unlimited access to 500+ AI tools.</p>
                 </div>
-              ))}
-            </div>
-            <div className="glass-card p-4 space-y-2 text-sm">
-              <p className="font-heading font-semibold text-foreground text-center">Pay via Bank Transfer</p>
-              <div className="space-y-1 text-muted-foreground text-xs">
-                <p><span className="text-foreground font-medium">Bank:</span> PalmPay</p>
-                <p><span className="text-foreground font-medium">Account:</span> 8033962964</p>
-                <p><span className="text-foreground font-medium">Name:</span> MARIAM AINA ADEKANMBI</p>
-              </div>
-              <p className="text-[10px] text-muted-foreground text-center pt-1">After payment, send receipt via WhatsApp or Email for instant activation</p>
-            </div>
-            <div className="flex flex-col gap-2 pt-2">
-              <a href="https://wa.me/2348033962964?text=Hi%2C%20I%20just%20paid%20for%20NEURON%20VIEW%20Premium.%20Here%20is%20my%20receipt.%20Please%20activate%20my%20account."
-                target="_blank" rel="noopener noreferrer"
-                onClick={() => {
-                  // Grant premium access for 30 days on clicking to send receipt
-                  const user = JSON.parse(localStorage.getItem("ai-tools-user") || '{"name":"Guest","email":""}');
-                  user.tier = "pro";
-                  user.premiumExpiry = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
-                  localStorage.setItem("ai-tools-user", JSON.stringify(user));
-                  localStorage.setItem("ai-tools-credits", "9999");
-                }}
-                className="w-full py-3 rounded-xl text-sm font-semibold gradient-primary text-primary-foreground text-center hover:opacity-90 transition active:scale-[0.97]">
-                💬 Send Receipt via WhatsApp
-              </a>
-              <a href="mailto:adekanmbiadekanmbi5@gmail.com?subject=NEURON%20VIEW%20Premium%20Payment%20Receipt&body=Hi%2C%20I%20just%20made%20payment%20for%20NEURON%20VIEW%20Premium.%20Please%20find%20my%20receipt%20attached.%20Activate%20my%20account.%20Thank%20you!"
-                onClick={() => {
-                  const user = JSON.parse(localStorage.getItem("ai-tools-user") || '{"name":"Guest","email":""}');
-                  user.tier = "pro";
-                  user.premiumExpiry = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
-                  localStorage.setItem("ai-tools-user", JSON.stringify(user));
-                  localStorage.setItem("ai-tools-credits", "9999");
-                }}
-                className="w-full py-3 rounded-xl text-sm font-medium border border-border bg-muted/30 text-foreground text-center hover:bg-muted/50 transition active:scale-[0.97]">
-                ✉️ Send Receipt via Email
-              </a>
-              <Link to="/pricing" onClick={() => setShowUpgradePopup(false)}
-                className="w-full py-2 text-sm text-primary text-center hover:underline">
-                View All Plans
-              </Link>
-            </div>
+                <div className="space-y-2 text-sm">
+                  {["Unlimited tool views", "Priority AI chatbot", "All premium tools", "No ads"].map((f) => (
+                    <div key={f} className="flex items-center gap-2 text-foreground whitespace-nowrap">
+                      <CheckCircle2 className="w-4 h-4 text-primary flex-shrink-0" />
+                      <span>{f}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="glass-card p-4 space-y-2 text-sm">
+                  <p className="font-heading font-semibold text-foreground text-center">Pay ₦500 via Bank Transfer</p>
+                  <div className="space-y-1 text-muted-foreground text-xs">
+                    <p className="whitespace-nowrap"><span className="text-foreground font-medium">Bank:</span> PalmPay</p>
+                    <p className="whitespace-nowrap"><span className="text-foreground font-medium">Account:</span> 8033962964</p>
+                    <p className="whitespace-nowrap"><span className="text-foreground font-medium">Name:</span> MARIAM AINA ADEKANMBI</p>
+                  </div>
+                </div>
+                <div className="flex flex-col gap-2 pt-2">
+                  <a href="https://wa.me/2348033962964?text=Hi%2C%20I%20want%20to%20pay%20%E2%82%A6500%20for%20NEURON%20VIEW%20Premium%20(3%20days).%20Please%20send%20me%20the%20activation%20code."
+                    target="_blank" rel="noopener noreferrer"
+                    className="w-full py-3 rounded-xl text-sm font-semibold gradient-primary text-primary-foreground text-center hover:opacity-90 transition active:scale-[0.97]">
+                    💬 Pay via WhatsApp
+                  </a>
+                  <a href="mailto:adekanmbiadekanmbi5@gmail.com?subject=NEURON%20VIEW%20Premium%20Payment&body=Hi%2C%20I%20want%20to%20pay%20%E2%82%A6500%20for%20NEURON%20VIEW%20Premium%20(3%20days).%20Please%20send%20me%20the%20activation%20code."
+                    className="w-full py-3 rounded-xl text-sm font-medium border border-border bg-muted/30 text-foreground text-center hover:bg-muted/50 transition active:scale-[0.97]">
+                    ✉️ Pay via Email
+                  </a>
+                  <button onClick={() => setShowCodeInput(true)}
+                    className="w-full py-3 rounded-xl text-sm font-semibold bg-green-500/15 text-green-400 border border-green-500/20 text-center hover:bg-green-500/25 transition active:scale-[0.97]">
+                    🔑 I Have an Activation Code
+                  </button>
+                  <Link to="/pricing" onClick={() => setShowUpgradePopup(false)}
+                    className="w-full py-2 text-sm text-primary text-center hover:underline">
+                    View All Plans
+                  </Link>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="text-center space-y-3">
+                  <div className="w-16 h-16 rounded-2xl bg-green-500/15 border border-green-500/20 flex items-center justify-center mx-auto">
+                    <Zap className="w-8 h-8 text-green-400" />
+                  </div>
+                  <h3 className="font-heading font-bold text-xl text-foreground">Enter Activation Code</h3>
+                  <p className="text-sm text-muted-foreground">Enter the code you received after payment to activate your 3-day premium access.</p>
+                </div>
+                <div className="space-y-3">
+                  <input
+                    type="text"
+                    value={activationCode}
+                    onChange={(e) => { setActivationCode(e.target.value); setCodeError(""); }}
+                    placeholder="Enter activation code"
+                    className="w-full px-4 py-3 rounded-xl bg-muted/50 border border-border text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  />
+                  {codeError && <p className="text-xs text-destructive">{codeError}</p>}
+                  <button onClick={handleActivate}
+                    className="w-full py-3 rounded-xl text-sm font-semibold gradient-primary text-primary-foreground text-center hover:opacity-90 transition active:scale-[0.97]">
+                    Activate Premium
+                  </button>
+                  <button onClick={() => { setShowCodeInput(false); setCodeError(""); }}
+                    className="w-full py-2 text-sm text-muted-foreground text-center hover:text-foreground transition">
+                    ← Back
+                  </button>
+                </div>
+              </>
+            )}
           </motion.div>
         </motion.div>
       )}
