@@ -15,19 +15,27 @@ export default function Splash() {
   const [msgIndex, setMsgIndex] = useState(0);
   const navigate = useNavigate();
 
+  const isLoggedIn = (() => {
+    try {
+      return !!localStorage.getItem("ai-tools-user");
+    } catch {
+      return false;
+    }
+  })();
+
   useEffect(() => {
     const interval = setInterval(() => {
       setMsgIndex((prev) => {
         if (prev >= messages.length - 1) {
           clearInterval(interval);
-          setTimeout(() => navigate("/welcome"), 600);
+          setTimeout(() => navigate(isLoggedIn ? "/home" : "/welcome"), 600);
           return prev;
         }
         return prev + 1;
       });
     }, 1200);
     return () => clearInterval(interval);
-  }, [navigate]);
+  }, [navigate, isLoggedIn]);
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center relative overflow-hidden">
