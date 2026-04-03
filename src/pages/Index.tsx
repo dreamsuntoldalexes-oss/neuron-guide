@@ -110,8 +110,8 @@ export default function Index() {
           className="relative z-10 flex items-center justify-between px-4 sm:px-6 py-4 sm:py-5"
         >
           <div className="flex items-center gap-2">
-            <img src={neuronLogo} alt="NEURON VIEW" className="w-9 h-9 sm:w-12 sm:h-12" />
-            <span className="font-heading font-bold text-lg sm:text-2xl text-foreground">NEURON VIEW</span>
+            <img src={neuronLogo} alt="NEURON VIEW" className="w-14 h-14 sm:w-16 sm:h-16" />
+            <span className="font-heading font-bold text-xl sm:text-2xl text-foreground">NEURON VIEW</span>
           </div>
           <div className="flex items-center gap-2 sm:gap-3">
             <div className="relative">
