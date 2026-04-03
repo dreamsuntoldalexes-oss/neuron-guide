@@ -90,6 +90,26 @@ export default function Index() {
   const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
   const [upgradeTooltip, setUpgradeTooltip] = useState(false);
   const [showUpgradePopup, setShowUpgradePopup] = useState(false);
+  const [showCodeInput, setShowCodeInput] = useState(false);
+  const [activationCode, setActivationCode] = useState("");
+  const [codeError, setCodeError] = useState("");
+
+  const handleActivate = () => {
+    if (activationCode.trim() === "Garuba001") {
+      const user = JSON.parse(localStorage.getItem("ai-tools-user") || '{"name":"Guest","email":""}');
+      user.tier = "pro";
+      user.premiumExpiry = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString();
+      localStorage.setItem("ai-tools-user", JSON.stringify(user));
+      localStorage.setItem("ai-tools-credits", "9999");
+      setShowUpgradePopup(false);
+      setShowCodeInput(false);
+      setActivationCode("");
+      setCodeError("");
+      window.location.reload();
+    } else {
+      setCodeError("Invalid code. Please pay ₦500 and get the activation code via WhatsApp.");
+    }
+  };
 
   return (
     <div ref={containerRef} className="min-h-screen bg-background relative">
