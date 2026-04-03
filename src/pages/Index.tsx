@@ -7,9 +7,9 @@ import {
   Award, BookOpen, Lightbulb, Target, BarChart3, Phone, Mail
 } from "lucide-react";
 import { useRef, useState } from "react";
-import neuronLogo from "@/assets/neuron-logo.png";
+import neuronLogo from "@/assets/neuron-logo-new.png";
 import landingHero from "@/assets/landing-hero.jpg";
-import heroPerson from "@/assets/hero-person.png";
+import heroPerson from "@/assets/hero-person-money.png";
 import demoScreenshot1 from "@/assets/demo-screenshot-1.jpg";
 import demoScreenshot2 from "@/assets/demo-screenshot-2.jpg";
 

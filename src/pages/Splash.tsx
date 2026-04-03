@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import neuronLogo from "@/assets/neuron-logo.png";
+import neuronLogo from "@/assets/neuron-logo-new.png";
+import { supabase } from "@/integrations/supabase/client";
 
 const messages = [
   "Welcome to NEURON VIEW...",
@@ -13,29 +14,43 @@ const messages = [
 
 export default function Splash() {
   const [msgIndex, setMsgIndex] = useState(0);
+  const [destination, setDestination] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const isLoggedIn = (() => {
-    try {
-      return !!localStorage.getItem("ai-tools-user");
-    } catch {
-      return false;
-    }
-  })();
+  // Check auth session
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        // Sync to localStorage for profile page
+        const user = session.user;
+        localStorage.setItem("ai-tools-user", JSON.stringify({
+          email: user.email,
+          name: user.user_metadata?.full_name || user.email?.split("@")[0] || "User",
+        }));
+        setDestination("/home");
+      } else if (localStorage.getItem("ai-tools-user")) {
+        setDestination("/home");
+      } else {
+        setDestination("/welcome");
+      }
+    };
+    checkSession();
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setMsgIndex((prev) => {
         if (prev >= messages.length - 1) {
           clearInterval(interval);
-          setTimeout(() => navigate(isLoggedIn ? "/home" : "/welcome"), 600);
+          setTimeout(() => navigate(destination || "/welcome"), 600);
           return prev;
         }
         return prev + 1;
       });
     }, 1200);
     return () => clearInterval(interval);
-  }, [navigate, isLoggedIn]);
+  }, [navigate, destination]);
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center relative overflow-hidden">
