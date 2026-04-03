@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import neuronLogo from "@/assets/neuron-logo.png";
+import neuronLogo from "@/assets/neuron-logo-new.png";
 
 const messages = [
   "Welcome to NEURON VIEW...",
