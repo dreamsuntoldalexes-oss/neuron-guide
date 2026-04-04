@@ -39,7 +39,7 @@ const testimonials = [
 ];
 
 const howItWorks = [
-  { step: "01", title: "Browse & Discover", desc: "Explore 500+ AI tools organized by category, use case, and pricing.", icon: Globe },
+  { step: "01", title: "Browse & Discover", desc: "Explore 10,000+ AI tools organized by category, use case, and pricing.", icon: Globe },
   { step: "02", title: "Compare & Rate", desc: "View side-by-side comparisons of features, pricing, and user ratings.", icon: BarChart3 },
   { step: "03", title: "Ask AI Chatbot", desc: "Get personalized tool recommendations based on your specific needs.", icon: MessageCircle },
   { step: "04", title: "Save & Master", desc: "Bookmark favorites, access tutorials, and become an AI power user.", icon: Rocket },
