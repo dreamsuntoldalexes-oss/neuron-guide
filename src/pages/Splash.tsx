@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 const messages = [
   "Welcome to NEURON VIEW...",
   "Getting everything ready ⚡",
-  "Loading 500+ AI tools...",
+  "Loading 10,000+ AI tools...",
   "Preparing your AI experience...",
   "Almost there... 🚀",
 ];

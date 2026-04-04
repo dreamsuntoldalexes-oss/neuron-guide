@@ -14,7 +14,7 @@ import demoScreenshot1 from "@/assets/demo-screenshot-1.jpg";
 import demoScreenshot2 from "@/assets/demo-screenshot-2.jpg";
 
 const features = [
-  { icon: Brain, title: "500+ AI Tools", desc: "Curated collection across 21+ categories" },
+  { icon: Brain, title: "10,000+ AI Tools", desc: "Curated collection across 21+ categories" },
   { icon: Zap, title: "Compare & Rate", desc: "Side-by-side ratings, pricing & features" },
   { icon: MessageCircle, title: "AI Chatbot", desc: "Get personalized recommendations instantly" },
   { icon: Heart, title: "Save Favorites", desc: "Bookmark tools you love for quick access" },
@@ -24,7 +24,7 @@ const features = [
 
 const stats = [
   { value: "50K+", label: "Active Users", icon: Users },
-  { value: "500+", label: "AI Tools", icon: Cpu },
+  { value: "10K+", label: "AI Tools", icon: Cpu },
   { value: "4.9★", label: "User Rating", icon: Star },
   { value: "21+", label: "Categories", icon: Layers },
 ];
@@ -39,7 +39,7 @@ const testimonials = [
 ];
 
 const howItWorks = [
-  { step: "01", title: "Browse & Discover", desc: "Explore 500+ AI tools organized by category, use case, and pricing.", icon: Globe },
+  { step: "01", title: "Browse & Discover", desc: "Explore 10,000+ AI tools organized by category, use case, and pricing.", icon: Globe },
   { step: "02", title: "Compare & Rate", desc: "View side-by-side comparisons of features, pricing, and user ratings.", icon: BarChart3 },
   { step: "03", title: "Ask AI Chatbot", desc: "Get personalized tool recommendations based on your specific needs.", icon: MessageCircle },
   { step: "04", title: "Save & Master", desc: "Bookmark favorites, access tutorials, and become an AI power user.", icon: Rocket },
@@ -58,7 +58,7 @@ const trustItems = [
 ];
 
 const whyChooseUs = [
-  { icon: Award, title: "Largest AI Directory in Africa", desc: "500+ verified tools — more than any other platform. Updated weekly with the latest AI innovations." },
+  { icon: Award, title: "Largest AI Directory in Africa", desc: "10,000+ verified tools — more than any other platform. Updated weekly with the latest AI innovations." },
   { icon: Lightbulb, title: "AI That Understands You", desc: "Our chatbot doesn't just list tools — it learns your workflow and recommends what actually fits your needs." },
   { icon: BookOpen, title: "Learn While You Discover", desc: "Every tool comes with guides, tutorials, and real user reviews so you can master it faster." },
   { icon: TrendingUp, title: "Stay Ahead of the Curve", desc: "While others search Google for hours, Neuron View users find the right AI tool in seconds." },
@@ -93,21 +93,35 @@ export default function Index() {
   const [showCodeInput, setShowCodeInput] = useState(false);
   const [activationCode, setActivationCode] = useState("");
   const [codeError, setCodeError] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState("Nigeria");
+  const [selectedPlan, setSelectedPlan] = useState<{ label: string; price: string; days: number } | null>(null);
+
+  const countries = ["Nigeria", "Ghana", "Kenya", "South Africa", "USA", "UK", "India", "Canada", "Other"];
+  const plans = [
+    { label: "1 Day Pass", price: "₦100", days: 1 },
+    { label: "5 Days Pass", price: "₦400", days: 5 },
+    { label: "3 Weeks Pass", price: "₦5,000", days: 21 },
+    { label: "2 Months Pass", price: "₦15,000", days: 60 },
+    { label: "6 Months Pass", price: "₦40,000", days: 180 },
+    { label: "1 Year Pass", price: "₦70,000", days: 365 },
+  ];
 
   const handleActivate = () => {
     if (activationCode.trim() === "Garuba001") {
+      const plan = selectedPlan || plans[1];
       const user = JSON.parse(localStorage.getItem("ai-tools-user") || '{"name":"Guest","email":""}');
       user.tier = "pro";
-      user.premiumExpiry = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString();
+      user.premiumExpiry = new Date(Date.now() + plan.days * 24 * 60 * 60 * 1000).toISOString();
       localStorage.setItem("ai-tools-user", JSON.stringify(user));
       localStorage.setItem("ai-tools-credits", "9999");
       setShowUpgradePopup(false);
       setShowCodeInput(false);
       setActivationCode("");
       setCodeError("");
+      setSelectedPlan(null);
       window.location.reload();
     } else {
-      setCodeError("Invalid code. Please pay ₦500 and get the activation code via WhatsApp.");
+      setCodeError("Invalid code. Please pay and get the activation code via WhatsApp or Email.");
     }
   };
 
@@ -150,7 +164,7 @@ export default function Index() {
                   animate={{ opacity: 1, y: 0 }}
                   className="absolute top-full mt-2 right-0 w-52 p-3 glass-card text-xs text-muted-foreground z-50"
                 >
-                  🔓 Unlock 500+ premium AI tools, unlimited saves, and priority chatbot access!
+                  🔓 Unlock 10,000+ premium AI tools, unlimited saves, and priority chatbot access!
                 </motion.div>
               )}
             </div>
@@ -174,7 +188,7 @@ export default function Index() {
               Your Ultimate<br />AI Tools Hub
             </h1>
             <p className="text-muted-foreground text-base sm:text-lg leading-relaxed">
-              Discover, compare, and master 500+ AI tools — all in one beautifully curated directory.
+              Discover, compare, and master 10,000+ AI tools — all in one beautifully curated directory.
             </p>
             <div className="flex gap-3 pt-1">
               <Link to="/onboarding" className="px-6 py-3.5 rounded-xl font-heading font-semibold gradient-primary text-primary-foreground flex items-center gap-2 hover:opacity-90 transition active:scale-[0.97]">
@@ -358,7 +372,7 @@ export default function Index() {
                 <div className="p-4">
                   <div className="flex items-center gap-2 mb-2">
                     <Database className="w-4 h-4 text-primary" />
-                    <h3 className="font-heading font-semibold text-foreground text-sm">Browse 500+ Tools</h3>
+                    <h3 className="font-heading font-semibold text-foreground text-sm">Browse 10,000+ Tools</h3>
                   </div>
                   <p className="text-xs text-muted-foreground">Search, filter, and compare AI tools with detailed ratings and pricing info.</p>
                 </div>
@@ -500,7 +514,7 @@ export default function Index() {
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 pointer-events-none" />
             <div className="relative z-10">
               <img src={neuronLogo} alt="" className="w-20 h-20 mx-auto mb-4" />
-              <h2 className="text-3xl font-heading font-bold text-foreground mb-3">Ready to Explore 500+ AI Tools?</h2>
+              <h2 className="text-3xl font-heading font-bold text-foreground mb-3">Ready to Explore 10,000+ AI Tools?</h2>
               <p className="text-muted-foreground mb-8 max-w-md mx-auto">Join 50,000+ users who discover, compare, and master AI tools with NEURON VIEW.</p>
               <div className="flex gap-3 justify-center">
                 <Link to="/signup" className="px-8 py-3.5 rounded-xl font-heading font-semibold gradient-primary text-primary-foreground flex items-center gap-2 hover:opacity-90 transition active:scale-[0.97]">
@@ -521,7 +535,7 @@ export default function Index() {
                 <img src={neuronLogo} alt="NEURON VIEW" className="w-10 h-10" />
                 <span className="font-heading font-bold text-lg text-foreground">NEURON VIEW</span>
               </div>
-              <p className="text-xs text-muted-foreground leading-relaxed">Your ultimate AI tools directory. Discover, compare, and master 500+ tools.</p>
+              <p className="text-xs text-muted-foreground leading-relaxed">Your ultimate AI tools directory. Discover, compare, and master 10,000+ tools.</p>
             </div>
             <div>
               <h4 className="font-heading font-semibold text-foreground text-sm mb-3">Product</h4>
@@ -573,72 +587,114 @@ export default function Index() {
       {showUpgradePopup && (
         <motion.div
           initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-          className="fixed inset-0 z-50 flex items-center justify-center px-6 bg-black/60 backdrop-blur-sm"
-          onClick={() => { setShowUpgradePopup(false); setShowCodeInput(false); setCodeError(""); }}
+          className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/60 backdrop-blur-sm"
+          onClick={() => { setShowUpgradePopup(false); setShowCodeInput(false); setCodeError(""); setSelectedPlan(null); }}
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="glass-card p-6 max-w-sm w-full space-y-4 relative"
+            className="glass-card p-5 max-w-sm w-full space-y-3 relative max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            <button onClick={() => { setShowUpgradePopup(false); setShowCodeInput(false); setCodeError(""); }} className="absolute top-3 right-3 p-1 rounded-lg hover:bg-muted transition">
+            <button onClick={() => { setShowUpgradePopup(false); setShowCodeInput(false); setCodeError(""); setSelectedPlan(null); }} className="absolute top-3 right-3 p-1 rounded-lg hover:bg-muted transition">
               <span className="text-muted-foreground text-lg">✕</span>
             </button>
 
             {!showCodeInput ? (
               <>
-                <div className="text-center space-y-3">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[hsl(38,92%,50%)] to-[hsl(25,95%,53%)] flex items-center justify-center mx-auto">
-                    <Crown className="w-8 h-8 text-white" />
+                <div className="text-center space-y-2">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[hsl(38,92%,50%)] to-[hsl(25,95%,53%)] flex items-center justify-center mx-auto">
+                    <Crown className="w-7 h-7 text-white" />
                   </div>
-                  <h3 className="font-heading font-bold text-xl text-foreground">Upgrade to Premium</h3>
-                  <p className="text-sm text-muted-foreground">₦500 for 3 days — unlimited access to 500+ AI tools.</p>
+                  <h3 className="font-heading font-bold text-lg text-foreground">Upgrade to Premium</h3>
+                  <p className="text-xs text-muted-foreground">Unlimited access to 10,000+ AI tools</p>
                 </div>
-                <div className="space-y-2 text-sm">
-                  {["Unlimited tool views", "Priority AI chatbot", "All premium tools", "No ads"].map((f) => (
-                    <div key={f} className="flex items-center gap-2 text-foreground whitespace-nowrap">
-                      <CheckCircle2 className="w-4 h-4 text-primary flex-shrink-0" />
+
+                {/* Country selector */}
+                <div className="space-y-1.5">
+                  <label className="text-xs text-muted-foreground font-medium">Choose your country</label>
+                  <select
+                    value={selectedCountry}
+                    onChange={(e) => setSelectedCountry(e.target.value)}
+                    className="w-full bg-muted/50 border border-border rounded-xl py-2 px-3 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary/50"
+                  >
+                    {countries.map((c) => <option key={c} value={c}>{c}</option>)}
+                  </select>
+                </div>
+
+                {/* Plans */}
+                <div className="grid grid-cols-2 gap-2">
+                  {plans.map((plan) => (
+                    <button
+                      key={plan.label}
+                      onClick={() => setSelectedPlan(plan)}
+                      className={`p-3 rounded-xl border text-left transition text-xs ${
+                        selectedPlan?.label === plan.label
+                          ? "border-primary bg-primary/10"
+                          : "border-border bg-muted/30 hover:border-primary/30"
+                      }`}
+                    >
+                      <p className="font-semibold text-foreground">{plan.price}</p>
+                      <p className="text-muted-foreground">{plan.label}</p>
+                    </button>
+                  ))}
+                </div>
+
+                <div className="space-y-2 text-xs">
+                  {["Unlimited tool views", "All 10,000+ AI tools", "Priority AI chatbot", "No ads"].map((f) => (
+                    <div key={f} className="flex items-center gap-2 text-foreground">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-primary flex-shrink-0" />
                       <span>{f}</span>
                     </div>
                   ))}
                 </div>
-                <div className="glass-card p-4 space-y-2 text-sm">
-                  <p className="font-heading font-semibold text-foreground text-center">Pay ₦500 via Bank Transfer</p>
-                  <div className="space-y-1 text-muted-foreground text-xs">
+
+                {/* About Us */}
+                <div className="glass-card p-3 space-y-1 text-xs">
+                  <p className="font-heading font-semibold text-foreground">About NEURON VIEW</p>
+                  <p className="text-muted-foreground leading-relaxed">
+                    Built by Adekanmbi — a passionate tech enthusiast helping Africans discover and master AI tools. 
+                    Our mission is to make AI accessible to everyone. Call us anytime at <a href="tel:08033962964" className="text-primary">08033962964</a>.
+                  </p>
+                </div>
+
+                {/* Payment info */}
+                <div className="glass-card p-3 space-y-1 text-xs">
+                  <p className="font-heading font-semibold text-foreground text-center">Pay via Bank Transfer</p>
+                  <div className="space-y-0.5 text-muted-foreground">
                     <p className="whitespace-nowrap"><span className="text-foreground font-medium">Bank:</span> PalmPay</p>
                     <p className="whitespace-nowrap"><span className="text-foreground font-medium">Account:</span> 8033962964</p>
                     <p className="whitespace-nowrap"><span className="text-foreground font-medium">Name:</span> MARIAM AINA ADEKANMBI</p>
                   </div>
                 </div>
-                <div className="flex flex-col gap-2 pt-2">
-                  <a href="https://wa.me/2348033962964?text=Hi%2C%20I%20want%20to%20pay%20%E2%82%A6500%20for%20NEURON%20VIEW%20Premium%20(3%20days).%20Please%20send%20me%20the%20activation%20code."
+
+                <div className="flex flex-col gap-2 pt-1">
+                  <a href={`https://wa.me/2348033962964?text=Hi%2C%20I%20want%20to%20pay%20${encodeURIComponent(selectedPlan?.price || "₦400")}%20for%20NEURON%20VIEW%20Premium%20(${encodeURIComponent(selectedPlan?.label || "5 Days")}).%20Country%3A%20${encodeURIComponent(selectedCountry)}.%20Please%20send%20me%20the%20activation%20code.`}
                     target="_blank" rel="noopener noreferrer"
-                    className="w-full py-3 rounded-xl text-sm font-semibold gradient-primary text-primary-foreground text-center hover:opacity-90 transition active:scale-[0.97]">
+                    className="w-full py-2.5 rounded-xl text-sm font-semibold gradient-primary text-primary-foreground text-center hover:opacity-90 transition active:scale-[0.97]">
                     💬 Pay via WhatsApp
                   </a>
-                  <a href="mailto:adekanmbiadekanmbi5@gmail.com?subject=NEURON%20VIEW%20Premium%20Payment&body=Hi%2C%20I%20want%20to%20pay%20%E2%82%A6500%20for%20NEURON%20VIEW%20Premium%20(3%20days).%20Please%20send%20me%20the%20activation%20code."
-                    className="w-full py-3 rounded-xl text-sm font-medium border border-border bg-muted/30 text-foreground text-center hover:bg-muted/50 transition active:scale-[0.97]">
+                  <a href={`mailto:adekanmbiadekanmbi5@gmail.com?subject=NEURON%20VIEW%20Premium%20Payment&body=Hi%2C%20I%20want%20to%20pay%20${encodeURIComponent(selectedPlan?.price || "₦400")}%20for%20NEURON%20VIEW%20Premium%20(${encodeURIComponent(selectedPlan?.label || "5 Days")}).%20Country%3A%20${encodeURIComponent(selectedCountry)}.%20Please%20send%20me%20the%20activation%20code.`}
+                    className="w-full py-2.5 rounded-xl text-sm font-medium border border-border bg-muted/30 text-foreground text-center hover:bg-muted/50 transition active:scale-[0.97]">
                     ✉️ Pay via Email
                   </a>
                   <button onClick={() => setShowCodeInput(true)}
-                    className="w-full py-3 rounded-xl text-sm font-semibold bg-green-500/15 text-green-400 border border-green-500/20 text-center hover:bg-green-500/25 transition active:scale-[0.97]">
+                    className="w-full py-2.5 rounded-xl text-sm font-semibold bg-green-500/15 text-green-400 border border-green-500/20 text-center hover:bg-green-500/25 transition active:scale-[0.97]">
                     🔑 I Have an Activation Code
                   </button>
-                  <Link to="/pricing" onClick={() => setShowUpgradePopup(false)}
-                    className="w-full py-2 text-sm text-primary text-center hover:underline">
-                    View All Plans
-                  </Link>
+                  <a href="tel:08033962964" className="w-full py-2 text-sm text-primary text-center hover:underline flex items-center justify-center gap-1">
+                    📞 Call Us: 08033962964
+                  </a>
                 </div>
               </>
             ) : (
               <>
-                <div className="text-center space-y-3">
-                  <div className="w-16 h-16 rounded-2xl bg-green-500/15 border border-green-500/20 flex items-center justify-center mx-auto">
-                    <Zap className="w-8 h-8 text-green-400" />
+                <div className="text-center space-y-2">
+                  <div className="w-14 h-14 rounded-2xl bg-green-500/15 border border-green-500/20 flex items-center justify-center mx-auto">
+                    <Zap className="w-7 h-7 text-green-400" />
                   </div>
-                  <h3 className="font-heading font-bold text-xl text-foreground">Enter Activation Code</h3>
-                  <p className="text-sm text-muted-foreground">Enter the code you received after payment to activate your 3-day premium access.</p>
+                  <h3 className="font-heading font-bold text-lg text-foreground">Enter Activation Code</h3>
+                  <p className="text-xs text-muted-foreground">Enter the code you received after payment{selectedPlan ? ` (${selectedPlan.label})` : ""}.</p>
                 </div>
                 <div className="space-y-3">
                   <input

@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Mail, Lock, Eye, EyeOff, ArrowLeft, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { lovable } from "@/integrations/lovable/index";
 import { useToast } from "@/hooks/use-toast";
 
 export default function Login() {
@@ -29,13 +30,15 @@ export default function Login() {
   };
 
   const handleOAuth = async (provider: "google" | "apple") => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider,
-      options: { redirectTo: `${window.location.origin}/home` },
+    const result = await lovable.auth.signInWithOAuth(provider, {
+      redirect_uri: window.location.origin,
     });
-    if (error) {
-      toast({ title: "Login failed", description: error.message, variant: "destructive" });
+    if (result.error) {
+      toast({ title: "Login failed", description: String(result.error), variant: "destructive" });
+      return;
     }
+    if (result.redirected) return;
+    navigate("/home");
   };
 
   return (
