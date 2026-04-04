@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { User, Mail, LogOut, BookOpen, Info, Heart, CreditCard, Pencil, Check, X, Camera } from "lucide-react";
+import { User, Mail, LogOut, BookOpen, Info, Heart, CreditCard, Pencil, Check, X, Camera, Phone } from "lucide-react";
 import Layout from "@/components/Layout";
 import { useFavorites } from "@/hooks/useFavorites";
 
