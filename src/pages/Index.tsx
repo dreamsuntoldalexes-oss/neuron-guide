@@ -14,7 +14,7 @@ import demoScreenshot1 from "@/assets/demo-screenshot-1.jpg";
 import demoScreenshot2 from "@/assets/demo-screenshot-2.jpg";
 
 const features = [
-  { icon: Brain, title: "500+ AI Tools", desc: "Curated collection across 21+ categories" },
+  { icon: Brain, title: "10,000+ AI Tools", desc: "Curated collection across 21+ categories" },
   { icon: Zap, title: "Compare & Rate", desc: "Side-by-side ratings, pricing & features" },
   { icon: MessageCircle, title: "AI Chatbot", desc: "Get personalized recommendations instantly" },
   { icon: Heart, title: "Save Favorites", desc: "Bookmark tools you love for quick access" },
