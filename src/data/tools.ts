@@ -687,11 +687,13 @@ const allTools: AITool[] = [...tools, ...generateAdditionalTools()];
 
 // Utility functions
 export function getSimilarTools(tool: AITool, limit = 4): AITool[] {
-  return tools.filter((t) => t.category === tool.category && t.id !== tool.id).slice(0, limit);
+  return allTools.filter((t) => t.category === tool.category && t.id !== tool.id).slice(0, limit);
 }
 
 export function getCategoryCounts(): Record<string, number> {
   const counts: Record<string, number> = {};
-  tools.forEach((t) => { counts[t.category] = (counts[t.category] || 0) + 1; });
+  allTools.forEach((t) => { counts[t.category] = (counts[t.category] || 0) + 1; });
   return counts;
 }
+
+export { allTools as tools };
