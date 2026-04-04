@@ -24,7 +24,7 @@ const features = [
 
 const stats = [
   { value: "50K+", label: "Active Users", icon: Users },
-  { value: "500+", label: "AI Tools", icon: Cpu },
+  { value: "10K+", label: "AI Tools", icon: Cpu },
   { value: "4.9★", label: "User Rating", icon: Star },
   { value: "21+", label: "Categories", icon: Layers },
 ];
