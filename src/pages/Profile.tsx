@@ -36,7 +36,8 @@ export default function Profile() {
     setEditing(false);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
     localStorage.removeItem("ai-tools-user");
     navigate("/login");
   };
