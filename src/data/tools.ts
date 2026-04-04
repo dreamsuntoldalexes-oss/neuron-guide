@@ -683,7 +683,7 @@ function generateAdditionalTools(): AITool[] {
   return extra;
 }
 
-const allTools: AITool[] = [...tools, ...generateAdditionalTools()];
+const allTools: AITool[] = [...baseTools, ...generateAdditionalTools()];
 
 // Utility functions
 export function getSimilarTools(tool: AITool, limit = 4): AITool[] {
