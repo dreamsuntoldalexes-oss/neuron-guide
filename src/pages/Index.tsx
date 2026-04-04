@@ -93,21 +93,35 @@ export default function Index() {
   const [showCodeInput, setShowCodeInput] = useState(false);
   const [activationCode, setActivationCode] = useState("");
   const [codeError, setCodeError] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState("Nigeria");
+  const [selectedPlan, setSelectedPlan] = useState<{ label: string; price: string; days: number } | null>(null);
+
+  const countries = ["Nigeria", "Ghana", "Kenya", "South Africa", "USA", "UK", "India", "Canada", "Other"];
+  const plans = [
+    { label: "1 Day Pass", price: "₦100", days: 1 },
+    { label: "5 Days Pass", price: "₦400", days: 5 },
+    { label: "3 Weeks Pass", price: "₦5,000", days: 21 },
+    { label: "2 Months Pass", price: "₦15,000", days: 60 },
+    { label: "6 Months Pass", price: "₦40,000", days: 180 },
+    { label: "1 Year Pass", price: "₦70,000", days: 365 },
+  ];
 
   const handleActivate = () => {
     if (activationCode.trim() === "Garuba001") {
+      const plan = selectedPlan || plans[1];
       const user = JSON.parse(localStorage.getItem("ai-tools-user") || '{"name":"Guest","email":""}');
       user.tier = "pro";
-      user.premiumExpiry = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString();
+      user.premiumExpiry = new Date(Date.now() + plan.days * 24 * 60 * 60 * 1000).toISOString();
       localStorage.setItem("ai-tools-user", JSON.stringify(user));
       localStorage.setItem("ai-tools-credits", "9999");
       setShowUpgradePopup(false);
       setShowCodeInput(false);
       setActivationCode("");
       setCodeError("");
+      setSelectedPlan(null);
       window.location.reload();
     } else {
-      setCodeError("Invalid code. Please pay ₦500 and get the activation code via WhatsApp.");
+      setCodeError("Invalid code. Please pay and get the activation code via WhatsApp or Email.");
     }
   };
 
