@@ -58,7 +58,7 @@ const trustItems = [
 ];
 
 const whyChooseUs = [
-  { icon: Award, title: "Largest AI Directory in Africa", desc: "500+ verified tools — more than any other platform. Updated weekly with the latest AI innovations." },
+  { icon: Award, title: "Largest AI Directory in Africa", desc: "10,000+ verified tools — more than any other platform. Updated weekly with the latest AI innovations." },
   { icon: Lightbulb, title: "AI That Understands You", desc: "Our chatbot doesn't just list tools — it learns your workflow and recommends what actually fits your needs." },
   { icon: BookOpen, title: "Learn While You Discover", desc: "Every tool comes with guides, tutorials, and real user reviews so you can master it faster." },
   { icon: TrendingUp, title: "Stay Ahead of the Curve", desc: "While others search Google for hours, Neuron View users find the right AI tool in seconds." },
@@ -164,7 +164,7 @@ export default function Index() {
                   animate={{ opacity: 1, y: 0 }}
                   className="absolute top-full mt-2 right-0 w-52 p-3 glass-card text-xs text-muted-foreground z-50"
                 >
-                  🔓 Unlock 500+ premium AI tools, unlimited saves, and priority chatbot access!
+                  🔓 Unlock 10,000+ premium AI tools, unlimited saves, and priority chatbot access!
                 </motion.div>
               )}
             </div>
@@ -188,7 +188,7 @@ export default function Index() {
               Your Ultimate<br />AI Tools Hub
             </h1>
             <p className="text-muted-foreground text-base sm:text-lg leading-relaxed">
-              Discover, compare, and master 500+ AI tools — all in one beautifully curated directory.
+              Discover, compare, and master 10,000+ AI tools — all in one beautifully curated directory.
             </p>
             <div className="flex gap-3 pt-1">
               <Link to="/onboarding" className="px-6 py-3.5 rounded-xl font-heading font-semibold gradient-primary text-primary-foreground flex items-center gap-2 hover:opacity-90 transition active:scale-[0.97]">
@@ -372,7 +372,7 @@ export default function Index() {
                 <div className="p-4">
                   <div className="flex items-center gap-2 mb-2">
                     <Database className="w-4 h-4 text-primary" />
-                    <h3 className="font-heading font-semibold text-foreground text-sm">Browse 500+ Tools</h3>
+                    <h3 className="font-heading font-semibold text-foreground text-sm">Browse 10,000+ Tools</h3>
                   </div>
                   <p className="text-xs text-muted-foreground">Search, filter, and compare AI tools with detailed ratings and pricing info.</p>
                 </div>
@@ -514,7 +514,7 @@ export default function Index() {
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 pointer-events-none" />
             <div className="relative z-10">
               <img src={neuronLogo} alt="" className="w-20 h-20 mx-auto mb-4" />
-              <h2 className="text-3xl font-heading font-bold text-foreground mb-3">Ready to Explore 500+ AI Tools?</h2>
+              <h2 className="text-3xl font-heading font-bold text-foreground mb-3">Ready to Explore 10,000+ AI Tools?</h2>
               <p className="text-muted-foreground mb-8 max-w-md mx-auto">Join 50,000+ users who discover, compare, and master AI tools with NEURON VIEW.</p>
               <div className="flex gap-3 justify-center">
                 <Link to="/signup" className="px-8 py-3.5 rounded-xl font-heading font-semibold gradient-primary text-primary-foreground flex items-center gap-2 hover:opacity-90 transition active:scale-[0.97]">
@@ -535,7 +535,7 @@ export default function Index() {
                 <img src={neuronLogo} alt="NEURON VIEW" className="w-10 h-10" />
                 <span className="font-heading font-bold text-lg text-foreground">NEURON VIEW</span>
               </div>
-              <p className="text-xs text-muted-foreground leading-relaxed">Your ultimate AI tools directory. Discover, compare, and master 500+ tools.</p>
+              <p className="text-xs text-muted-foreground leading-relaxed">Your ultimate AI tools directory. Discover, compare, and master 10,000+ tools.</p>
             </div>
             <div>
               <h4 className="font-heading font-semibold text-foreground text-sm mb-3">Product</h4>
