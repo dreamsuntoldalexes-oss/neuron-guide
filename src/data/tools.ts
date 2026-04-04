@@ -91,7 +91,7 @@ function t(
   };
 }
 
-export const tools: AITool[] = [
+const baseTools: AITool[] = [
   // ===== WRITING (25) =====
   t("chatgpt", "ChatGPT", "Writing", "Advanced AI chatbot by OpenAI for writing, coding, and brainstorming.", "https://chat.openai.com", "Free / Plus $20/mo", 4.8, "enterprise", 15420, ["Text generation", "Code writing", "Image analysis", "Web browsing", "Plugin ecosystem"], ["Highly versatile", "Great for coding", "Regular updates"], ["Can hallucinate", "Rate limits on free tier"]),
   t("jasper", "Jasper AI", "Writing", "Enterprise AI content platform for marketing teams with brand voice.", "https://jasper.ai", "Creator $49/mo / Pro $69/mo", 4.4, "pro", 7650, ["Blog writing", "Ad copy", "Brand voice", "Templates", "Team collaboration"], ["Great for marketing", "Brand voice feature"], ["Expensive", "Can be repetitive"]),
