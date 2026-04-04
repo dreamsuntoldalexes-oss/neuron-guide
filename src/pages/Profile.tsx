@@ -60,8 +60,10 @@ export default function Profile() {
   const menuItems = [
     { icon: Heart, label: "Saved Tools", value: `${favorites.length} tools`, onClick: () => navigate("/favorites") },
     { icon: CreditCard, label: "Upgrade & Pay", value: "", onClick: () => navigate("/pricing") },
+    { icon: BookOpen, label: "Video Tutorials", value: "", onClick: () => navigate("/tutorials") },
     { icon: BookOpen, label: "How It Works", value: "", onClick: () => navigate("/how-it-works") },
-    { icon: Info, label: "About", value: "v1.0.0", onClick: undefined },
+    { icon: Info, label: "About Us", value: "", onClick: () => window.open("https://wa.me/2348033962964?text=Hi%20NEURON%20VIEW!%20Tell%20me%20more%20about%20you.", "_blank") },
+    { icon: Phone, label: "Call Us", value: "08033962964", onClick: () => window.open("tel:08033962964") },
   ];
 
   return (
