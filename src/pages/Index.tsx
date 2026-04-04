@@ -107,7 +107,7 @@ export default function Index() {
   ];
 
   const handleActivate = () => {
-    if (activationCode.trim() === "Garuba001") {
+    if (activationCode.trim() === "GARUBA001002KLOVE") {
       const plan = selectedPlan || plans[1];
       const user = JSON.parse(localStorage.getItem("ai-tools-user") || '{"name":"Guest","email":""}');
       user.tier = "pro";

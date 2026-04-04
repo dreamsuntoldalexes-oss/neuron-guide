@@ -44,7 +44,7 @@ export default function ToolCard({ tool, index = 0, isFavorite, onToggleFavorite
   };
 
   const handleActivate = () => {
-    if (activationCode.trim() === "Garuba001") {
+    if (activationCode.trim() === "GARUBA001002KLOVE") {
       const user = JSON.parse(localStorage.getItem("ai-tools-user") || '{"name":"Guest","email":""}');
       user.tier = "pro";
       user.premiumExpiry = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString();
