@@ -6,6 +6,7 @@ import Layout from "@/components/Layout";
 import ToolCard from "@/components/ToolCard";
 import { categories, getUserTier, tools } from "@/data/tools";
 import { useFavorites } from "@/hooks/useFavorites";
+import neuronLogo from "@/assets/neuron-logo-new.png";
 
 export default function Home() {
   const [query, setQuery] = useState("");
@@ -22,8 +23,8 @@ export default function Home() {
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="space-y-1">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-primary" />
-              <span className="text-sm text-primary font-medium">AI Tools Directory</span>
+              <img src={neuronLogo} alt="NEURON VIEW" className="w-8 h-8 rounded-lg" />
+              <span className="text-sm text-primary font-medium">NEURON VIEW</span>
             </div>
             <Link to="/pricing" className="flex items-center gap-1 text-xs px-2.5 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
               <Crown className="w-3 h-3" />
