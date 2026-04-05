@@ -4,48 +4,48 @@
 
 @layer base {
   :root {
-    --background: 220 30% 6%;
-    --foreground: 210 20% 92%;
+    --background: 240 10% 8%;
+    --foreground: 220 15% 90%;
 
-    --card: 220 25% 10%;
-    --card-foreground: 210 20% 92%;
+    --card: 240 8% 12%;
+    --card-foreground: 220 15% 90%;
 
-    --popover: 220 25% 10%;
-    --popover-foreground: 210 20% 92%;
+    --popover: 240 8% 12%;
+    --popover-foreground: 220 15% 90%;
 
-    --primary: 330 85% 60%;
+    --primary: 330 80% 55%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 100% 55%;
+    --secondary: 200 85% 60%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 220 20% 15%;
-    --muted-foreground: 215 15% 55%;
+    --muted: 240 8% 18%;
+    --muted-foreground: 220 10% 50%;
 
-    --accent: 210 100% 55%;
+    --accent: 200 85% 60%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 220 20% 18%;
-    --input: 220 20% 15%;
-    --ring: 330 85% 60%;
+    --border: 240 8% 22%;
+    --input: 240 8% 16%;
+    --ring: 330 80% 55%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 220 25% 8%;
-    --sidebar-foreground: 210 20% 92%;
-    --sidebar-primary: 330 85% 60%;
+    --sidebar-background: 240 10% 10%;
+    --sidebar-foreground: 220 15% 90%;
+    --sidebar-primary: 330 80% 55%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 20% 15%;
-    --sidebar-accent-foreground: 210 20% 92%;
-    --sidebar-border: 220 20% 18%;
-    --sidebar-ring: 330 85% 60%;
+    --sidebar-accent: 240 8% 18%;
+    --sidebar-accent-foreground: 220 15% 90%;
+    --sidebar-border: 240 8% 22%;
+    --sidebar-ring: 330 80% 55%;
 
-    --neon-cyan: 210 100% 55%;
-    --neon-purple: 330 85% 60%;
-    --neon-pink: 340 90% 65%;
+    --neon-cyan: 200 85% 60%;
+    --neon-purple: 330 80% 55%;
+    --neon-pink: 340 85% 65%;
   }
 }
 
@@ -65,39 +65,43 @@
 
 @layer components {
   .glass-card {
-    @apply bg-card/60 backdrop-blur-xl border border-border/50 rounded-2xl;
-    box-shadow: 0 0 30px -10px hsl(var(--neon-cyan) / 0.08),
-                inset 0 1px 0 0 hsl(var(--foreground) / 0.05);
+    @apply bg-card/40 backdrop-blur-2xl border border-border/30 rounded-2xl;
+    box-shadow: 0 0 40px -10px hsl(var(--neon-pink) / 0.1),
+                0 0 80px -20px hsl(var(--neon-cyan) / 0.08),
+                inset 0 1px 0 0 hsl(var(--foreground) / 0.06);
   }
 
   .glass-card-hover {
-    @apply glass-card transition-all duration-300;
+    @apply glass-card transition-all duration-500;
   }
   .glass-card-hover:hover {
-    @apply border-primary/30;
-    box-shadow: 0 0 40px -10px hsl(var(--neon-cyan) / 0.15),
-                inset 0 1px 0 0 hsl(var(--foreground) / 0.08);
-    transform: translateY(-2px);
+    @apply border-primary/40;
+    box-shadow: 0 0 50px -10px hsl(var(--neon-pink) / 0.25),
+                0 0 100px -20px hsl(var(--neon-cyan) / 0.15),
+                inset 0 1px 0 0 hsl(var(--foreground) / 0.1);
+    transform: translateY(-3px);
   }
 
   .neon-text {
     color: hsl(var(--primary));
-    text-shadow: 0 0 20px hsl(var(--neon-cyan) / 0.5),
-                 0 0 40px hsl(var(--neon-cyan) / 0.2);
+    text-shadow: 0 0 20px hsl(var(--neon-pink) / 0.6),
+                 0 0 60px hsl(var(--neon-pink) / 0.3),
+                 0 0 100px hsl(var(--neon-cyan) / 0.15);
   }
 
   .neon-border {
     border-color: hsl(var(--primary) / 0.5);
-    box-shadow: 0 0 15px -5px hsl(var(--neon-cyan) / 0.3),
-                inset 0 0 15px -5px hsl(var(--neon-cyan) / 0.1);
+    box-shadow: 0 0 20px -5px hsl(var(--neon-pink) / 0.4),
+                0 0 60px -10px hsl(var(--neon-cyan) / 0.15),
+                inset 0 0 20px -5px hsl(var(--neon-pink) / 0.1);
   }
 
   .gradient-primary {
-    background: linear-gradient(135deg, hsl(var(--neon-cyan)), hsl(var(--neon-purple)));
+    background: linear-gradient(135deg, hsl(var(--neon-pink)), hsl(var(--neon-cyan)));
   }
 
   .gradient-text {
-    background: linear-gradient(135deg, hsl(var(--neon-cyan)), hsl(var(--neon-purple)));
+    background: linear-gradient(135deg, hsl(var(--neon-pink)), hsl(var(--neon-cyan)));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -112,7 +116,7 @@
     inset: 0;
     border-radius: inherit;
     padding: 1px;
-    background: linear-gradient(135deg, hsl(var(--neon-cyan) / 0.5), hsl(var(--neon-purple) / 0.5));
+    background: linear-gradient(135deg, hsl(var(--neon-pink) / 0.6), hsl(var(--neon-cyan) / 0.6));
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
@@ -121,12 +125,24 @@
 
   .chat-bubble-user {
     @apply rounded-2xl rounded-br-md px-4 py-3;
-    background: linear-gradient(135deg, hsl(var(--neon-cyan) / 0.2), hsl(var(--neon-purple) / 0.2));
-    border: 1px solid hsl(var(--neon-cyan) / 0.2);
+    background: linear-gradient(135deg, hsl(var(--neon-pink) / 0.2), hsl(var(--neon-cyan) / 0.15));
+    border: 1px solid hsl(var(--neon-pink) / 0.25);
+    backdrop-filter: blur(12px);
   }
 
   .chat-bubble-bot {
-    @apply rounded-2xl rounded-bl-md px-4 py-3 bg-muted border border-border/50;
+    @apply rounded-2xl rounded-bl-md px-4 py-3 bg-muted/60 border border-border/30;
+    backdrop-filter: blur(12px);
+  }
+
+  .glow-pink {
+    box-shadow: 0 0 30px -5px hsl(var(--neon-pink) / 0.4),
+                0 0 80px -15px hsl(var(--neon-pink) / 0.2);
+  }
+
+  .glow-blue {
+    box-shadow: 0 0 30px -5px hsl(var(--neon-cyan) / 0.4),
+                0 0 80px -15px hsl(var(--neon-cyan) / 0.2);
   }
 }
 
