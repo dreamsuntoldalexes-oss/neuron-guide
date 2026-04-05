@@ -65,39 +65,43 @@
 
 @layer components {
   .glass-card {
-    @apply bg-card/60 backdrop-blur-xl border border-border/50 rounded-2xl;
-    box-shadow: 0 0 30px -10px hsl(var(--neon-cyan) / 0.08),
-                inset 0 1px 0 0 hsl(var(--foreground) / 0.05);
+    @apply bg-card/40 backdrop-blur-2xl border border-border/30 rounded-2xl;
+    box-shadow: 0 0 40px -10px hsl(var(--neon-pink) / 0.1),
+                0 0 80px -20px hsl(var(--neon-cyan) / 0.08),
+                inset 0 1px 0 0 hsl(var(--foreground) / 0.06);
   }
 
   .glass-card-hover {
-    @apply glass-card transition-all duration-300;
+    @apply glass-card transition-all duration-500;
   }
   .glass-card-hover:hover {
-    @apply border-primary/30;
-    box-shadow: 0 0 40px -10px hsl(var(--neon-cyan) / 0.15),
-                inset 0 1px 0 0 hsl(var(--foreground) / 0.08);
-    transform: translateY(-2px);
+    @apply border-primary/40;
+    box-shadow: 0 0 50px -10px hsl(var(--neon-pink) / 0.25),
+                0 0 100px -20px hsl(var(--neon-cyan) / 0.15),
+                inset 0 1px 0 0 hsl(var(--foreground) / 0.1);
+    transform: translateY(-3px);
   }
 
   .neon-text {
     color: hsl(var(--primary));
-    text-shadow: 0 0 20px hsl(var(--neon-cyan) / 0.5),
-                 0 0 40px hsl(var(--neon-cyan) / 0.2);
+    text-shadow: 0 0 20px hsl(var(--neon-pink) / 0.6),
+                 0 0 60px hsl(var(--neon-pink) / 0.3),
+                 0 0 100px hsl(var(--neon-cyan) / 0.15);
   }
 
   .neon-border {
     border-color: hsl(var(--primary) / 0.5);
-    box-shadow: 0 0 15px -5px hsl(var(--neon-cyan) / 0.3),
-                inset 0 0 15px -5px hsl(var(--neon-cyan) / 0.1);
+    box-shadow: 0 0 20px -5px hsl(var(--neon-pink) / 0.4),
+                0 0 60px -10px hsl(var(--neon-cyan) / 0.15),
+                inset 0 0 20px -5px hsl(var(--neon-pink) / 0.1);
   }
 
   .gradient-primary {
-    background: linear-gradient(135deg, hsl(var(--neon-cyan)), hsl(var(--neon-purple)));
+    background: linear-gradient(135deg, hsl(var(--neon-pink)), hsl(var(--neon-cyan)));
   }
 
   .gradient-text {
-    background: linear-gradient(135deg, hsl(var(--neon-cyan)), hsl(var(--neon-purple)));
+    background: linear-gradient(135deg, hsl(var(--neon-pink)), hsl(var(--neon-cyan)));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -112,7 +116,7 @@
     inset: 0;
     border-radius: inherit;
     padding: 1px;
-    background: linear-gradient(135deg, hsl(var(--neon-cyan) / 0.5), hsl(var(--neon-purple) / 0.5));
+    background: linear-gradient(135deg, hsl(var(--neon-pink) / 0.6), hsl(var(--neon-cyan) / 0.6));
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
@@ -121,12 +125,24 @@
 
   .chat-bubble-user {
     @apply rounded-2xl rounded-br-md px-4 py-3;
-    background: linear-gradient(135deg, hsl(var(--neon-cyan) / 0.2), hsl(var(--neon-purple) / 0.2));
-    border: 1px solid hsl(var(--neon-cyan) / 0.2);
+    background: linear-gradient(135deg, hsl(var(--neon-pink) / 0.2), hsl(var(--neon-cyan) / 0.15));
+    border: 1px solid hsl(var(--neon-pink) / 0.25);
+    backdrop-filter: blur(12px);
   }
 
   .chat-bubble-bot {
-    @apply rounded-2xl rounded-bl-md px-4 py-3 bg-muted border border-border/50;
+    @apply rounded-2xl rounded-bl-md px-4 py-3 bg-muted/60 border border-border/30;
+    backdrop-filter: blur(12px);
+  }
+
+  .glow-pink {
+    box-shadow: 0 0 30px -5px hsl(var(--neon-pink) / 0.4),
+                0 0 80px -15px hsl(var(--neon-pink) / 0.2);
+  }
+
+  .glow-blue {
+    box-shadow: 0 0 30px -5px hsl(var(--neon-cyan) / 0.4),
+                0 0 80px -15px hsl(var(--neon-cyan) / 0.2);
   }
 }
 
