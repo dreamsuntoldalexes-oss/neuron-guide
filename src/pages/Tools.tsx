@@ -6,6 +6,7 @@ import Layout from "@/components/Layout";
 import ToolCard from "@/components/ToolCard";
 import { tools, categories, type Category, getUserTier, getCategoryCounts } from "@/data/tools";
 import { useFavorites } from "@/hooks/useFavorites";
+import neuronLogo from "@/assets/neuron-logo-new.png";
 
 type SortBy = "rating" | "newest" | "popular" | "name";
 type TierFilter = "all" | "free" | "pro" | "enterprise";
