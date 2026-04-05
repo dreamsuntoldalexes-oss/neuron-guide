@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Send, Bot, User, Sparkles } from "lucide-react";
 import Layout from "@/components/Layout";
+import neuronLogo from "@/assets/neuron-logo-new.png";
 
 interface Message {
   id: string;
