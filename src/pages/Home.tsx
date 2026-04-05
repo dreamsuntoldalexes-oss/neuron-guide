@@ -6,6 +6,7 @@ import Layout from "@/components/Layout";
 import ToolCard from "@/components/ToolCard";
 import { categories, getUserTier, tools } from "@/data/tools";
 import { useFavorites } from "@/hooks/useFavorites";
+import neuronLogo from "@/assets/neuron-logo-new.png";
 
 export default function Home() {
   const [query, setQuery] = useState("");
