@@ -66,9 +66,7 @@ export default function Chatbot() {
         {/* Header */}
         <div className="px-4 py-3 border-b border-border/50">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full gradient-primary flex items-center justify-center">
-              <Bot className="w-4 h-4 text-primary-foreground" />
-            </div>
+            <img src={neuronLogo} alt="NEURON VIEW" className="w-8 h-8 rounded-full" />
             <div>
               <h1 className="text-sm font-heading font-semibold text-foreground">AI Assistant</h1>
               <p className="text-[10px] text-primary">Online</p>

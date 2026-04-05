@@ -58,7 +58,10 @@ export default function Tools() {
     <Layout>
       <div className="px-4 pt-6 pb-4 space-y-4">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center justify-between">
-          <h1 className="text-2xl font-heading font-bold text-foreground">All AI Tools</h1>
+          <div className="flex items-center gap-2">
+            <img src={neuronLogo} alt="NEURON VIEW" className="w-7 h-7 rounded-lg" />
+            <h1 className="text-2xl font-heading font-bold text-foreground">All AI Tools</h1>
+          </div>
           <span className="text-xs text-muted-foreground">{tools.length} tools</span>
         </motion.div>
 
