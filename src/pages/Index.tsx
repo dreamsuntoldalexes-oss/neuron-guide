@@ -212,11 +212,12 @@ export default function Index() {
               alt="Person working with AI tools"
               className="w-[420px] lg:w-[520px] drop-shadow-2xl"
               animate={{
-                y: [0, -6, 0, -3, 0],
-                rotate: [0, 0.5, -0.5, 0.3, 0],
+                y: [0, -12, 0, -6, 0],
+                rotate: [0, 1, -1, 0.5, 0],
+                scale: [1, 1.02, 1, 1.01, 1],
               }}
               transition={{
-                duration: 3,
+                duration: 4,
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
