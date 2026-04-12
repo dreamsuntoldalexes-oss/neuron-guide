@@ -13,7 +13,7 @@ interface ToolCardProps {
 }
 
 const tierBadge: Record<string, { label: string; class: string }> = {
-  free: { label: "Free", class: "bg-green-500/15 text-green-400 border-green-500/20" },
+  free: { label: "Free", class: "bg-secondary/15 text-secondary border-secondary/20" },
   pro: { label: "Pro", class: "bg-primary/15 text-primary border-primary/20" },
   enterprise: { label: "Enterprise", class: "bg-neon-purple/15 text-neon-purple border-neon-purple/20" },
 };
@@ -204,7 +204,7 @@ export default function ToolCard({ tool, index = 0, isFavorite, onToggleFavorite
                       ✉️ Pay via Email
                     </a>
                     <button onClick={() => setShowCodeInput(true)}
-                      className="w-full py-3 rounded-xl text-sm font-semibold bg-green-500/15 text-green-400 border border-green-500/20 text-center hover:bg-green-500/25 transition active:scale-[0.97]">
+                      className="w-full py-3 rounded-xl text-sm font-semibold bg-secondary/15 text-secondary border border-secondary/20 text-center hover:bg-secondary/25 transition active:scale-[0.97]">
                       🔑 I Have an Activation Code
                     </button>
                     <Link to="/pricing" onClick={closeAll}
@@ -216,8 +216,8 @@ export default function ToolCard({ tool, index = 0, isFavorite, onToggleFavorite
               ) : (
                 <>
                   <div className="text-center space-y-3">
-                    <div className="w-12 h-12 rounded-2xl bg-green-500/15 border border-green-500/20 flex items-center justify-center mx-auto">
-                      <Zap className="w-6 h-6 text-green-400" />
+                    <div className="w-12 h-12 rounded-2xl bg-secondary/15 border border-secondary/20 flex items-center justify-center mx-auto">
+                       <Zap className="w-6 h-6 text-secondary" />
                     </div>
                     <h3 className="font-heading font-bold text-foreground">Enter Activation Code</h3>
                     <p className="text-xs text-muted-foreground">Enter the code you received after payment.</p>

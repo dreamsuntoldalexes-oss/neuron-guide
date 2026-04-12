@@ -210,7 +210,7 @@ export default function Index() {
             <motion.img
               src={heroPerson}
               alt="Person working with AI tools"
-              className="w-72 lg:w-96 drop-shadow-2xl"
+              className="w-[420px] lg:w-[520px] drop-shadow-2xl"
               animate={{
                 y: [0, -6, 0, -3, 0],
                 rotate: [0, 0.5, -0.5, 0.3, 0],
@@ -679,7 +679,7 @@ export default function Index() {
                     ✉️ Pay via Email
                   </a>
                   <button onClick={() => setShowCodeInput(true)}
-                    className="w-full py-2.5 rounded-xl text-sm font-semibold bg-green-500/15 text-green-400 border border-green-500/20 text-center hover:bg-green-500/25 transition active:scale-[0.97]">
+                    className="w-full py-2.5 rounded-xl text-sm font-semibold bg-secondary/15 text-secondary border border-secondary/20 text-center hover:bg-secondary/25 transition active:scale-[0.97]">
                     🔑 I Have an Activation Code
                   </button>
                   <a href="tel:08033962964" className="w-full py-2 text-sm text-primary text-center hover:underline flex items-center justify-center gap-1">
@@ -690,8 +690,8 @@ export default function Index() {
             ) : (
               <>
                 <div className="text-center space-y-2">
-                  <div className="w-14 h-14 rounded-2xl bg-green-500/15 border border-green-500/20 flex items-center justify-center mx-auto">
-                    <Zap className="w-7 h-7 text-green-400" />
+                  <div className="w-14 h-14 rounded-2xl bg-secondary/15 border border-secondary/20 flex items-center justify-center mx-auto">
+                    <Zap className="w-7 h-7 text-secondary" />
                   </div>
                   <h3 className="font-heading font-bold text-lg text-foreground">Enter Activation Code</h3>
                   <p className="text-xs text-muted-foreground">Enter the code you received after payment{selectedPlan ? ` (${selectedPlan.label})` : ""}.</p>

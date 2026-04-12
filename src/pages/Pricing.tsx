@@ -98,7 +98,7 @@ export default function Pricing() {
                   </span>
                 )}
                 {isCurrent && (
-                  <span className="absolute top-3 right-3 text-[10px] font-bold uppercase tracking-wider bg-green-500/20 text-green-400 px-2 py-0.5 rounded-full border border-green-500/30">
+                  <span className="absolute top-3 right-3 text-[10px] font-bold uppercase tracking-wider bg-secondary/20 text-secondary px-2 py-0.5 rounded-full border border-secondary/30">
                     Current
                   </span>
                 )}
