@@ -8,21 +8,21 @@ const contacts = [
     label: "Call Us",
     subtitle: "09029837829",
     href: "tel:09029837829",
-    color: "text-green-400",
+    color: "text-secondary",
   },
   {
     icon: MessageCircle,
     label: "WhatsApp",
     subtitle: "08033962964",
     href: "https://wa.me/2348033962964",
-    color: "text-green-400",
+    color: "text-secondary",
   },
   {
     icon: MessageCircle,
     label: "WhatsApp 2",
     subtitle: "09029837829",
     href: "https://wa.me/2349029837829",
-    color: "text-green-400",
+    color: "text-secondary",
   },
 ];
 
