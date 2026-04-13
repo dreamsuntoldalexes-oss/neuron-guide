@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import neuronLogo from "@/assets/neuron-logo-new.png";
 import { supabase } from "@/integrations/supabase/client";
+import NeuralBackground from "@/components/NeuralBackground";
 
 const messages = [
   "Welcome to NEURON VIEW...",
@@ -17,12 +18,10 @@ export default function Splash() {
   const [destination, setDestination] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  // Check auth session
   useEffect(() => {
     const checkSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        // Sync to localStorage for profile page
         const user = session.user;
         localStorage.setItem("ai-tools-user", JSON.stringify({
           email: user.email,
@@ -54,8 +53,8 @@ export default function Splash() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center relative overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,hsl(var(--neon-cyan)/0.08),transparent_70%)]" />
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-primary/5 blur-[150px] pointer-events-none" />
+      <NeuralBackground opacity={0.4} nodeCount={60} />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,hsl(var(--primary)/0.06),transparent_70%)]" />
 
       <motion.div
         initial={{ scale: 0.5, opacity: 0 }}

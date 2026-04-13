@@ -1,9 +1,10 @@
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, Brain, Zap, BookOpen, Users } from "lucide-react";
+import { ArrowRight, Sparkles, Brain, Zap, BookOpen, Users, Star, MessageSquare } from "lucide-react";
 import { useState } from "react";
 import neuronLogo from "@/assets/neuron-logo-new.png";
 import heroImage from "@/assets/hero-person-money.png";
+import NeuralBackground from "@/components/NeuralBackground";
 
 const examplePrompts = [
   "Find the best AI writing tools",
@@ -19,6 +20,13 @@ const features = [
   { icon: Users, title: "Community Picks", desc: "See what tools students and professionals love" },
 ];
 
+const stats = [
+  { value: "10,000+", label: "AI Tools" },
+  { value: "21+", label: "Categories" },
+  { value: "50K+", label: "Students" },
+  { value: "24/7", label: "AI Support" },
+];
+
 export default function Index() {
   const navigate = useNavigate();
   const [prompt, setPrompt] = useState("");
@@ -30,10 +38,13 @@ export default function Index() {
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden flex flex-col">
-      {/* Gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[hsl(210,30%,96%)] via-[hsl(200,60%,92%)] to-[hsl(330,70%,88%)] dark:from-background dark:via-background dark:to-background" />
-      <div className="absolute bottom-0 left-0 right-0 h-[40%] bg-gradient-to-t from-[hsl(340,80%,75%)] via-[hsl(280,50%,80%)] to-transparent opacity-40 dark:opacity-15" />
+    <div className="min-h-screen relative overflow-hidden flex flex-col bg-background">
+      {/* Neural network background */}
+      <NeuralBackground opacity={0.25} nodeCount={45} />
+
+      {/* Subtle radial glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-[radial-gradient(ellipse,hsl(var(--primary)/0.08),transparent_70%)] pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-[radial-gradient(circle,hsl(var(--neon-purple)/0.05),transparent_70%)] pointer-events-none" />
 
       {/* Nav */}
       <motion.nav
@@ -49,20 +60,20 @@ export default function Index() {
         <div className="flex items-center gap-2">
           <Link
             to="/login"
-            className="px-4 py-2 text-sm font-medium text-foreground hover:text-primary transition-colors rounded-full"
+            className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-full"
           >
             Log in
           </Link>
           <Link
             to="/signup"
-            className="px-4 py-2 text-sm font-semibold rounded-full bg-foreground text-background hover:opacity-90 transition"
+            className="px-4 py-2 text-sm font-semibold rounded-full btn-gradient text-primary-foreground hover:opacity-90 transition"
           >
             Get started
           </Link>
         </div>
       </motion.nav>
 
-      {/* Hero Section with prompt + image */}
+      {/* Hero */}
       <div className="relative z-10 flex-1 flex flex-col items-center px-5 pt-6 pb-10">
         {/* Headline */}
         <motion.div
@@ -73,9 +84,7 @@ export default function Index() {
         >
           <h1 className="text-3xl sm:text-5xl font-heading font-bold text-foreground leading-tight">
             Discover AI Tools,{" "}
-            <span className="bg-gradient-to-r from-[hsl(200,80%,55%)] to-[hsl(330,70%,60%)] bg-clip-text text-transparent">
-              Effortlessly
-            </span>
+            <span className="gradient-text">Effortlessly</span>
           </h1>
           <p className="text-muted-foreground text-base sm:text-lg">
             Browse, compare, and master 10,000+ AI tools — all in one place
@@ -89,7 +98,7 @@ export default function Index() {
           transition={{ duration: 0.6, delay: 0.35 }}
           className="mt-8 w-full max-w-lg"
         >
-          <div className="bg-card/80 dark:bg-card/60 backdrop-blur-xl border border-border/50 rounded-2xl p-4 shadow-lg">
+          <div className="glass-card p-4 shadow-lg">
             <textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
@@ -100,7 +109,7 @@ export default function Index() {
                 }
               }}
               placeholder="Ask NEURON VIEW to find the perfect AI tool..."
-              className="w-full bg-transparent text-foreground placeholder:text-muted-foreground/60 resize-none outline-none text-sm min-h-[60px]"
+              className="w-full bg-transparent text-foreground placeholder:text-muted-foreground/60 resize-none outline-none text-sm min-h-[60px] focus:ring-0"
               rows={2}
             />
             <div className="flex items-center justify-between mt-2">
@@ -110,7 +119,7 @@ export default function Index() {
               </div>
               <button
                 onClick={handleSubmit}
-                className="w-9 h-9 rounded-full bg-foreground text-background flex items-center justify-center hover:opacity-80 transition"
+                className="w-9 h-9 rounded-full btn-gradient text-primary-foreground flex items-center justify-center hover:opacity-80 transition"
               >
                 <ArrowRight className="w-4 h-4" />
               </button>
@@ -123,7 +132,7 @@ export default function Index() {
               <button
                 key={p}
                 onClick={() => setPrompt(p)}
-                className="px-3 py-1.5 text-xs rounded-full border border-border/50 bg-card/50 backdrop-blur text-muted-foreground hover:text-foreground hover:border-foreground/20 transition"
+                className="px-3 py-1.5 text-xs rounded-full border border-border/50 bg-card/50 backdrop-blur text-muted-foreground hover:text-foreground hover:border-primary/30 transition"
               >
                 {p}
               </button>
@@ -139,13 +148,28 @@ export default function Index() {
           className="mt-10 relative"
         >
           <div className="relative w-[300px] sm:w-[420px]">
-            <div className="absolute inset-0 bg-gradient-to-t from-primary/20 via-transparent to-transparent rounded-3xl blur-2xl" />
+            <div className="absolute inset-0 bg-gradient-to-t from-primary/10 via-transparent to-transparent rounded-3xl blur-2xl" />
             <img
               src={heroImage}
               alt="AI Assistant"
               className="w-full h-auto relative z-10 drop-shadow-2xl"
             />
           </div>
+        </motion.div>
+
+        {/* Stats bar */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.6 }}
+          className="mt-10 w-full max-w-xl grid grid-cols-4 gap-2"
+        >
+          {stats.map((s) => (
+            <div key={s.label} className="text-center py-3 px-2 rounded-xl glass-card">
+              <p className="text-lg sm:text-xl font-heading font-bold text-primary">{s.value}</p>
+              <p className="text-[10px] sm:text-xs text-muted-foreground">{s.label}</p>
+            </div>
+          ))}
         </motion.div>
 
         {/* Features Grid */}
@@ -156,7 +180,7 @@ export default function Index() {
           className="mt-14 w-full max-w-2xl"
         >
           <h2 className="text-xl sm:text-2xl font-heading font-bold text-foreground text-center mb-6">
-            Why Students Love NEURON VIEW
+            Why Students Love <span className="gradient-text">NEURON VIEW</span>
           </h2>
           <div className="grid grid-cols-2 gap-3 sm:gap-4">
             {features.map((f, i) => (
@@ -165,7 +189,7 @@ export default function Index() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.8 + i * 0.1 }}
-                className="bg-card/60 dark:bg-card/40 backdrop-blur-xl border border-border/40 rounded-2xl p-4 hover:border-primary/30 transition-all group"
+                className="glass-card-hover p-4 group"
               >
                 <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center mb-3 group-hover:bg-primary/20 transition">
                   <f.icon className="w-4.5 h-4.5 text-primary" />
@@ -190,13 +214,13 @@ export default function Index() {
           <div className="flex flex-col sm:flex-row items-center gap-3">
             <Link
               to="/signup"
-              className="px-6 py-3 rounded-full bg-foreground text-background font-semibold text-sm hover:opacity-90 transition"
+              className="px-6 py-3 rounded-full btn-gradient text-primary-foreground font-semibold text-sm hover:opacity-90 transition"
             >
               Get Started Free
             </Link>
             <Link
               to="/home"
-              className="px-6 py-3 rounded-full border border-border/50 text-foreground font-medium text-sm hover:border-foreground/30 transition"
+              className="px-6 py-3 rounded-full border border-border/50 text-foreground font-medium text-sm hover:border-primary/30 transition"
             >
               Browse Tools
             </Link>
