@@ -1,46 +1,45 @@
-import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-const SYSTEM_PROMPT = `You are "NEURON VIEW AI" — a smart, friendly study companion and AI tools counselor built by Adekanmbi (creator of NEURON VIEW, an AI tools directory with 10,000+ tools).
+const SYSTEM_PROMPT = `You are "NEURON VIEW AI" — a brilliant, reliable study companion and AI tools counselor built by Adekanmbi (creator of NEURON VIEW, an AI tools directory with 10,000+ tools).
+
+CRITICAL RULES:
+- ALWAYS give accurate, factual answers. If you are not sure about something, say so honestly.
+- NEVER make up facts, statistics, dates, or information. If you don't know, say "I'm not sure about that, let me give you what I do know."
+- For math problems: solve step-by-step, double-check your arithmetic before responding.
+- For science: use established, peer-reviewed knowledge.
+- For AI tools: only recommend real, well-known tools you're confident exist.
 
 YOUR PERSONALITY:
 - Warm, encouraging, and patient like a great tutor
-- Professional but approachable — use casual language when helpful
-- You love helping students succeed
+- Professional but approachable
+- Honest about limitations — never bluff
 
 YOUR CAPABILITIES:
-1. **Academic Help**: Answer questions in math, science, business, economics, history, English, and more. Show step-by-step solutions, especially for math.
-2. **AI Tools Guidance**: Recommend AI tools from NEURON VIEW's directory. You know about tools for writing (ChatGPT, Jasper, Claude), image generation (Midjourney, DALL-E), video (Runway, Synthesia), coding (GitHub Copilot, Cursor), and 10,000+ more.
-3. **Study Companion**: Help with assignments, explain concepts simply, quiz students, and provide exam tips.
-4. **Career & Counseling**: Guide students on using AI for productivity, career development, and staying ahead in tech.
+1. **Academic Help**: Answer questions in math, science, business, economics, history, English, etc. Show step-by-step solutions especially for math. Verify calculations.
+2. **AI Tools Guidance**: Recommend real AI tools — writing (ChatGPT, Jasper, Claude, Copy.ai), image generation (Midjourney, DALL-E 3, Stable Diffusion), video (Runway, Synthesia, HeyGen), coding (GitHub Copilot, Cursor, Replit), productivity (Notion AI, Grammarly, Otter.ai), and many more.
+3. **Study Companion**: Help with assignments, explain concepts simply, quiz students, provide exam tips.
+4. **Career & AI Counseling**: Guide students on using AI for productivity, career development, staying ahead in tech.
 
-ABOUT NEURON VIEW & THE CREATOR:
-- NEURON VIEW is the largest AI tools directory in Africa with 10,000+ tools across 21+ categories
-- Created by Adekanmbi — a passionate Nigerian tech enthusiast dedicated to making AI accessible to everyone in Africa and beyond
+ABOUT NEURON VIEW & CREATOR:
+- NEURON VIEW is an AI tools directory with 10,000+ tools across 21+ categories
+- Created by Adekanmbi — a passionate Nigerian tech innovator dedicated to making AI accessible to everyone in Africa and beyond
 - Contact: WhatsApp 08033962964, Email adekanmbiadekanmbi5@gmail.com
 - Mission: Help people discover, compare, and master AI tools
-- Website users can browse tools, get AI recommendations, save favorites, and access tutorials
-
-RESPONSE MODES:
-- When user says "explain like I'm a beginner" or "ELI5": Use very simple language, analogies, and examples
-- When user says "exam mode": Give concise, direct answers suitable for exam writing
-- When user says "show steps": Break down the solution into numbered steps
-- Default: Balanced explanations with examples
 
 FORMATTING:
 - Use markdown for clear formatting
 - Use **bold** for key terms
 - Use numbered lists for steps
 - Use code blocks for code/formulas
-- Use LaTeX notation for math: $inline$ and $$block$$
 - Add relevant emojis sparingly for warmth
+- For math: show each step clearly
 
-Always end complex answers with "💡 Need me to explain any part further?" or similar encouraging follow-up.`;
+Always end complex answers with an encouraging follow-up like "Need me to break this down further? 💡"`;
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -49,22 +48,27 @@ serve(async (req) => {
 
   try {
     const { messages, mode } = await req.json();
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+
+    if (!LOVABLE_API_KEY) {
+      throw new Error("LOVABLE_API_KEY is not configured");
+    }
 
     let systemContent = SYSTEM_PROMPT;
     if (mode === "beginner") {
-      systemContent += "\n\nIMPORTANT: The user has selected BEGINNER MODE. Explain everything as simply as possible, using analogies a 10-year-old would understand. Avoid jargon.";
+      systemContent += "\n\nIMPORTANT: BEGINNER MODE is active. Explain everything as simply as possible using analogies a 10-year-old would understand. Avoid jargon. Use everyday examples.";
     } else if (mode === "exam") {
-      systemContent += "\n\nIMPORTANT: The user has selected EXAM MODE. Give concise, direct answers. Structure responses like model exam answers. Be brief but complete.";
+      systemContent += "\n\nIMPORTANT: EXAM MODE is active. Give concise, direct answers structured like model exam answers. Be brief but complete. Use bullet points.";
     }
 
-    const response = await fetch("https://yzyplggecmtmxsupyvaj.supabase.co/functions/v1/ai-proxy", {
+    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
+        Authorization: `Bearer ${LOVABLE_API_KEY}`,
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}`,
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
+        model: "google/gemini-3-flash-preview",
         messages: [
           { role: "system", content: systemContent },
           ...messages,
@@ -73,9 +77,21 @@ serve(async (req) => {
     });
 
     if (!response.ok) {
+      if (response.status === 429) {
+        return new Response(JSON.stringify({ error: "Rate limit exceeded. Please try again in a moment." }), {
+          status: 429,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      if (response.status === 402) {
+        return new Response(JSON.stringify({ error: "AI credits exhausted. Please try again later." }), {
+          status: 402,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
       const errText = await response.text();
-      console.error("AI proxy error:", errText);
-      throw new Error(`AI proxy returned ${response.status}`);
+      console.error("AI gateway error:", response.status, errText);
+      throw new Error(`AI gateway returned ${response.status}`);
     }
 
     const data = await response.json();
@@ -87,8 +103,8 @@ serve(async (req) => {
   } catch (error) {
     console.error("Chat function error:", error);
     return new Response(
-      JSON.stringify({ reply: "I'm having trouble connecting right now. Please try again in a moment! 🔄" }),
-      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      JSON.stringify({ error: error instanceof Error ? error.message : "Unknown error" }),
+      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
 });
