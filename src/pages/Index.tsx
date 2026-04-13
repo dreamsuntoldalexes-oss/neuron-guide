@@ -1,14 +1,22 @@
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowRight, Send } from "lucide-react";
+import { ArrowRight, Sparkles, Brain, Zap, BookOpen, Users } from "lucide-react";
 import { useState } from "react";
 import neuronLogo from "@/assets/neuron-logo-new.png";
+import heroImage from "@/assets/hero-person-money.png";
 
 const examplePrompts = [
   "Find the best AI writing tools",
   "Compare image generators",
   "What AI tools help with coding?",
   "Recommend tools for students",
+];
+
+const features = [
+  { icon: Brain, title: "Smart Discovery", desc: "AI-powered tool recommendations tailored to your needs" },
+  { icon: Zap, title: "Instant Compare", desc: "Side-by-side comparisons of 10,000+ AI tools" },
+  { icon: BookOpen, title: "Study Companion", desc: "Get help with assignments, past questions & concepts" },
+  { icon: Users, title: "Community Picks", desc: "See what tools students and professionals love" },
 ];
 
 export default function Index() {
@@ -25,7 +33,7 @@ export default function Index() {
     <div className="min-h-screen relative overflow-hidden flex flex-col">
       {/* Gradient background */}
       <div className="absolute inset-0 bg-gradient-to-b from-[hsl(210,30%,96%)] via-[hsl(200,60%,92%)] to-[hsl(330,70%,88%)] dark:from-background dark:via-background dark:to-background" />
-      <div className="absolute bottom-0 left-0 right-0 h-[40%] bg-gradient-to-t from-[hsl(340,80%,75%)] via-[hsl(280,50%,80%)] to-transparent opacity-60 dark:opacity-20" />
+      <div className="absolute bottom-0 left-0 right-0 h-[40%] bg-gradient-to-t from-[hsl(340,80%,75%)] via-[hsl(280,50%,80%)] to-transparent opacity-40 dark:opacity-15" />
 
       {/* Nav */}
       <motion.nav
@@ -54,13 +62,14 @@ export default function Index() {
         </div>
       </motion.nav>
 
-      {/* Center content */}
-      <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-5 pb-20">
+      {/* Hero Section with prompt + image */}
+      <div className="relative z-10 flex-1 flex flex-col items-center px-5 pt-6 pb-10">
+        {/* Headline */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.15 }}
-          className="text-center max-w-xl space-y-4"
+          className="text-center max-w-xl space-y-3"
         >
           <h1 className="text-3xl sm:text-5xl font-heading font-bold text-foreground leading-tight">
             Discover AI Tools,{" "}
@@ -78,7 +87,7 @@ export default function Index() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.35 }}
-          className="mt-10 w-full max-w-lg"
+          className="mt-8 w-full max-w-lg"
         >
           <div className="bg-card/80 dark:bg-card/60 backdrop-blur-xl border border-border/50 rounded-2xl p-4 shadow-lg">
             <textarea
@@ -96,6 +105,7 @@ export default function Index() {
             />
             <div className="flex items-center justify-between mt-2">
               <div className="flex items-center gap-2">
+                <Sparkles className="w-3.5 h-3.5 text-primary" />
                 <span className="text-xs text-muted-foreground">Powered by AI</span>
               </div>
               <button
@@ -112,14 +122,84 @@ export default function Index() {
             {examplePrompts.map((p) => (
               <button
                 key={p}
-                onClick={() => {
-                  setPrompt(p);
-                }}
+                onClick={() => setPrompt(p)}
                 className="px-3 py-1.5 text-xs rounded-full border border-border/50 bg-card/50 backdrop-blur text-muted-foreground hover:text-foreground hover:border-foreground/20 transition"
               >
                 {p}
               </button>
             ))}
+          </div>
+        </motion.div>
+
+        {/* Hero Image */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
+          className="mt-10 relative"
+        >
+          <div className="relative w-[300px] sm:w-[420px]">
+            <div className="absolute inset-0 bg-gradient-to-t from-primary/20 via-transparent to-transparent rounded-3xl blur-2xl" />
+            <img
+              src={heroImage}
+              alt="AI Assistant"
+              className="w-full h-auto relative z-10 drop-shadow-2xl"
+            />
+          </div>
+        </motion.div>
+
+        {/* Features Grid */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.7 }}
+          className="mt-14 w-full max-w-2xl"
+        >
+          <h2 className="text-xl sm:text-2xl font-heading font-bold text-foreground text-center mb-6">
+            Why Students Love NEURON VIEW
+          </h2>
+          <div className="grid grid-cols-2 gap-3 sm:gap-4">
+            {features.map((f, i) => (
+              <motion.div
+                key={f.title}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.8 + i * 0.1 }}
+                className="bg-card/60 dark:bg-card/40 backdrop-blur-xl border border-border/40 rounded-2xl p-4 hover:border-primary/30 transition-all group"
+              >
+                <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center mb-3 group-hover:bg-primary/20 transition">
+                  <f.icon className="w-4.5 h-4.5 text-primary" />
+                </div>
+                <h3 className="font-heading font-semibold text-sm text-foreground mb-1">{f.title}</h3>
+                <p className="text-xs text-muted-foreground leading-relaxed">{f.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 1.2 }}
+          className="mt-14 text-center space-y-4 pb-10"
+        >
+          <h2 className="text-xl sm:text-2xl font-heading font-bold text-foreground">
+            Ready to explore?
+          </h2>
+          <div className="flex flex-col sm:flex-row items-center gap-3">
+            <Link
+              to="/signup"
+              className="px-6 py-3 rounded-full bg-foreground text-background font-semibold text-sm hover:opacity-90 transition"
+            >
+              Get Started Free
+            </Link>
+            <Link
+              to="/home"
+              className="px-6 py-3 rounded-full border border-border/50 text-foreground font-medium text-sm hover:border-foreground/30 transition"
+            >
+              Browse Tools
+            </Link>
           </div>
         </motion.div>
       </div>
