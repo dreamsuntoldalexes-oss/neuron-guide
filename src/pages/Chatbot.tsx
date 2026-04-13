@@ -160,8 +160,16 @@ export default function Chatbot() {
         body: { messages: chatMessages, mode },
       });
 
+      if (error) {
+        console.error("Chat error:", error);
+        throw new Error("Failed to get response");
+      }
+      
+      if (data?.error) {
+        throw new Error(data.error);
+      }
+
       const reply = data?.reply || "Sorry, I couldn't process that. Please try again.";
-      if (error) console.error("Chat error:", error);
 
       const botMsg: Message = { id: crypto.randomUUID(), role: "assistant", content: reply };
       updateChat(activeId, (c) => ({ ...c, messages: [...c.messages, botMsg] }));
