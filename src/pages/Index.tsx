@@ -4,6 +4,7 @@ import { ArrowRight, Sparkles, Brain, Zap, BookOpen, Users, Star, MessageSquare 
 import { useState } from "react";
 import neuronLogo from "@/assets/neuron-logo-new.png";
 import heroImage from "@/assets/hero-person-money.png";
+import aiBg from "@/assets/ai-fusion-bg.jpg";
 import NeuralBackground from "@/components/NeuralBackground";
 
 const examplePrompts = [
@@ -39,7 +40,16 @@ export default function Index() {
 
   return (
     <div className="min-h-screen relative overflow-hidden flex flex-col bg-background">
-      {/* Neural network background */}
+      {/* AI human + computer fusion background */}
+      <img
+        src={aiBg}
+        alt=""
+        aria-hidden="true"
+        className="absolute inset-0 w-full h-full object-cover opacity-25"
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/80 to-background" />
+
+      {/* Neural network overlay */}
       <NeuralBackground opacity={0.25} nodeCount={45} />
 
       {/* Subtle radial glow */}
