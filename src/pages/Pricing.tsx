@@ -16,15 +16,15 @@ const plans: { name: string; tier: UserTier; price: string; features: string[]; 
   {
     name: "Pro",
     tier: "pro",
-    price: "$9.99/mo",
-    features: ["Access 300+ AI tools", "Save up to 50 favorites", "Advanced AI chatbot", "Pro & free tools access", "Priority tool updates", "Exclusive tutorials"],
+    price: "₦200/click",
+    features: ["Pay-as-you-go: ₦200 per tool click", "Access 300+ AI tools", "Save up to 50 favorites", "Advanced AI chatbot", "Priority tool updates", "Exclusive tutorials"],
     popular: true,
   },
   {
     name: "Enterprise",
     tier: "enterprise",
-    price: "$29.99/mo",
-    features: ["Access ALL 400+ AI tools", "Unlimited favorites", "Everything in Pro", "API access", "Custom recommendations", "Dedicated support", "Team features"],
+    price: "₦200/click",
+    features: ["Pay-as-you-go: ₦200 per tool click", "Access ALL 11,000+ AI tools", "Unlimited favorites", "Everything in Pro", "API access", "Custom recommendations", "Dedicated support"],
     popular: false,
   },
 ];

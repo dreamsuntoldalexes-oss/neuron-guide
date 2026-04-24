@@ -662,7 +662,7 @@ const tierOptions: Array<"free"|"pro"|"enterprise"> = ["free","pro","enterprise"
 function generateAdditionalTools(): AITool[] {
   const extra: AITool[] = [];
   let count = 0;
-  const target = 9400;
+  const target = 11400;
   for (const cat of additionalCategories) {
     const templates = additionalTemplates[cat] || [];
     const perCat = Math.ceil(target / additionalCategories.length);
