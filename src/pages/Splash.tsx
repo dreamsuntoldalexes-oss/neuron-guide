@@ -7,12 +7,24 @@ import { supabase } from "@/integrations/supabase/client";
 import NeuralBackground from "@/components/NeuralBackground";
 
 const messages = [
-  "Welcome to NEURON VIEW...",
-  "Getting everything ready ⚡",
-  "Loading 10,000+ AI tools...",
-  "Preparing your AI experience...",
-  "Almost there... 🚀",
+  "Welcome to NEURON VIEW ✨",
+  "Igniting neural pathways…",
+  "Awakening 11,400+ AI minds 🧠",
+  "Fusing human creativity with machine intelligence",
+  "Where ideas meet infinite possibility",
+  "Calibrating your AI universe…",
+  "Empowering the next generation of creators",
+  "Every great breakthrough starts with curiosity",
+  "Unlocking tools that move the world forward 🚀",
+  "Designed for dreamers. Built for doers.",
+  "Your AI control center is almost ready",
+  "Think bigger. Build faster. Create boldly.",
+  "Loading inspiration… please hold the vision",
+  "The future is not coming — it's loading ⚡",
+  "Ready to change the world? Let's begin.",
 ];
+
+const TOTAL_DURATION = 60000; // 60 seconds
 
 export default function Splash() {
   const [msgIndex, setMsgIndex] = useState(0);
@@ -39,74 +51,97 @@ export default function Splash() {
   }, []);
 
   useEffect(() => {
+    const perMessage = TOTAL_DURATION / messages.length;
     const interval = setInterval(() => {
-      setMsgIndex((prev) => {
-        if (prev >= messages.length - 1) {
-          clearInterval(interval);
-          setTimeout(() => navigate(destination || "/welcome"), 600);
-          return prev;
-        }
-        return prev + 1;
-      });
-    }, 1200);
-    return () => clearInterval(interval);
+      setMsgIndex((prev) => (prev < messages.length - 1 ? prev + 1 : prev));
+    }, perMessage);
+
+    const timeout = setTimeout(() => {
+      navigate(destination || "/welcome");
+    }, TOTAL_DURATION);
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timeout);
+    };
   }, [navigate, destination]);
 
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center relative overflow-hidden">
+    <div className="min-h-[100dvh] bg-background flex flex-col items-center justify-center relative overflow-hidden px-6">
+      {/* Layered transparent backgrounds */}
       <img
         src={aiBg}
         alt=""
         aria-hidden="true"
-        className="absolute inset-0 w-full h-full object-cover opacity-30"
+        className="absolute inset-0 w-full h-full object-cover opacity-20"
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/40 to-background" />
-      <NeuralBackground opacity={0.4} nodeCount={60} />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,hsl(var(--primary)/0.06),transparent_70%)]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/30 to-background/80" />
+      <NeuralBackground opacity={0.5} nodeCount={70} />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,hsl(var(--primary)/0.08),transparent_70%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,hsl(var(--neon-purple)/0.08),transparent_60%)]" />
 
       <motion.div
-        initial={{ scale: 0.5, opacity: 0 }}
+        initial={{ scale: 0.6, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="relative z-10 flex flex-col items-center"
+        transition={{ duration: 1, ease: "easeOut" }}
+        className="relative z-10 flex flex-col items-center w-full max-w-sm"
       >
-        <motion.img
-          src={neuronLogo}
-          alt="NEURON VIEW"
-          className="w-36 h-36 sm:w-44 sm:h-44 mb-6"
-          animate={{ rotate: [0, 5, -5, 0] }}
-          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <h1 className="text-4xl sm:text-5xl font-heading font-bold gradient-text mb-2">NEURON VIEW</h1>
-        <p className="text-sm sm:text-base text-muted-foreground tracking-widest uppercase mb-10">AI Tools Directory</p>
+        {/* Glassy logo container */}
+        <motion.div
+          className="relative mb-6 p-5 rounded-full backdrop-blur-xl bg-card/20 border border-border/30"
+          style={{
+            boxShadow:
+              "0 0 60px -10px hsl(var(--primary) / 0.35), inset 0 1px 0 0 hsl(var(--foreground) / 0.06)",
+          }}
+          animate={{ y: [0, -6, 0] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <motion.img
+            src={neuronLogo}
+            alt="NEURON VIEW"
+            className="w-28 h-28 sm:w-36 sm:h-36"
+            animate={{ rotate: [0, 4, -4, 0] }}
+            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle,hsl(var(--primary)/0.2),transparent_70%)] pointer-events-none" />
+        </motion.div>
 
-        <div className="h-12 flex items-center">
+        <h1 className="text-3xl sm:text-5xl font-heading font-bold gradient-text mb-2 text-center">
+          NEURON VIEW
+        </h1>
+        <p className="text-[11px] sm:text-sm text-muted-foreground tracking-[0.25em] uppercase mb-8 text-center">
+          AI Tools Directory
+        </p>
+
+        {/* Rotating inspirational message */}
+        <div className="h-14 flex items-center justify-center w-full px-2">
           <AnimatePresence mode="wait">
             <motion.p
               key={msgIndex}
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="text-muted-foreground text-sm text-center"
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.6 }}
+              className="text-foreground/85 text-sm sm:text-base text-center font-medium"
             >
               {messages[msgIndex]}
             </motion.p>
           </AnimatePresence>
         </div>
 
-        <motion.div
-          className="w-48 h-1 rounded-full bg-muted overflow-hidden mt-4"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-        >
+        {/* Glassy progress bar */}
+        <div className="w-full max-w-[260px] h-1.5 rounded-full bg-muted/40 backdrop-blur-md border border-border/30 overflow-hidden mt-4">
           <motion.div
             className="h-full gradient-primary rounded-full"
             initial={{ width: "0%" }}
             animate={{ width: "100%" }}
-            transition={{ duration: 6, ease: "linear" }}
+            transition={{ duration: TOTAL_DURATION / 1000, ease: "linear" }}
           />
-        </motion.div>
+        </div>
+
+        <p className="mt-4 text-[10px] sm:text-xs text-muted-foreground/70 tracking-widest uppercase">
+          Preparing your AI experience
+        </p>
       </motion.div>
     </div>
   );
