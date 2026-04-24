@@ -1,135 +1,89 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Play, Search, ThumbsUp, Eye, Clock, ChevronRight, TrendingUp, Flame } from "lucide-react";
+import { ArrowLeft, Play, Search, ExternalLink, Flame, Youtube } from "lucide-react";
 
-interface Video {
+interface VideoCollection {
   id: string;
   title: string;
   description: string;
-  videoUrl: string;
+  query: string;
+  searchUrl: string;
   thumbnail: string;
-  duration: string;
-  views: string;
-  channel: string;
-  uploadedAgo: string;
   category: string;
+  badge: string;
 }
 
-const videos: Video[] = [
+const collections: VideoCollection[] = [
   {
     id: "1",
-    title: "Getting Started with NEURON VIEW - Complete Guide",
-    description: "Learn how to browse, search, and discover 10,000+ AI tools across 21+ categories. This tutorial covers everything you need to know.",
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg",
-    duration: "8:45",
-    views: "12.4K",
-    channel: "NEURON VIEW",
-    uploadedAgo: "2 days ago",
-    category: "Getting Started",
+    title: "Artificial Intelligence Tutorial",
+    description: "Hand-picked YouTube tutorials covering AI fundamentals, neural networks, and real-world applications.",
+    query: "artificial intelligence tutorial",
+    searchUrl: "https://www.youtube.com/results?search_query=artificial+intelligence+tutorial",
+    thumbnail: "https://img.youtube.com/vi/JMUxmLyrhSk/hqdefault.jpg",
+    category: "AI Basics",
+    badge: "Beginner → Pro",
   },
   {
     id: "2",
-    title: "How to Upgrade Your Account & Activate Premium",
-    description: "Step-by-step guide on how to pay via WhatsApp or Email and activate your premium access code.",
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg",
-    duration: "5:30",
-    views: "8.2K",
-    channel: "NEURON VIEW",
-    uploadedAgo: "5 days ago",
-    category: "Account",
+    title: "Machine Learning for Beginners",
+    description: "Step-by-step introductions to ML algorithms, supervised vs unsupervised learning, and Python workflows.",
+    query: "machine learning for beginners",
+    searchUrl: "https://www.youtube.com/results?search_query=machine+learning+for+beginners",
+    thumbnail: "https://img.youtube.com/vi/i_LwzRVP7bg/hqdefault.jpg",
+    category: "Machine Learning",
+    badge: "Beginner",
   },
   {
     id: "3",
-    title: "Using the AI Chatbot for Smart Recommendations",
-    description: "Get personalized AI tool recommendations from our smart chatbot. Ask questions and get instant answers.",
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg",
-    duration: "6:15",
-    views: "15.7K",
-    channel: "NEURON VIEW",
-    uploadedAgo: "1 week ago",
-    category: "Features",
+    title: "ChatGPT Tutorial",
+    description: "Master ChatGPT — prompt engineering, custom GPTs, automation, and pro productivity workflows.",
+    query: "chatgpt tutorial",
+    searchUrl: "https://www.youtube.com/results?search_query=chatgpt+tutorial",
+    thumbnail: "https://img.youtube.com/vi/JTxsNm9IdYU/hqdefault.jpg",
+    category: "ChatGPT",
+    badge: "Trending",
   },
   {
     id: "4",
-    title: "Top 10 AI Tools You MUST Try in 2025",
-    description: "Our curated list of the absolute best AI tools across writing, coding, design, and video categories.",
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg",
-    duration: "12:20",
-    views: "45.3K",
-    channel: "NEURON VIEW",
-    uploadedAgo: "3 days ago",
-    category: "Top Picks",
+    title: "Deep Learning Course",
+    description: "Full-length deep learning courses covering CNNs, RNNs, transformers, and PyTorch / TensorFlow.",
+    query: "deep learning course",
+    searchUrl: "https://www.youtube.com/results?search_query=deep+learning+course",
+    thumbnail: "https://img.youtube.com/vi/VyWAvY2CF9c/hqdefault.jpg",
+    category: "Deep Learning",
+    badge: "Advanced",
   },
   {
     id: "5",
-    title: "Save & Manage Your Favorite AI Tools",
-    description: "Learn how to bookmark, organize, and quickly access your favorite AI tools from any device.",
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg",
-    duration: "4:00",
-    views: "6.1K",
-    channel: "NEURON VIEW",
-    uploadedAgo: "1 week ago",
-    category: "Features",
-  },
-  {
-    id: "6",
-    title: "AI Tools for Students - Study Smarter Not Harder",
-    description: "Discover AI tools that can help you ace your exams, write better essays, and manage your time.",
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg",
-    duration: "9:55",
-    views: "22.8K",
-    channel: "NEURON VIEW",
-    uploadedAgo: "4 days ago",
-    category: "Education",
-  },
-  {
-    id: "7",
-    title: "Free vs Pro vs Enterprise - Which Plan is Right for You?",
-    description: "A detailed comparison of all NEURON VIEW plans to help you choose the best value.",
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg",
-    duration: "7:10",
-    views: "9.5K",
-    channel: "NEURON VIEW",
-    uploadedAgo: "6 days ago",
-    category: "Account",
-  },
-  {
-    id: "8",
-    title: "How to Make Money Using AI Tools in Nigeria",
-    description: "Real strategies to earn income using AI tools found on NEURON VIEW. Freelancing, content creation, and more.",
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg",
-    duration: "15:30",
-    views: "67.2K",
-    channel: "NEURON VIEW",
-    uploadedAgo: "1 day ago",
-    category: "Top Picks",
+    title: "AI App Development",
+    description: "Build real AI-powered apps — from idea to launch using modern frameworks, APIs, and deployment tools.",
+    query: "ai app development",
+    searchUrl: "https://www.youtube.com/results?search_query=ai+app+development",
+    thumbnail: "https://img.youtube.com/vi/mJwPvyc4-rk/hqdefault.jpg",
+    category: "App Building",
+    badge: "Hot",
   },
 ];
 
-const categoryFilters = ["All", "Getting Started", "Features", "Account", "Top Picks", "Education"];
+const categoryFilters = ["All", "AI Basics", "Machine Learning", "ChatGPT", "Deep Learning", "App Building"];
 
 export default function VideoTutorial() {
   const navigate = useNavigate();
-  const [selectedVideo, setSelectedVideo] = useState<Video>(videos[0]);
+  const [selected, setSelected] = useState<VideoCollection>(collections[0]);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
 
-  const filtered = videos.filter((v) => {
+  const filtered = collections.filter((v) => {
     const matchCategory = activeCategory === "All" || v.category === activeCategory;
     const matchSearch = !searchQuery || v.title.toLowerCase().includes(searchQuery.toLowerCase());
     return matchCategory && matchSearch;
   });
 
-  const relatedVideos = videos.filter((v) => v.id !== selectedVideo.id);
+  const others = collections.filter((v) => v.id !== selected.id);
+
+  const openOnYouTube = (url: string) => window.open(url, "_blank", "noopener,noreferrer");
 
   return (
     <div className="min-h-screen bg-background">
@@ -143,7 +97,7 @@ export default function VideoTutorial() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <input
               type="text"
-              placeholder="Search tutorials..."
+              placeholder="Search AI tutorials..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-9 pr-3 py-2 rounded-full bg-muted/40 border border-border/30 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/50"
@@ -169,85 +123,76 @@ export default function VideoTutorial() {
         </div>
       </div>
 
-      {/* Main video player */}
-      <div className="w-full aspect-video bg-black">
-        <iframe
-          src={selectedVideo.videoUrl}
-          title={selectedVideo.title}
-          className="w-full h-full"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        />
-      </div>
-
-      {/* Video info */}
-      <div className="px-3 py-3 border-b border-border/30">
-        <h1 className="text-base font-semibold text-foreground leading-tight">{selectedVideo.title}</h1>
-        <div className="flex items-center gap-3 mt-1.5 text-xs text-muted-foreground">
-          <span className="flex items-center gap-1"><Eye className="w-3 h-3" /> {selectedVideo.views} views</span>
-          <span>{selectedVideo.uploadedAgo}</span>
-        </div>
-        <p className="text-xs text-muted-foreground mt-2 leading-relaxed">{selectedVideo.description}</p>
-
-        {/* Action buttons */}
-        <div className="flex items-center gap-4 mt-3">
-          <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted/50 text-xs font-medium text-foreground hover:bg-muted transition">
-            <ThumbsUp className="w-3.5 h-3.5" /> Like
-          </button>
-          <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted/50 text-xs font-medium text-foreground hover:bg-muted transition">
-            <Clock className="w-3.5 h-3.5" /> Watch Later
-          </button>
-        </div>
-
-        {/* Channel info */}
-        <div className="flex items-center gap-2.5 mt-3 pt-3 border-t border-border/20">
-          <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary text-xs font-bold">NV</div>
-          <div>
-            <p className="text-sm font-medium text-foreground">{selectedVideo.channel}</p>
-            <p className="text-[10px] text-muted-foreground">Official Channel</p>
+      {/* Featured collection hero */}
+      <button
+        onClick={() => openOnYouTube(selected.searchUrl)}
+        className="relative w-full aspect-video bg-black overflow-hidden group"
+      >
+        <img src={selected.thumbnail} alt={selected.title} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-16 h-16 rounded-full bg-red-600/90 flex items-center justify-center shadow-lg group-hover:scale-110 transition">
+            <Play className="w-8 h-8 text-white fill-white ml-1" />
           </div>
         </div>
+        <div className="absolute top-2 left-2 px-2 py-1 rounded bg-red-600 text-white text-[10px] font-bold flex items-center gap-1">
+          <Youtube className="w-3 h-3" /> LIVE PLAYLIST
+        </div>
+      </button>
+
+      {/* Selected info */}
+      <div className="px-3 py-3 border-b border-border/30">
+        <h1 className="text-base font-semibold text-foreground leading-tight">{selected.title}</h1>
+        <div className="flex items-center gap-2 mt-1.5 text-xs text-muted-foreground">
+          <span className="px-1.5 py-0.5 rounded bg-primary/10 text-primary text-[10px] font-medium">{selected.badge}</span>
+          <span>•</span>
+          <span>{selected.category}</span>
+        </div>
+        <p className="text-xs text-muted-foreground mt-2 leading-relaxed">{selected.description}</p>
+
+        <button
+          onClick={() => openOnYouTube(selected.searchUrl)}
+          className="flex items-center justify-center gap-2 w-full mt-3 px-4 py-2.5 rounded-full bg-red-600 hover:bg-red-700 text-white text-sm font-semibold transition"
+        >
+          <Youtube className="w-4 h-4" /> Watch on YouTube <ExternalLink className="w-3.5 h-3.5" />
+        </button>
       </div>
 
-      {/* Related / Up Next */}
+      {/* All collections */}
       <div className="px-3 py-3">
         <div className="flex items-center gap-2 mb-3">
           <Flame className="w-4 h-4 text-primary" />
-          <h2 className="text-sm font-semibold text-foreground">Up Next</h2>
+          <h2 className="text-sm font-semibold text-foreground">More AI Playlists</h2>
         </div>
 
         <div className="space-y-3">
-          {(searchQuery || activeCategory !== "All" ? filtered : relatedVideos).map((video) => (
+          {(searchQuery || activeCategory !== "All" ? filtered : others).map((video) => (
             <motion.button
               key={video.id}
               onClick={() => {
-                setSelectedVideo(video);
+                setSelected(video);
                 window.scrollTo({ top: 0, behavior: "smooth" });
               }}
               whileTap={{ scale: 0.98 }}
               className="flex gap-3 w-full text-left group"
             >
-              {/* Thumbnail */}
               <div className="relative w-40 min-w-[10rem] aspect-video rounded-lg overflow-hidden bg-muted/30 flex-shrink-0">
                 <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover" />
-                <div className="absolute bottom-1 right-1 bg-black/80 text-white text-[10px] px-1 py-0.5 rounded font-medium">
-                  {video.duration}
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition bg-black/40">
+                  <Play className="w-8 h-8 text-white drop-shadow-lg fill-white" />
                 </div>
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition bg-black/20">
-                  <Play className="w-8 h-8 text-white drop-shadow-lg" />
+                <div className="absolute top-1 left-1 px-1.5 py-0.5 rounded bg-red-600 text-white text-[9px] font-bold flex items-center gap-0.5">
+                  <Youtube className="w-2.5 h-2.5" />
                 </div>
               </div>
 
-              {/* Info */}
               <div className="flex-1 min-w-0 py-0.5">
                 <h3 className="text-sm font-medium text-foreground leading-tight line-clamp-2 group-hover:text-primary transition">
                   {video.title}
                 </h3>
-                <p className="text-[11px] text-muted-foreground mt-1">{video.channel}</p>
-                <div className="flex items-center gap-2 text-[11px] text-muted-foreground mt-0.5">
-                  <span>{video.views} views</span>
-                  <span>•</span>
-                  <span>{video.uploadedAgo}</span>
+                <p className="text-[11px] text-muted-foreground mt-1">{video.category}</p>
+                <div className="flex items-center gap-1 text-[11px] text-primary mt-0.5">
+                  <ExternalLink className="w-2.5 h-2.5" /> Open on YouTube
                 </div>
               </div>
             </motion.button>
