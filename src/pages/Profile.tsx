@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { User, Mail, LogOut, BookOpen, Info, Heart, CreditCard, Pencil, Check, X, Camera, Phone } from "lucide-react";
+import { User, Mail, LogOut, BookOpen, Info, Heart, CreditCard, Pencil, Check, X, Camera, Phone, Settings as SettingsIcon, Bell } from "lucide-react";
 import Layout from "@/components/Layout";
 import { useFavorites } from "@/hooks/useFavorites";
 import { supabase } from "@/integrations/supabase/client";
@@ -60,6 +60,8 @@ export default function Profile() {
   };
 
   const menuItems = [
+    { icon: SettingsIcon, label: "Settings", value: "", onClick: () => navigate("/settings") },
+    { icon: Bell, label: "Notifications", value: "Manage", onClick: () => navigate("/settings") },
     { icon: Heart, label: "Saved Tools", value: `${favorites.length} tools`, onClick: () => navigate("/favorites") },
     { icon: CreditCard, label: "Upgrade & Pay", value: "", onClick: () => navigate("/pricing") },
     { icon: BookOpen, label: "Video Tutorials", value: "", onClick: () => navigate("/tutorials") },
