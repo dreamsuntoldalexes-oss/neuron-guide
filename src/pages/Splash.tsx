@@ -24,7 +24,7 @@ const messages = [
   "Ready to change the world? Let's begin.",
 ];
 
-const TOTAL_DURATION = 60000; // 60 seconds
+const TOTAL_DURATION = 20000; // 20 seconds
 
 export default function Splash() {
   const [msgIndex, setMsgIndex] = useState(0);
