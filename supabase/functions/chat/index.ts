@@ -68,11 +68,12 @@ serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
+        model: "openai/gpt-5",
         messages: [
           { role: "system", content: systemContent },
           ...messages,
         ],
+        reasoning: { effort: "medium" },
       }),
     });
 
