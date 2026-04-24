@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import neuronLogo from "@/assets/neuron-logo-new.png";
+import aiBg from "@/assets/ai-fusion-bg.jpg";
 import { supabase } from "@/integrations/supabase/client";
 import NeuralBackground from "@/components/NeuralBackground";
 
@@ -53,6 +54,13 @@ export default function Splash() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center relative overflow-hidden">
+      <img
+        src={aiBg}
+        alt=""
+        aria-hidden="true"
+        className="absolute inset-0 w-full h-full object-cover opacity-30"
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/40 to-background" />
       <NeuralBackground opacity={0.4} nodeCount={60} />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,hsl(var(--primary)/0.06),transparent_70%)]" />
 
