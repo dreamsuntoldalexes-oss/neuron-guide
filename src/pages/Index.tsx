@@ -94,12 +94,25 @@ export default function Index() {
           className="text-center max-w-xl space-y-3"
         >
           <h1 className="text-3xl sm:text-5xl font-heading font-bold text-foreground leading-tight">
-            Discover AI Tools,{" "}
-            <span className="gradient-text">Effortlessly</span>
+            Discover the Best <span className="gradient-text">AI Tools</span> in One Place
           </h1>
           <p className="text-muted-foreground text-base sm:text-lg">
-            Browse, compare, and master 10,000+ AI tools — all in one place
+            Explore, compare, and use powerful AI tools for productivity, creativity, and growth.
           </p>
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+            <Link
+              to="/home"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full btn-gradient text-primary-foreground font-semibold text-sm hover:opacity-90 hover:scale-[1.03] transition shadow-[0_0_25px_hsl(var(--primary)/0.4)]"
+            >
+              <Compass className="w-4 h-4" /> Explore Tools
+            </Link>
+            <Link
+              to="/signup"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-primary/40 text-foreground font-semibold text-sm hover:border-primary hover:bg-primary/10 transition"
+            >
+              <Rocket className="w-4 h-4 text-[#FACC15]" /> Get Started
+            </Link>
+          </div>
         </motion.div>
 
         {/* Prompt input card */}
