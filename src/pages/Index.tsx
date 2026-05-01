@@ -57,17 +57,17 @@ export default function Index() {
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-[radial-gradient(ellipse,hsl(var(--primary)/0.08),transparent_70%)] pointer-events-none" />
       <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-[radial-gradient(circle,hsl(var(--neon-purple)/0.05),transparent_70%)] pointer-events-none" />
 
-      {/* Nav */}
+      {/* Nav (glassmorphism) */}
       <motion.nav
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className="relative z-10 flex items-center justify-between px-5 py-4"
+        className="sticky top-0 z-30 flex items-center justify-between px-5 py-3 bg-background/40 backdrop-blur-xl border-b border-border/30"
       >
-        <div className="flex items-center gap-2">
-          <img src={neuronLogo} alt="NEURON VIEW" className="w-10 h-10" />
+        <Link to="/" className="flex items-center gap-2">
+          <img src={neuronLogo} alt="NEURON VIEW" className="w-10 h-10 drop-shadow-[0_0_10px_hsl(var(--primary)/0.5)]" />
           <span className="font-heading font-bold text-lg text-foreground">NEURON VIEW</span>
-        </div>
+        </Link>
         <div className="flex items-center gap-2">
           <Link
             to="/login"
@@ -77,9 +77,9 @@ export default function Index() {
           </Link>
           <Link
             to="/signup"
-            className="px-4 py-2 text-sm font-semibold rounded-full btn-gradient text-primary-foreground hover:opacity-90 transition"
+            className="px-4 py-2 text-sm font-semibold rounded-full btn-gradient text-primary-foreground hover:opacity-90 hover:scale-[1.03] transition shadow-[0_0_20px_hsl(var(--primary)/0.35)]"
           >
-            Get started
+            Sign Up
           </Link>
         </div>
       </motion.nav>
