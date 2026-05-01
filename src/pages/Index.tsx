@@ -238,6 +238,8 @@ export default function Index() {
           </div>
         </motion.div>
       </div>
+
+      <WelcomeFooter />
     </div>
   );
 }
