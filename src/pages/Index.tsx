@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, Brain, Zap, BookOpen, Users, Star, MessageSquare } from "lucide-react";
+import { ArrowRight, Sparkles, Brain, Zap, BookOpen, Users, Star, MessageSquare, Search, Layers, RefreshCw, Bot, Compass, GitCompare, Rocket, LayoutDashboard } from "lucide-react";
 import { useState } from "react";
 import neuronLogo from "@/assets/neuron-logo-new.png";
 import heroImage from "@/assets/hero-person-money.png";
