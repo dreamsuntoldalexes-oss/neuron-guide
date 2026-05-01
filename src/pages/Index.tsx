@@ -164,19 +164,24 @@ export default function Index() {
           </div>
         </motion.div>
 
-        {/* Hero Image */}
+        {/* Hero Image — floating AI assistant with soft glow */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
+          animate={{ opacity: 1, scale: 1, y: [0, -8, 0] }}
+          transition={{
+            opacity: { duration: 0.8, delay: 0.5 },
+            scale: { duration: 0.8, delay: 0.5 },
+            y: { duration: 5, repeat: Infinity, ease: "easeInOut" },
+          }}
           className="mt-10 relative"
         >
           <div className="relative w-[300px] sm:w-[420px]">
-            <div className="absolute inset-0 bg-gradient-to-t from-primary/10 via-transparent to-transparent rounded-3xl blur-2xl" />
+            <div className="absolute -inset-6 bg-[radial-gradient(circle,hsl(var(--primary)/0.25),transparent_70%)] rounded-full blur-2xl animate-pulse" />
+            <div className="absolute inset-0 bg-gradient-to-t from-primary/15 via-transparent to-[#FACC15]/10 rounded-3xl blur-2xl" />
             <img
               src={heroImage}
-              alt="AI Assistant"
-              className="w-full h-auto relative z-10 drop-shadow-2xl"
+              alt="AI Assistant Robot"
+              className="w-full h-auto relative z-10 drop-shadow-[0_0_40px_hsl(var(--primary)/0.45)]"
             />
           </div>
         </motion.div>
