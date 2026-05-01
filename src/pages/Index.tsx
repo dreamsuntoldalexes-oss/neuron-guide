@@ -6,6 +6,7 @@ import neuronLogo from "@/assets/neuron-logo-new.png";
 import heroImage from "@/assets/hero-person-money.png";
 import aiBg from "@/assets/ai-fusion-bg.jpg";
 import NeuralBackground from "@/components/NeuralBackground";
+import WelcomeFooter from "@/components/WelcomeFooter";
 
 const examplePrompts = [
   "Find the best AI writing tools",
@@ -237,6 +238,8 @@ export default function Index() {
           </div>
         </motion.div>
       </div>
+
+      <WelcomeFooter />
     </div>
   );
 }
