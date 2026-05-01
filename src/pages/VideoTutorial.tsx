@@ -2,9 +2,18 @@ import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft, Play, Search, ExternalLink, Flame, Youtube, ListVideo, Film } from "lucide-react";
-import { playlists, featuredVideos, allCategories, type VideoPlaylist } from "@/data/videoTutorials";
+import { playlists, featuredVideos, allCategories, type VideoPlaylist, type FeaturedVideo } from "@/data/videoTutorials";
+import VideoPlayerModal from "@/components/VideoPlayerModal";
 
 type Tab = "playlists" | "videos";
+
+interface PlayerState {
+  open: boolean;
+  videoId?: string;
+  searchQuery?: string;
+  title?: string;
+  fallbackUrl: string;
+}
 
 export default function VideoTutorial() {
   const navigate = useNavigate();
@@ -12,7 +21,16 @@ export default function VideoTutorial() {
   const [selected, setSelected] = useState<VideoPlaylist>(playlists[0]);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
+  const [player, setPlayer] = useState<PlayerState>({ open: false, fallbackUrl: "" });
 
+  const playPlaylist = (p: VideoPlaylist) => {
+    // Search pages can't embed; show fallback inside modal
+    setPlayer({ open: true, searchQuery: p.query, title: p.title, fallbackUrl: p.searchUrl });
+  };
+  const playVideo = (v: FeaturedVideo) => {
+    setPlayer({ open: true, videoId: v.videoId, title: `Featured · ${v.category}`, fallbackUrl: v.url });
+  };
+  const closePlayer = () => setPlayer((s) => ({ ...s, open: false }));
   const openOnYouTube = (url: string) => window.open(url, "_blank", "noopener,noreferrer");
 
   const filteredPlaylists = useMemo(() => playlists.filter((v) => {
@@ -84,7 +102,7 @@ export default function VideoTutorial() {
       {tab === "playlists" ? (
         <>
           {/* Featured hero */}
-          <button onClick={() => openOnYouTube(selected.searchUrl)} className="relative w-full aspect-video bg-black overflow-hidden group">
+          <button onClick={() => playPlaylist(selected)} className="relative w-full aspect-video bg-black overflow-hidden group">
             <img src={selected.thumbnail} alt={selected.title} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition" onError={(e) => { (e.target as HTMLImageElement).src = "/placeholder.svg"; }} />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
             <div className="absolute inset-0 flex items-center justify-center">
@@ -104,9 +122,14 @@ export default function VideoTutorial() {
               <span>•</span>
               <span>{selected.category}</span>
             </div>
-            <button onClick={() => openOnYouTube(selected.searchUrl)} className="flex items-center justify-center gap-2 w-full mt-3 px-4 py-2.5 rounded-full bg-red-600 hover:bg-red-700 text-white text-sm font-semibold transition">
-              <Youtube className="w-4 h-4" /> Watch on YouTube <ExternalLink className="w-3.5 h-3.5" />
-            </button>
+            <div className="flex items-center gap-2 mt-3">
+              <button onClick={() => playPlaylist(selected)} className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition">
+                <Play className="w-4 h-4 fill-current" /> Play Here
+              </button>
+              <button onClick={() => openOnYouTube(selected.searchUrl)} className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-red-600 hover:bg-red-700 text-white text-sm font-semibold transition">
+                <Youtube className="w-4 h-4" /> YouTube <ExternalLink className="w-3.5 h-3.5" />
+              </button>
+            </div>
           </div>
 
           <div className="px-3 py-3">
@@ -116,7 +139,7 @@ export default function VideoTutorial() {
             </div>
             <div className="space-y-3">
               {filteredPlaylists.filter(v => v.id !== selected.id).map((video) => (
-                <motion.button key={video.id} onClick={() => { setSelected(video); window.scrollTo({ top: 0, behavior: "smooth" }); }} whileTap={{ scale: 0.98 }} className="flex gap-3 w-full text-left group">
+                <motion.button key={video.id} onClick={() => { setSelected(video); playPlaylist(video); }} whileTap={{ scale: 0.98 }} className="flex gap-3 w-full text-left group">
                   <div className="relative w-40 min-w-[10rem] aspect-video rounded-lg overflow-hidden bg-muted/30 flex-shrink-0">
                     <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "/placeholder.svg"; }} />
                     <div className="absolute top-1 left-1 px-1.5 py-0.5 rounded bg-red-600 text-white text-[9px] font-bold flex items-center gap-0.5">
@@ -144,7 +167,7 @@ export default function VideoTutorial() {
           </div>
           <div className="grid grid-cols-2 gap-3">
             {filteredVideos.map((v) => (
-              <motion.button key={v.id} onClick={() => openOnYouTube(v.url)} whileTap={{ scale: 0.96 }} className="group text-left">
+              <motion.button key={v.id} onClick={() => playVideo(v)} whileTap={{ scale: 0.96 }} className="group text-left">
                 <div className="relative aspect-video rounded-lg overflow-hidden bg-muted/30">
                   <img src={v.thumbnail} alt={v.category} loading="lazy" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "/placeholder.svg"; }} />
                   <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition bg-black/40">
@@ -161,6 +184,15 @@ export default function VideoTutorial() {
           </div>
         </div>
       )}
+
+      <VideoPlayerModal
+        open={player.open}
+        videoId={player.videoId}
+        searchQuery={player.searchQuery}
+        title={player.title}
+        fallbackUrl={player.fallbackUrl}
+        onClose={closePlayer}
+      />
     </div>
   );
 }
