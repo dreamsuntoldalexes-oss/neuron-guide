@@ -25,7 +25,7 @@ export default function Signup() {
         options: { data: { full_name: name }, emailRedirectTo: window.location.origin },
       });
       if (error) throw error;
-      localStorage.setItem("ai-tools-user", JSON.stringify({ name: "User", email: "gmail", avatar: "" }));
+      localStorage.setItem("ai-tools-user", JSON.stringify({ name: "User", email: "userr@gmail.com", avatar: "" }));
       toast({ title: "Account created!", description: "Welcome to NEURON VIEW 🎉" });
       navigate("/home");
     } catch (error: any) {

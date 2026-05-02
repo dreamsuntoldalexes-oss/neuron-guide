@@ -15,9 +15,9 @@ export default function Profile() {
   const getUser = () => {
     try {
       const stored = localStorage.getItem("ai-tools-user");
-      return stored ? JSON.parse(stored) : { name: "User", email: "gmail", avatar: "" };
+      return stored ? JSON.parse(stored) : { name: "User", email: "userr@gmail.com", avatar: "" };
     } catch {
-      return { name: "User", email: "gmail", avatar: "" };
+      return { name: "User", email: "userr@gmail.com", avatar: "" };
     }
   };
 
