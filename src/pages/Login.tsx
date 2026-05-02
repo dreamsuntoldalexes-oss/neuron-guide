@@ -20,7 +20,7 @@ export default function Login() {
     try {
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
-      localStorage.setItem("ai-tools-user", JSON.stringify({ email, name: data.user?.user_metadata?.full_name || email.split("@")[0] }));
+      localStorage.setItem("ai-tools-user", JSON.stringify({ name: "User", email: "gmail", avatar: "" }));
       navigate("/home");
     } catch (error: any) {
       toast({ title: "Login failed", description: error.message, variant: "destructive" });
