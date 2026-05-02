@@ -36,7 +36,7 @@ export default function Splash() {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
         if (!localStorage.getItem("ai-tools-user")) {
-          localStorage.setItem("ai-tools-user", JSON.stringify({ name: "User", email: "gmail", avatar: "" }));
+          localStorage.setItem("ai-tools-user", JSON.stringify({ name: "User", email: "userr@gmail.com", avatar: "" }));
         }
         setDestination("/home");
       } else if (localStorage.getItem("ai-tools-user")) {
