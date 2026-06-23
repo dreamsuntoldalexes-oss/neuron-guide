@@ -126,30 +126,53 @@ export default function Profile() {
                   <img
                     src={user.avatar}
                     alt={user.name}
-                    className="w-16 h-16 rounded-2xl object-cover"
+                    className="w-16 h-16 rounded-full object-cover ring-2 ring-primary/40"
                   />
                 ) : (
-                  <div className="w-16 h-16 rounded-2xl gradient-primary flex items-center justify-center">
+                  <div className="w-16 h-16 rounded-full gradient-primary flex items-center justify-center ring-2 ring-primary/40">
                     <User className="w-8 h-8 text-primary-foreground" />
                   </div>
                 )}
                 <button
                   onClick={() => fileInputRef.current?.click()}
-                  className="absolute inset-0 rounded-2xl bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+                  className="absolute inset-0 rounded-full bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
                 >
                   <Camera className="w-5 h-5 text-white" />
                 </button>
               </div>
-              <div className="flex-1">
-                <h2 className="font-heading font-semibold text-lg text-foreground">{user.name}</h2>
-                <p className="text-sm text-muted-foreground flex items-center gap-1"><Mail className="w-3 h-3" /> {user.email}</p>
+              <div className="flex-1 min-w-0">
+                <h2 className="font-heading font-semibold text-lg text-foreground truncate">{user.name}</h2>
+                <p className="text-xs text-primary flex items-center gap-1.5 whitespace-nowrap">
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                  Available · NEURON VIEW member
+                </p>
+                <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5 truncate"><Mail className="w-3 h-3 flex-shrink-0" /> {user.email}</p>
               </div>
-              <button onClick={() => setEditing(true)} className="p-2 rounded-lg hover:bg-muted transition-colors">
-                <Pencil className="w-4 h-4 text-muted-foreground" />
-              </button>
+              <div className="flex flex-col gap-1.5">
+                <button onClick={() => setEditing(true)} className="p-2 rounded-full bg-muted/60 hover:bg-muted transition-colors">
+                  <Pencil className="w-3.5 h-3.5 text-foreground" />
+                </button>
+                <button onClick={() => navigator.share?.({ title: "NEURON VIEW", url: window.location.origin }).catch(() => {})} className="p-2 rounded-full bg-muted/60 hover:bg-muted transition-colors">
+                  <Share2 className="w-3.5 h-3.5 text-foreground" />
+                </button>
+              </div>
             </div>
           )}
         </motion.div>
+
+        {/* Quick action chips */}
+        <div className="flex gap-2">
+          <button onClick={() => navigate("/favorites")} className="flex-1 glass-card py-2.5 flex items-center justify-center gap-1.5 text-xs text-foreground hover:border-primary/30 transition">
+            <Heart className="w-3.5 h-3.5 text-primary" /> {favorites.length} Saved
+          </button>
+          <button onClick={() => navigate("/analytics")} className="flex-1 glass-card py-2.5 flex items-center justify-center gap-1.5 text-xs text-foreground hover:border-primary/30 transition">
+            <BarChart3 className="w-3.5 h-3.5 text-accent" /> Analytics
+          </button>
+          <button onClick={() => navigate("/pricing")} className="flex-1 glass-card py-2.5 flex items-center justify-center gap-1.5 text-xs text-foreground hover:border-primary/30 transition">
+            <Bookmark className="w-3.5 h-3.5 text-secondary" /> Upgrade
+          </button>
+        </div>
+
 
         {/* Menu */}
         <div className="space-y-2">
