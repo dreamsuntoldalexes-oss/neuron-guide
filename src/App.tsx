@@ -18,6 +18,7 @@ import Profile from "./pages/Profile";
 import Pricing from "./pages/Pricing";
 import VideoTutorial from "./pages/VideoTutorial";
 import Settings from "./pages/Settings";
+import Analytics from "./pages/Analytics";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -44,6 +45,7 @@ const App = () => (
           <Route path="/profile" element={<Profile />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/analytics" element={<Analytics />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
