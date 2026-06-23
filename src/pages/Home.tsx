@@ -28,7 +28,7 @@ export default function Home() {
             </div>
             <Link to="/pricing" className="flex items-center gap-1 text-xs px-2.5 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
               <Crown className="w-3 h-3" />
-              <span className="capitalize font-medium">{tier}</span>
+              <span className="capitalize font-medium">{tier === "free" ? "Update" : tier}</span>
             </Link>
           </div>
           <h1 className="text-2xl font-heading font-bold text-foreground">NEURON VIEW — {tools.length}+ AI Tools</h1>
