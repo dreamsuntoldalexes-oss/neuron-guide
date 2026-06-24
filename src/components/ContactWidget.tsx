@@ -1,33 +1,26 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Headphones, X, Phone, MessageCircle } from "lucide-react";
+import { Headphones, X, Phone, MessageCircle, Sparkles } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const contacts = [
   {
     icon: Phone,
     label: "Call Us",
-    subtitle: "09029837829",
-    href: "tel:09029837829",
-    color: "text-secondary",
+    subtitle: "08033962964",
+    href: "tel:08033962964",
   },
   {
     icon: MessageCircle,
     label: "WhatsApp",
     subtitle: "08033962964",
     href: "https://wa.me/2348033962964",
-    color: "text-secondary",
-  },
-  {
-    icon: MessageCircle,
-    label: "WhatsApp 2",
-    subtitle: "09029837829",
-    href: "https://wa.me/2349029837829",
-    color: "text-secondary",
   },
 ];
 
 export default function ContactWidget() {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <div className="fixed bottom-24 right-4 z-50 flex flex-col items-end gap-2">
@@ -48,9 +41,9 @@ export default function ContactWidget() {
                   href={c.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-muted/50 transition group"
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-muted/50 transition"
                 >
-                  <Icon className={`w-4 h-4 ${c.color}`} />
+                  <Icon className="w-4 h-4 text-secondary" />
                   <div>
                     <p className="text-sm text-foreground font-medium">{c.label}</p>
                     <p className="text-[10px] text-muted-foreground">{c.subtitle}</p>
@@ -62,16 +55,33 @@ export default function ContactWidget() {
         )}
       </AnimatePresence>
 
-      <button
-        onClick={() => setOpen(!open)}
-        className="w-12 h-12 rounded-full gradient-primary flex items-center justify-center shadow-lg hover:opacity-90 transition active:scale-95"
-      >
-        {open ? (
-          <X className="w-5 h-5 text-primary-foreground" />
-        ) : (
-          <Headphones className="w-5 h-5 text-primary-foreground" />
-        )}
-      </button>
+      <div className="flex items-center gap-2">
+        <AnimatePresence>
+          {open && (
+            <motion.button
+              initial={{ opacity: 0, x: 10, scale: 0.8 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              exit={{ opacity: 0, x: 10, scale: 0.8 }}
+              onClick={() => { setOpen(false); navigate("/chatbot"); }}
+              className="w-12 h-12 rounded-full bg-primary/15 border border-primary/30 flex items-center justify-center shadow-lg hover:bg-primary/25 transition active:scale-95"
+              title="Open AI Assistant"
+            >
+              <Sparkles className="w-5 h-5 text-primary" />
+            </motion.button>
+          )}
+        </AnimatePresence>
+
+        <button
+          onClick={() => setOpen(!open)}
+          className="w-12 h-12 rounded-full gradient-primary flex items-center justify-center shadow-lg hover:opacity-90 transition active:scale-95"
+        >
+          {open ? (
+            <X className="w-5 h-5 text-primary-foreground" />
+          ) : (
+            <Headphones className="w-5 h-5 text-primary-foreground" />
+          )}
+        </button>
+      </div>
     </div>
   );
 }
