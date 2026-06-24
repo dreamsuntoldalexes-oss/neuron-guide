@@ -47,23 +47,41 @@ export default function ToolCard({ tool, index = 0, isFavorite, onToggleFavorite
     useCredit();
   };
 
-  const handleActivate = () => {
-    if (activationCode.trim() === "GARUBA001002KLOVE") {
-      const user = JSON.parse(localStorage.getItem("ai-tools-user") || '{"name":"User","email":"user@gmail.com"}');
+  const handleActivate = async () => {
+    setCodeError("");
+    setActivating(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        setCodeError("Please sign in first to activate premium.");
+        return;
+      }
+      const { data, error } = await supabase.functions.invoke("redeem-code", {
+        body: { code: activationCode.trim() },
+      });
+      if (error || !data?.success) {
+        setCodeError(data?.error || "Invalid code. Pay ₦500 and get the code via WhatsApp.");
+        return;
+      }
+      // Cache for UI only — DB is source of truth.
+      setUserTier("pro");
+      const user = JSON.parse(localStorage.getItem("ai-tools-user") || '{"name":"User","email":""}');
       user.tier = "pro";
-      user.premiumExpiry = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString();
+      user.premiumExpiry = data.premium_expiry;
       localStorage.setItem("ai-tools-user", JSON.stringify(user));
       localStorage.setItem("ai-tools-credits", "9999");
       setShowUpgrade(false);
       setShowCredits(false);
       setShowCodeInput(false);
       setActivationCode("");
-      setCodeError("");
       window.location.reload();
-    } else {
-      setCodeError("Invalid code. Pay ₦500 and get the code via WhatsApp.");
+    } catch (e) {
+      setCodeError("Could not validate code. Try again.");
+    } finally {
+      setActivating(false);
     }
   };
+
 
   const closeAll = () => {
     setShowUpgrade(false);
