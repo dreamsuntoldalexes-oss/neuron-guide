@@ -29,6 +29,8 @@ export default function ToolCard({ tool, index = 0, isFavorite, onToggleFavorite
   const [showCodeInput, setShowCodeInput] = useState(false);
   const [activationCode, setActivationCode] = useState("");
   const [codeError, setCodeError] = useState("");
+  const [activating, setActivating] = useState(false);
+
 
   const handleLockedClick = (e: React.MouseEvent) => {
     e.preventDefault();
