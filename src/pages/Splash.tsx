@@ -35,16 +35,31 @@ export default function Splash() {
     const checkSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        if (!localStorage.getItem("ai-tools-user")) {
-          localStorage.setItem("ai-tools-user", JSON.stringify({ name: "User", email: session.user.email ?? "", avatar: "" }));
-        }
+        // Source-of-truth tier/credits from DB. Overwrite any client-tampered cache.
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("tier, credits, premium_expiry")
+          .eq("id", session.user.id)
+          .maybeSingle();
+        const existing = (() => {
+          try { return JSON.parse(localStorage.getItem("ai-tools-user") || "{}"); } catch { return {}; }
+        })();
+        localStorage.setItem("ai-tools-user", JSON.stringify({
+          name: existing.name || "User",
+          email: session.user.email ?? existing.email ?? "",
+          avatar: existing.avatar || "",
+          tier: profile?.tier || "free",
+          premiumExpiry: profile?.premium_expiry || null,
+        }));
+        localStorage.setItem("ai-tools-credits", String(profile?.credits ?? 3));
         setDestination("/home");
       } else {
-        // Clear any stale local profile so it cannot be used to bypass auth.
         localStorage.removeItem("ai-tools-user");
+        localStorage.removeItem("ai-tools-credits");
         setDestination("/welcome");
       }
     };
+
 
     checkSession();
   }, []);
