@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Heart, Star, ExternalLink, Lock, Crown, X, Zap, AlertCircle } from "lucide-react";
+import { Heart, Star, ExternalLink, Lock, Crown, X, Zap, AlertCircle, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { AITool } from "@/data/tools";
-import { getUserTier, canAccessTool, getCredits, useCredit } from "@/data/tools";
+import { getUserTier, canAccessTool, getCredits, useCredit, setUserTier } from "@/data/tools";
+import { supabase } from "@/integrations/supabase/client";
+
 
 interface ToolCardProps {
   tool: AITool;
@@ -27,6 +29,8 @@ export default function ToolCard({ tool, index = 0, isFavorite, onToggleFavorite
   const [showCodeInput, setShowCodeInput] = useState(false);
   const [activationCode, setActivationCode] = useState("");
   const [codeError, setCodeError] = useState("");
+  const [activating, setActivating] = useState(false);
+
 
   const handleLockedClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -43,23 +47,41 @@ export default function ToolCard({ tool, index = 0, isFavorite, onToggleFavorite
     useCredit();
   };
 
-  const handleActivate = () => {
-    if (activationCode.trim() === "GARUBA001002KLOVE") {
-      const user = JSON.parse(localStorage.getItem("ai-tools-user") || '{"name":"User","email":"user@gmail.com"}');
+  const handleActivate = async () => {
+    setCodeError("");
+    setActivating(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        setCodeError("Please sign in first to activate premium.");
+        return;
+      }
+      const { data, error } = await supabase.functions.invoke("redeem-code", {
+        body: { code: activationCode.trim() },
+      });
+      if (error || !data?.success) {
+        setCodeError(data?.error || "Invalid code. Pay ₦500 and get the code via WhatsApp.");
+        return;
+      }
+      // Cache for UI only — DB is source of truth.
+      setUserTier("pro");
+      const user = JSON.parse(localStorage.getItem("ai-tools-user") || '{"name":"User","email":""}');
       user.tier = "pro";
-      user.premiumExpiry = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString();
+      user.premiumExpiry = data.premium_expiry;
       localStorage.setItem("ai-tools-user", JSON.stringify(user));
       localStorage.setItem("ai-tools-credits", "9999");
       setShowUpgrade(false);
       setShowCredits(false);
       setShowCodeInput(false);
       setActivationCode("");
-      setCodeError("");
       window.location.reload();
-    } else {
-      setCodeError("Invalid code. Pay ₦500 and get the code via WhatsApp.");
+    } catch (e) {
+      setCodeError("Could not validate code. Try again.");
+    } finally {
+      setActivating(false);
     }
   };
+
 
   const closeAll = () => {
     setShowUpgrade(false);
@@ -231,10 +253,12 @@ export default function ToolCard({ tool, index = 0, isFavorite, onToggleFavorite
                       className="w-full px-4 py-3 rounded-xl bg-muted/50 border border-border text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                     />
                     {codeError && <p className="text-xs text-destructive">{codeError}</p>}
-                    <button onClick={handleActivate}
-                      className="w-full py-3 rounded-xl text-sm font-semibold gradient-primary text-primary-foreground text-center hover:opacity-90 transition active:scale-[0.97]">
+                    <button onClick={handleActivate} disabled={activating || !activationCode.trim()}
+                      className="w-full py-3 rounded-xl text-sm font-semibold gradient-primary text-primary-foreground text-center hover:opacity-90 transition active:scale-[0.97] disabled:opacity-60 flex items-center justify-center gap-2">
+                      {activating && <Loader2 className="w-4 h-4 animate-spin" />}
                       Activate Premium
                     </button>
+
                     <button onClick={() => { setShowCodeInput(false); setCodeError(""); }}
                       className="w-full py-2 text-sm text-muted-foreground text-center hover:text-foreground transition">
                       ← Back
