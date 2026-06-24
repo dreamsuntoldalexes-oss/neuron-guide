@@ -253,10 +253,12 @@ export default function ToolCard({ tool, index = 0, isFavorite, onToggleFavorite
                       className="w-full px-4 py-3 rounded-xl bg-muted/50 border border-border text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                     />
                     {codeError && <p className="text-xs text-destructive">{codeError}</p>}
-                    <button onClick={handleActivate}
-                      className="w-full py-3 rounded-xl text-sm font-semibold gradient-primary text-primary-foreground text-center hover:opacity-90 transition active:scale-[0.97]">
+                    <button onClick={handleActivate} disabled={activating || !activationCode.trim()}
+                      className="w-full py-3 rounded-xl text-sm font-semibold gradient-primary text-primary-foreground text-center hover:opacity-90 transition active:scale-[0.97] disabled:opacity-60 flex items-center justify-center gap-2">
+                      {activating && <Loader2 className="w-4 h-4 animate-spin" />}
                       Activate Premium
                     </button>
+
                     <button onClick={() => { setShowCodeInput(false); setCodeError(""); }}
                       className="w-full py-2 text-sm text-muted-foreground text-center hover:text-foreground transition">
                       ← Back
