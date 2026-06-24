@@ -36,15 +36,16 @@ export default function Splash() {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
         if (!localStorage.getItem("ai-tools-user")) {
-          localStorage.setItem("ai-tools-user", JSON.stringify({ name: "User", email: "userr@gmail.com", avatar: "" }));
+          localStorage.setItem("ai-tools-user", JSON.stringify({ name: "User", email: session.user.email ?? "", avatar: "" }));
         }
         setDestination("/home");
-      } else if (localStorage.getItem("ai-tools-user")) {
-        setDestination("/home");
       } else {
+        // Clear any stale local profile so it cannot be used to bypass auth.
+        localStorage.removeItem("ai-tools-user");
         setDestination("/welcome");
       }
     };
+
     checkSession();
   }, []);
 
