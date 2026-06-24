@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Heart, Star, ExternalLink, Lock, Crown, X, Zap, AlertCircle } from "lucide-react";
+import { Heart, Star, ExternalLink, Lock, Crown, X, Zap, AlertCircle, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { AITool } from "@/data/tools";
-import { getUserTier, canAccessTool, getCredits, useCredit } from "@/data/tools";
+import { getUserTier, canAccessTool, getCredits, useCredit, setUserTier } from "@/data/tools";
+import { supabase } from "@/integrations/supabase/client";
+
 
 interface ToolCardProps {
   tool: AITool;
