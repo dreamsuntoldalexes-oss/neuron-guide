@@ -1,13 +1,15 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft, Star, Heart, ExternalLink, Check, X, Eye } from "lucide-react";
 import Layout from "@/components/Layout";
 import ToolCard from "@/components/ToolCard";
+import ToolUsageChart from "@/components/ToolUsageChart";
 import { tools, getSimilarTools } from "@/data/tools";
 import { useFavorites } from "@/hooks/useFavorites";
 
 export default function ToolDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const tool = tools.find((t) => t.id === id);
   const { isFavorite, toggleFavorite } = useFavorites();
 
@@ -28,9 +30,10 @@ export default function ToolDetail() {
     <Layout>
       <div className="px-4 pt-4 pb-6 space-y-6 max-w-2xl mx-auto">
         {/* Back */}
-        <Link to="/tools" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition">
+        <button onClick={() => (window.history.length > 1 ? navigate(-1) : navigate("/tools"))}
+          className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition">
           <ArrowLeft className="w-4 h-4" /> Back
-        </Link>
+        </button>
 
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass-card p-6 space-y-4">
@@ -89,6 +92,9 @@ export default function ToolDetail() {
             ))}
           </div>
         </motion.div>
+
+        {/* Usage Chart */}
+        <ToolUsageChart toolId={tool.id} toolName={tool.name} baseViews={tool.views} />
 
         {/* Pros & Cons */}
         <div className="grid grid-cols-2 gap-3">
