@@ -85,6 +85,18 @@ serve(async (req) => {
     }
 
     const { messages, mode } = await req.json();
+    const safeMessages = Array.isArray(messages)
+      ? messages
+          .filter((message) => message && (message.role === "user" || message.role === "assistant") && typeof message.content === "string")
+          .slice(-20)
+      : [];
+
+    if (safeMessages.length === 0) {
+      return new Response(JSON.stringify({ error: "Please send a message first." }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
 
 
@@ -99,6 +111,14 @@ serve(async (req) => {
       systemContent += "\n\nIMPORTANT: EXAM MODE is active. Act as an exam coach. If the student has not provided all details, ask for the subject, topic, number of questions, and preferred question type. When details are available, create the requested exam questions first WITHOUT showing answers. Ask the student to reply with numbered answers. After they answer, mark each response, give a score/percentage, correct mistakes, and then show the correct answers with short explanations.";
     }
 
+    const gatewayPayload = {
+      model: "google/gemini-3-flash-preview",
+      messages: [
+        { role: "system", content: systemContent },
+        ...safeMessages,
+      ],
+    };
+
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -106,13 +126,7 @@ serve(async (req) => {
         "X-Lovable-AIG-SDK": "neuron-view-edge-function",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
-        messages: [
-          { role: "system", content: systemContent },
-          ...messages,
-        ],
-      }),
+      body: JSON.stringify(gatewayPayload),
 
     });
 

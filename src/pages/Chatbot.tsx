@@ -9,6 +9,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { supabase } from "@/integrations/supabase/client";
 import neuronLogo from "@/assets/neuron-logo-new.png";
+import { aiGalleryImages } from "@/assets/aiGallery";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 
@@ -233,7 +234,7 @@ export default function Chatbot() {
   const showWelcome = activeChat?.messages.length === 0;
 
   return (
-    <div className="h-screen bg-background flex overflow-hidden">
+    <div className="h-screen bg-background flex overflow-hidden p-2 sm:p-4 gap-3">
       {/* ─── SIDEBAR (mobile overlay + desktop persistent) ─── */}
       <AnimatePresence>
         {sidebarOpen && (
@@ -249,8 +250,8 @@ export default function Chatbot() {
 
       <motion.aside
         className={`
-          fixed lg:relative z-50 lg:z-auto h-full
-          w-72 bg-card/80 backdrop-blur-xl border-r border-border/50
+          fixed lg:relative z-50 lg:z-auto h-[calc(100%-1rem)] sm:h-[calc(100%-2rem)] lg:h-full
+          w-72 bg-card/80 backdrop-blur-xl border border-border/50 rounded-3xl overflow-hidden
           flex flex-col
           transition-transform duration-300
           ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
@@ -320,7 +321,7 @@ export default function Chatbot() {
       </motion.aside>
 
       {/* ─── MAIN CHAT AREA ─── */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 rounded-3xl border border-border/40 bg-card/30 backdrop-blur-xl overflow-hidden">
         {/* Top bar */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-border/30 bg-card/40 backdrop-blur-xl">
           <div className="flex items-center gap-3">
@@ -369,13 +370,14 @@ export default function Chatbot() {
                 animate={{ opacity: 1, scale: 1 }}
                 className="text-center max-w-lg space-y-6"
               >
-                <motion.img
-                  src={neuronLogo}
-                  alt="NEURON VIEW"
-                  className="w-20 h-20 mx-auto"
-                  animate={{ rotate: [0, 3, -3, 0] }}
+                <motion.div
+                  className="relative w-28 h-28 mx-auto rounded-full overflow-hidden border border-primary/30 shadow-[0_0_40px_hsl(var(--primary)/0.25)]"
+                  animate={{ y: [0, -6, 0] }}
                   transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                />
+                >
+                  <img src={aiGalleryImages[0].src} alt="NEURON VIEW AI character" className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent" />
+                </motion.div>
                 <div>
                   <h1 className="text-2xl sm:text-3xl font-heading font-bold text-foreground">
                     NEURON VIEW AI
@@ -453,7 +455,7 @@ export default function Chatbot() {
                     }`}
                   >
                     {msg.role === "assistant" ? (
-                      <div className="prose prose-sm prose-invert max-w-none text-foreground text-sm [&>p]:mb-2 [&>ul]:mb-2 [&>ol]:mb-2 [&>h1]:text-lg [&>h2]:text-base [&>h3]:text-sm [&_code]:bg-muted [&_code]:px-1 [&_code]:rounded [&_pre]:bg-muted/80 [&_pre]:rounded-xl [&_pre]:p-3 [&_pre]:overflow-x-auto [&_a]:text-primary [&_strong]:text-foreground">
+                  <div className="prose prose-sm prose-invert max-w-none text-foreground text-sm [&>p]:mb-2 [&>ul]:mb-2 [&>ol]:mb-2 [&>h1]:text-lg [&>h2]:text-base [&>h3]:text-sm [&_code]:bg-muted [&_code]:px-1 [&_code]:rounded [&_pre]:bg-muted/80 [&_pre]:rounded-xl [&_pre]:p-3 [&_pre]:overflow-x-auto [&_a]:text-primary [&_strong]:text-foreground">
                         <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
                       </div>
                     ) : (
