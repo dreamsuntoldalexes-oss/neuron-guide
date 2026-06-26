@@ -77,6 +77,9 @@ export default function Chatbot() {
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [examSubject, setExamSubject] = useState("");
+  const [examTopic, setExamTopic] = useState("");
+  const [examCount, setExamCount] = useState("10");
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -223,6 +226,11 @@ export default function Chatbot() {
       e.preventDefault();
       send(input);
     }
+  };
+
+  const startExam = () => {
+    const prompt = `Exam mode. Subject: ${examSubject || "please ask me for subject"}. Topic: ${examTopic || "please ask me for topic"}. Number of questions: ${examCount || "10"}. Create the exam questions now. Do not show the answers yet. After I answer, mark my answers, score me, and then show the correct answers with short explanations.`;
+    send(prompt);
   };
 
   const user = (() => {
@@ -412,6 +420,23 @@ export default function Chatbot() {
                   })}
                 </div>
 
+                {mode === "exam" && (
+                  <div className="glass-card p-4 space-y-3 text-left">
+                    <div>
+                      <h2 className="text-sm font-heading font-bold text-foreground">Create an exam</h2>
+                      <p className="text-xs text-muted-foreground">Enter what you want to study. I will ask questions first, then score you after you answer.</p>
+                    </div>
+                    <div className="grid sm:grid-cols-3 gap-2">
+                      <input value={examSubject} onChange={(e) => setExamSubject(e.target.value)} placeholder="Subject e.g. Biology" className="bg-muted/30 border border-border/50 rounded-xl px-3 py-2 text-xs text-foreground outline-none focus:border-primary/40" />
+                      <input value={examTopic} onChange={(e) => setExamTopic(e.target.value)} placeholder="Topic e.g. Photosynthesis" className="bg-muted/30 border border-border/50 rounded-xl px-3 py-2 text-xs text-foreground outline-none focus:border-primary/40" />
+                      <input value={examCount} onChange={(e) => setExamCount(e.target.value)} placeholder="Questions" inputMode="numeric" className="bg-muted/30 border border-border/50 rounded-xl px-3 py-2 text-xs text-foreground outline-none focus:border-primary/40" />
+                    </div>
+                    <button onClick={startExam} disabled={isTyping} className="w-full py-2.5 rounded-xl gradient-primary text-primary-foreground text-xs font-semibold hover:opacity-90 transition disabled:opacity-50">
+                      Generate exam questions
+                    </button>
+                  </div>
+                )}
+
                 {/* Suggestion prompts */}
                 <div className="space-y-2">
                   <p className="text-xs text-muted-foreground flex items-center gap-1 justify-center">
@@ -498,6 +523,14 @@ export default function Chatbot() {
 
         {/* ─── INPUT BAR ─── */}
         <div className="border-t border-border/30 bg-card/40 backdrop-blur-xl px-4 py-3">
+          {mode === "exam" && activeChat?.messages.length > 0 && (
+            <div className="max-w-3xl mx-auto mb-3 glass-card p-3 grid sm:grid-cols-[1fr_1fr_90px_auto] gap-2">
+              <input value={examSubject} onChange={(e) => setExamSubject(e.target.value)} placeholder="Subject" className="bg-muted/30 border border-border/50 rounded-xl px-3 py-2 text-xs text-foreground outline-none focus:border-primary/40" />
+              <input value={examTopic} onChange={(e) => setExamTopic(e.target.value)} placeholder="Topic" className="bg-muted/30 border border-border/50 rounded-xl px-3 py-2 text-xs text-foreground outline-none focus:border-primary/40" />
+              <input value={examCount} onChange={(e) => setExamCount(e.target.value)} placeholder="No." inputMode="numeric" className="bg-muted/30 border border-border/50 rounded-xl px-3 py-2 text-xs text-foreground outline-none focus:border-primary/40" />
+              <button onClick={startExam} disabled={isTyping} className="px-4 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-semibold hover:opacity-90 disabled:opacity-50">Start</button>
+            </div>
+          )}
           <form
             onSubmit={(e) => { e.preventDefault(); send(input); }}
             className="max-w-3xl mx-auto flex items-end gap-2"
