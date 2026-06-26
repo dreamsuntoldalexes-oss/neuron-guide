@@ -2,9 +2,9 @@ import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
-  LogOut, BookOpen, Info, Heart, CreditCard, Pencil, Check, X,
+  Mail, LogOut, BookOpen, Info, Heart, CreditCard, Pencil, Check, X,
   Camera, Phone, Settings as SettingsIcon, Bell, BarChart3, Bookmark,
-  Share2, Globe, MessageCircle, Sparkles, Calendar, Search, Bot,
+  Share2, Globe, MessageCircle, Sparkles, Calendar,
 } from "lucide-react";
 import Layout from "@/components/Layout";
 import { useFavorites } from "@/hooks/useFavorites";
