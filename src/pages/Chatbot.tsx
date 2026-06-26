@@ -156,8 +156,21 @@ export default function Chatbot() {
         content: m.content,
       }));
 
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        const errMsg: Message = {
+          id: crypto.randomUUID(),
+          role: "assistant",
+          content: "Please [sign in](/login) to chat with NEURON VIEW AI. 🔐",
+        };
+        updateChat(activeId, (c) => ({ ...c, messages: [...c.messages, errMsg] }));
+        setIsTyping(false);
+        return;
+      }
+
       const { data, error } = await supabase.functions.invoke("chat", {
         body: { messages: chatMessages, mode },
+        headers: { Authorization: `Bearer ${session.access_token}` },
       });
 
       if (error) {
