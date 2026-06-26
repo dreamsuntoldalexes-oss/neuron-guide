@@ -41,7 +41,7 @@ export default function ContactWidget() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-background/55 backdrop-blur-sm z-[-1]"
+            className="fixed inset-0 bg-background/55 backdrop-blur-sm z-[55]"
             onClick={() => setOpen(false)}
           />
         )}
@@ -53,7 +53,7 @@ export default function ContactWidget() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 360 }}
             transition={{ type: "spring", damping: 28, stiffness: 260 }}
-            className="fixed right-0 top-0 h-dvh w-[min(25rem,100vw)] rounded-l-[2rem] rounded-r-none border-y-0 border-r-0 bg-card/95 backdrop-blur-2xl p-5 shadow-2xl space-y-5 overflow-y-auto"
+            className="fixed right-0 top-0 z-[60] h-dvh w-[min(25rem,100vw)] rounded-l-[2rem] rounded-r-none border-y-0 border-r-0 bg-card/95 backdrop-blur-2xl p-5 shadow-2xl space-y-5 overflow-y-auto"
           >
             <div className="flex items-start justify-between gap-3">
               <div>
