@@ -127,11 +127,9 @@ serve(async (req) => {
         { role: "system", content: systemContent },
         ...safeMessages,
       ],
-      temperature: mode === "exam" ? 0.35 : 0.7,
     };
 
-    // Keep the payload intentionally small. The AI gateway currently rejects unsupported
-    // OpenAI-style options such as `reasoning`, so do not pass through client options.
+    // Keep the payload intentionally small and do not pass unsupported client options.
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
