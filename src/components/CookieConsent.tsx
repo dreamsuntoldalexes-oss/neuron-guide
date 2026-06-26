@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Cookie, X } from "lucide-react";
 
-const COOKIE_KEY = "neuron-view-cookie-choice";
+const COOKIE_KEY = "neuron-view-cookie-choice-v2";
 
 export default function CookieConsent() {
   const [visible, setVisible] = useState(false);
