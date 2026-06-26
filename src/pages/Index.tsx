@@ -1,12 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, Sparkles, Brain, Zap, BookOpen, Users, Star, MessageSquare, Search, Layers, RefreshCw, Bot, Compass, GitCompare, Rocket, LayoutDashboard } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import neuronLogo from "@/assets/neuron-logo-new.png";
-import heroImage from "@/assets/hero-person-money.png";
 import aiBg from "@/assets/ai-fusion-bg.jpg";
 import NeuralBackground from "@/components/NeuralBackground";
 import WelcomeFooter from "@/components/WelcomeFooter";
+import { aiGalleryImages } from "@/assets/aiGallery";
 
 const examplePrompts = [
   "Find the best AI writing tools",
@@ -32,6 +32,14 @@ const stats = [
 export default function Index() {
   const navigate = useNavigate();
   const [prompt, setPrompt] = useState("");
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setActiveSlide((current) => (current + 1) % aiGalleryImages.length);
+    }, 4000);
+    return () => window.clearInterval(timer);
+  }, []);
 
   const handleSubmit = () => {
     if (prompt.trim()) {
@@ -164,7 +172,7 @@ export default function Index() {
           </div>
         </motion.div>
 
-        {/* Hero Image — floating AI assistant with soft glow */}
+        {/* Hero Image — sliding AI character gallery */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1, y: [0, -8, 0] }}
@@ -175,14 +183,38 @@ export default function Index() {
           }}
           className="mt-10 relative"
         >
-          <div className="relative w-[300px] sm:w-[420px]">
+          <div className="relative w-[320px] sm:w-[460px] h-[260px] sm:h-[340px]">
             <div className="absolute -inset-6 bg-[radial-gradient(circle,hsl(var(--primary)/0.25),transparent_70%)] rounded-full blur-2xl animate-pulse" />
             <div className="absolute inset-0 bg-gradient-to-t from-primary/15 via-transparent to-[#FACC15]/10 rounded-3xl blur-2xl" />
-            <img
-              src={heroImage}
-              alt="AI Assistant Robot"
-              className="w-full h-auto relative z-10 drop-shadow-[0_0_40px_hsl(var(--primary)/0.45)]"
-            />
+            <div className="relative z-10 w-full h-full overflow-hidden rounded-[2rem] border border-primary/20 bg-card/40 shadow-2xl shadow-primary/20">
+              <AnimatePresence mode="wait">
+                <motion.img
+                  key={aiGalleryImages[activeSlide].src}
+                  src={aiGalleryImages[activeSlide].src}
+                  alt={aiGalleryImages[activeSlide].alt}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  initial={{ opacity: 0, scale: 1.08, x: 24 }}
+                  animate={{ opacity: 1, scale: 1, x: 0 }}
+                  exit={{ opacity: 0, scale: 0.98, x: -24 }}
+                  transition={{ duration: 0.75, ease: "easeOut" }}
+                />
+              </AnimatePresence>
+              <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
+              <div className="absolute bottom-4 left-4 right-4 glass-card p-3">
+                <p className="text-xs text-primary uppercase tracking-wider">NEURON VIEW AI</p>
+                <p className="font-heading font-bold text-foreground">Animated AI character assistant</p>
+              </div>
+              <div className="absolute top-4 right-4 flex gap-1.5">
+                {aiGalleryImages.map((slide, index) => (
+                  <button
+                    key={slide.src}
+                    onClick={() => setActiveSlide(index)}
+                    className={`h-2 rounded-full transition-all ${activeSlide === index ? "w-6 bg-primary" : "w-2 bg-white/40"}`}
+                    aria-label={`Show AI character ${index + 1}`}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
         </motion.div>
 

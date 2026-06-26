@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Send, Bot, User, Sparkles, Plus, Trash2, MessageSquare,
+  Send, User, Sparkles, Plus, Trash2, MessageSquare,
   ChevronLeft, ChevronRight, BookOpen, Zap, GraduationCap,
   Menu, X
 } from "lucide-react";
@@ -9,6 +9,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { supabase } from "@/integrations/supabase/client";
 import neuronLogo from "@/assets/neuron-logo-new.png";
+import { aiGalleryImages } from "@/assets/aiGallery";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 
@@ -32,7 +33,7 @@ type Mode = "default" | "beginner" | "exam";
 const MODE_CONFIG: Record<Mode, { label: string; icon: typeof BookOpen; desc: string }> = {
   default: { label: "Standard", icon: BookOpen, desc: "Balanced explanations" },
   beginner: { label: "Beginner", icon: GraduationCap, desc: "Simple, easy to understand" },
-  exam: { label: "Exam", icon: Zap, desc: "Short, direct answers" },
+  exam: { label: "Exam", icon: Zap, desc: "Create exams and score answers" },
 };
 
 const SUGGESTIONS = [
@@ -42,6 +43,7 @@ const SUGGESTIONS = [
   "Recommend the best AI writing tool",
   "Help me study for WAEC Biology",
   "What AI tools can help with coding?",
+  "Exam: Biology, photosynthesis, 10 questions",
 ];
 
 // ─── LocalStorage helpers ───
@@ -75,6 +77,9 @@ export default function Chatbot() {
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [examSubject, setExamSubject] = useState("");
+  const [examTopic, setExamTopic] = useState("");
+  const [examCount, setExamCount] = useState("10");
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -208,7 +213,7 @@ export default function Chatbot() {
       const errMsg: Message = {
         id: crypto.randomUUID(),
         role: "assistant",
-        content: "I'm having trouble connecting right now. Please try again! 🔄",
+        content: err instanceof Error ? `I'm having trouble connecting right now: ${err.message}` : "I'm having trouble connecting right now. Please try again! 🔄",
       };
       updateChat(activeId, (c) => ({ ...c, messages: [...c.messages, errMsg] }));
     } finally {
@@ -223,6 +228,14 @@ export default function Chatbot() {
     }
   };
 
+  const startExam = () => {
+    const count = Math.min(Math.max(Number.parseInt(examCount || "10", 10) || 10, 1), 50);
+    const prompt = examSubject.trim() && examTopic.trim()
+      ? `Exam mode. Subject: ${examSubject.trim()}. Topic: ${examTopic.trim()}. Number of questions: ${count}. Create the exam questions now. Do not show the answers yet. After I answer with numbered responses, mark my answers, score me, and then show the correct answers with short explanations.`
+      : "Exam mode. Please ask me for the subject, topic, number of questions, and question type before creating the exam.";
+    send(prompt);
+  };
+
   const user = (() => {
     try {
       return JSON.parse(localStorage.getItem("ai-tools-user") || "{}");
@@ -232,7 +245,8 @@ export default function Chatbot() {
   const showWelcome = activeChat?.messages.length === 0;
 
   return (
-    <div className="h-screen bg-background flex overflow-hidden">
+    <div className="h-screen bg-background overflow-hidden p-3 sm:p-6">
+      <div className="mx-auto flex h-full max-w-7xl gap-4">
       {/* ─── SIDEBAR (mobile overlay + desktop persistent) ─── */}
       <AnimatePresence>
         {sidebarOpen && (
@@ -248,8 +262,8 @@ export default function Chatbot() {
 
       <motion.aside
         className={`
-          fixed lg:relative z-50 lg:z-auto h-full
-          w-72 bg-card/80 backdrop-blur-xl border-r border-border/50
+          fixed lg:relative z-50 lg:z-auto h-[calc(100%-1.5rem)] sm:h-[calc(100%-3rem)] lg:h-full
+          w-72 bg-card/80 backdrop-blur-xl border border-border/50 rounded-[2rem] overflow-hidden
           flex flex-col
           transition-transform duration-300
           ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
@@ -319,7 +333,7 @@ export default function Chatbot() {
       </motion.aside>
 
       {/* ─── MAIN CHAT AREA ─── */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 rounded-3xl border border-border/40 bg-card/30 backdrop-blur-xl overflow-hidden">
         {/* Top bar */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-border/30 bg-card/40 backdrop-blur-xl">
           <div className="flex items-center gap-3">
@@ -368,13 +382,14 @@ export default function Chatbot() {
                 animate={{ opacity: 1, scale: 1 }}
                 className="text-center max-w-lg space-y-6"
               >
-                <motion.img
-                  src={neuronLogo}
-                  alt="NEURON VIEW"
-                  className="w-20 h-20 mx-auto"
-                  animate={{ rotate: [0, 3, -3, 0] }}
+                <motion.div
+                  className="relative w-32 h-32 mx-auto rounded-[2rem] overflow-hidden border border-primary/30 shadow-[0_0_50px_hsl(var(--primary)/0.25)]"
+                  animate={{ y: [0, -6, 0] }}
                   transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                />
+                >
+                  <img src={aiGalleryImages[0].src} alt="NEURON VIEW AI character" className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent" />
+                </motion.div>
                 <div>
                   <h1 className="text-2xl sm:text-3xl font-heading font-bold text-foreground">
                     NEURON VIEW AI
@@ -409,6 +424,23 @@ export default function Chatbot() {
                   })}
                 </div>
 
+                {mode === "exam" && (
+                  <div className="glass-card p-4 space-y-3 text-left">
+                    <div>
+                      <h2 className="text-sm font-heading font-bold text-foreground">Create an exam</h2>
+                      <p className="text-xs text-muted-foreground">Enter what you want to study. I will ask questions first, then score you after you answer.</p>
+                    </div>
+                    <div className="grid sm:grid-cols-3 gap-2">
+                      <input value={examSubject} onChange={(e) => setExamSubject(e.target.value)} placeholder="Subject e.g. Biology" className="bg-muted/30 border border-border/50 rounded-xl px-3 py-2 text-xs text-foreground outline-none focus:border-primary/40" />
+                      <input value={examTopic} onChange={(e) => setExamTopic(e.target.value)} placeholder="Topic e.g. Photosynthesis" className="bg-muted/30 border border-border/50 rounded-xl px-3 py-2 text-xs text-foreground outline-none focus:border-primary/40" />
+                      <input value={examCount} onChange={(e) => setExamCount(e.target.value)} placeholder="Questions" inputMode="numeric" className="bg-muted/30 border border-border/50 rounded-xl px-3 py-2 text-xs text-foreground outline-none focus:border-primary/40" />
+                    </div>
+                    <button onClick={startExam} disabled={isTyping} className="w-full py-2.5 rounded-xl gradient-primary text-primary-foreground text-xs font-semibold hover:opacity-90 transition disabled:opacity-50">
+                      Generate exam questions
+                    </button>
+                  </div>
+                )}
+
                 {/* Suggestion prompts */}
                 <div className="space-y-2">
                   <p className="text-xs text-muted-foreground flex items-center gap-1 justify-center">
@@ -440,8 +472,8 @@ export default function Chatbot() {
                   className={`flex gap-3 ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                 >
                   {msg.role === "assistant" && (
-                    <div className="w-8 h-8 rounded-full bg-primary/15 border border-primary/20 flex items-center justify-center flex-shrink-0 mt-1">
-                      <Bot className="w-4 h-4 text-primary" />
+                    <div className="w-9 h-9 rounded-full overflow-hidden bg-primary/15 border border-primary/20 flex items-center justify-center flex-shrink-0 mt-1">
+                      <img src={aiGalleryImages[0].src} alt="AI" className="w-full h-full object-cover" />
                     </div>
                   )}
                   <div
@@ -452,7 +484,7 @@ export default function Chatbot() {
                     }`}
                   >
                     {msg.role === "assistant" ? (
-                      <div className="prose prose-sm prose-invert max-w-none text-foreground text-sm [&>p]:mb-2 [&>ul]:mb-2 [&>ol]:mb-2 [&>h1]:text-lg [&>h2]:text-base [&>h3]:text-sm [&_code]:bg-muted [&_code]:px-1 [&_code]:rounded [&_pre]:bg-muted/80 [&_pre]:rounded-xl [&_pre]:p-3 [&_pre]:overflow-x-auto [&_a]:text-primary [&_strong]:text-foreground">
+                  <div className="prose prose-sm prose-invert max-w-none text-foreground text-sm [&>p]:mb-2 [&>ul]:mb-2 [&>ol]:mb-2 [&>h1]:text-lg [&>h2]:text-base [&>h3]:text-sm [&_code]:bg-muted [&_code]:px-1 [&_code]:rounded [&_pre]:bg-muted/80 [&_pre]:rounded-xl [&_pre]:p-3 [&_pre]:overflow-x-auto [&_a]:text-primary [&_strong]:text-foreground">
                         <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
                       </div>
                     ) : (
@@ -475,7 +507,7 @@ export default function Chatbot() {
                   className="flex gap-3"
                 >
                   <div className="w-8 h-8 rounded-full bg-primary/15 border border-primary/20 flex items-center justify-center flex-shrink-0">
-                    <Bot className="w-4 h-4 text-primary" />
+                    <img src={aiGalleryImages[0].src} alt="AI" className="w-full h-full object-cover rounded-full" />
                   </div>
                   <div className="bg-muted/50 border border-border/30 rounded-2xl rounded-bl-md px-4 py-3">
                     <div className="flex items-center gap-2">
@@ -495,6 +527,14 @@ export default function Chatbot() {
 
         {/* ─── INPUT BAR ─── */}
         <div className="border-t border-border/30 bg-card/40 backdrop-blur-xl px-4 py-3">
+          {mode === "exam" && activeChat?.messages.length > 0 && (
+            <div className="max-w-3xl mx-auto mb-3 glass-card p-3 grid sm:grid-cols-[1fr_1fr_90px_auto] gap-2">
+              <input value={examSubject} onChange={(e) => setExamSubject(e.target.value)} placeholder="Subject" className="bg-muted/30 border border-border/50 rounded-xl px-3 py-2 text-xs text-foreground outline-none focus:border-primary/40" />
+              <input value={examTopic} onChange={(e) => setExamTopic(e.target.value)} placeholder="Topic" className="bg-muted/30 border border-border/50 rounded-xl px-3 py-2 text-xs text-foreground outline-none focus:border-primary/40" />
+              <input value={examCount} onChange={(e) => setExamCount(e.target.value)} placeholder="No." inputMode="numeric" className="bg-muted/30 border border-border/50 rounded-xl px-3 py-2 text-xs text-foreground outline-none focus:border-primary/40" />
+              <button onClick={startExam} disabled={isTyping} className="px-4 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-semibold hover:opacity-90 disabled:opacity-50">Start</button>
+            </div>
+          )}
           <form
             onSubmit={(e) => { e.preventDefault(); send(input); }}
             className="max-w-3xl mx-auto flex items-end gap-2"
@@ -508,7 +548,7 @@ export default function Chatbot() {
                 mode === "beginner"
                   ? "Ask me anything — I'll explain it simply..."
                   : mode === "exam"
-                  ? "Paste your exam question here..."
+                  ? "Tell me subject, topic, number of questions, then answer when I ask..."
                   : "Ask about academics, AI tools, anything..."
               }
               rows={1}
@@ -526,6 +566,7 @@ export default function Chatbot() {
             NEURON VIEW AI can make mistakes. Verify important information.
           </p>
         </div>
+      </div>
       </div>
     </div>
   );

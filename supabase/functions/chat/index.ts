@@ -59,6 +59,17 @@ When appropriate, encourage users to explore NEURON VIEW to discover more AI too
 WELCOME MESSAGE
 "Welcome to our AI Directory Assistant! I can help you discover AI tools, compare platforms, learn AI concepts, solve everyday problems, and boost your productivity. What would you like help with today?"`;
 
+function jsonResponse(body: Record<string, unknown>, status = 200) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { ...corsHeaders, "Content-Type": "application/json" },
+  });
+}
+
+function normalizeAuthHeader(header: string) {
+  return header.startsWith("Bearer ") ? header : `Bearer ${header}`;
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -67,11 +78,9 @@ serve(async (req) => {
   try {
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return jsonResponse({ error: "Unauthorized" }, 401);
     }
-    const jwt = authHeader.replace("Bearer ", "");
+    const jwt = normalizeAuthHeader(authHeader).replace("Bearer ", "");
     const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
     const ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY")!;
     const userClient = createClient(SUPABASE_URL, ANON_KEY, {
@@ -79,12 +88,19 @@ serve(async (req) => {
     });
     const { data: { user }, error: userErr } = await userClient.auth.getUser();
     if (userErr || !user) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return jsonResponse({ error: "Unauthorized" }, 401);
     }
 
-    const { messages, mode } = await req.json();
+    const { messages, mode } = await req.json().catch(() => ({ messages: [], mode: "default" }));
+    const safeMessages = Array.isArray(messages)
+      ? messages
+          .filter((message) => message && (message.role === "user" || message.role === "assistant") && typeof message.content === "string")
+          .slice(-20)
+      : [];
+
+    if (safeMessages.length === 0) {
+      return jsonResponse({ error: "Please send a message first." }, 400);
+    }
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
 
 
@@ -96,24 +112,44 @@ serve(async (req) => {
     if (mode === "beginner") {
       systemContent += "\n\nIMPORTANT: BEGINNER MODE is active. Explain everything as simply as possible using analogies a 10-year-old would understand. Avoid jargon. Use everyday examples.";
     } else if (mode === "exam") {
-      systemContent += "\n\nIMPORTANT: EXAM MODE is active. Give concise, direct answers structured like model exam answers. Be brief but complete. Use bullet points.";
+      systemContent += `\n\nIMPORTANT: EXAM MODE is active.
+- First collect: subject, topic, number of questions, and question type if missing.
+- When the student gives those details, create the exact number of exam questions.
+- Do NOT show answers with the questions.
+- Tell the student to reply with numbered answers.
+- When answers are submitted, score the work, show the total mark and percentage, mark each question correct/incorrect, then reveal the correct answers with short explanations.
+- If the student's answers are incomplete, score what they answered and ask if they want to continue.`;
     }
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "openai/gpt-5",
-        messages: [
-          { role: "system", content: systemContent },
-          ...messages,
-        ],
-      }),
+    const baseMessages = [
+      { role: "system", content: systemContent },
+      ...safeMessages,
+    ];
 
-    });
+    // Keep the payload intentionally small and do not pass unsupported client options.
+    const modelCandidates = ["google/gemini-3-flash-preview", "google/gemini-2.5-flash"];
+    let response: Response | null = null;
+    let lastGatewayError = "";
+
+    for (const model of modelCandidates) {
+      response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${LOVABLE_API_KEY}`,
+          "X-Lovable-AIG-SDK": "neuron-view-edge-function",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ model, messages: baseMessages }),
+      });
+
+      if (response.ok || response.status !== 400) break;
+      lastGatewayError = await response.text();
+      console.error("AI gateway model retry:", model, response.status, lastGatewayError);
+    }
+
+    if (!response) {
+      return jsonResponse({ error: "AI service is unavailable. Please try again." }, 502);
+    }
 
     if (!response.ok) {
       if (response.status === 429) {
@@ -128,22 +164,17 @@ serve(async (req) => {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      const errText = await response.text();
+      const errText = lastGatewayError || await response.text();
       console.error("AI gateway error:", response.status, errText);
-      throw new Error(`AI gateway returned ${response.status}`);
+      return jsonResponse({ error: "The AI service rejected the request. Please try again." }, 502);
     }
 
     const data = await response.json();
     const reply = data.choices?.[0]?.message?.content || "I'm sorry, I couldn't generate a response. Please try again.";
 
-    return new Response(JSON.stringify({ reply }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return jsonResponse({ reply });
   } catch (error) {
     console.error("Chat function error:", error);
-    return new Response(
-      JSON.stringify({ error: error instanceof Error ? error.message : "Unknown error" }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return jsonResponse({ error: "Chat service is temporarily unavailable. Please try again." }, 500);
   }
 });

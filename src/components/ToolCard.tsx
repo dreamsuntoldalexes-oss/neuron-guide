@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Heart, Star, ExternalLink, Lock, Crown, X, Zap, AlertCircle, Loader2 } from "lucide-react";
+import { Heart, Star, ExternalLink, Lock, Crown, X, CreditCard, AlertCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { AITool } from "@/data/tools";
-import { getUserTier, canAccessTool, getCredits, useCredit, setUserTier } from "@/data/tools";
-import { supabase } from "@/integrations/supabase/client";
+import { getUserTier, canAccessTool, getCredits, useCredit } from "@/data/tools";
 
 
 interface ToolCardProps {
@@ -26,10 +25,6 @@ export default function ToolCard({ tool, index = 0, isFavorite, onToggleFavorite
   const badge = tierBadge[tool.tier];
   const [showUpgrade, setShowUpgrade] = useState(false);
   const [showCredits, setShowCredits] = useState(false);
-  const [showCodeInput, setShowCodeInput] = useState(false);
-  const [activationCode, setActivationCode] = useState("");
-  const [codeError, setCodeError] = useState("");
-  const [activating, setActivating] = useState(false);
 
 
   const handleLockedClick = (e: React.MouseEvent) => {
@@ -47,48 +42,9 @@ export default function ToolCard({ tool, index = 0, isFavorite, onToggleFavorite
     useCredit();
   };
 
-  const handleActivate = async () => {
-    setCodeError("");
-    setActivating(true);
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        setCodeError("Please sign in first to activate premium.");
-        return;
-      }
-      const { data, error } = await supabase.functions.invoke("redeem-code", {
-        body: { code: activationCode.trim() },
-      });
-      if (error || !data?.success) {
-        setCodeError(data?.error || "Invalid code. Pay ₦500 and get the code via WhatsApp.");
-        return;
-      }
-      // Cache for UI only — DB is source of truth.
-      setUserTier("pro");
-      const user = JSON.parse(localStorage.getItem("ai-tools-user") || '{"name":"User","email":""}');
-      user.tier = "pro";
-      user.premiumExpiry = data.premium_expiry;
-      localStorage.setItem("ai-tools-user", JSON.stringify(user));
-      localStorage.setItem("ai-tools-credits", "9999");
-      setShowUpgrade(false);
-      setShowCredits(false);
-      setShowCodeInput(false);
-      setActivationCode("");
-      window.location.reload();
-    } catch (e) {
-      setCodeError("Could not validate code. Try again.");
-    } finally {
-      setActivating(false);
-    }
-  };
-
-
   const closeAll = () => {
     setShowUpgrade(false);
     setShowCredits(false);
-    setShowCodeInput(false);
-    setCodeError("");
-    setActivationCode("");
   };
 
   return (
@@ -188,84 +144,41 @@ export default function ToolCard({ tool, index = 0, isFavorite, onToggleFavorite
                 <X className="w-4 h-4 text-muted-foreground" />
               </button>
 
-              {!showCodeInput ? (
-                <>
-                  <div className="flex items-center gap-3">
-                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${showCredits ? "bg-destructive/15 border border-destructive/20" : "bg-neon-purple/15 border border-neon-purple/20"}`}>
-                      {showCredits ? <AlertCircle className="w-6 h-6 text-destructive" /> : <Zap className="w-6 h-6 text-neon-purple" />}
-                    </div>
-                    <div>
-                      <h3 className="font-heading font-bold text-foreground whitespace-nowrap">
-                        {showCredits ? "0 Credits Left" : "Upgrade Required"}
-                      </h3>
-                      <p className="text-xs text-muted-foreground whitespace-nowrap">
-                        {showCredits ? "You've used all your free views" : `${tool.tier} plan needed`}
-                      </p>
-                    </div>
-                  </div>
-                  <p className="text-sm text-muted-foreground">
-                    {showCredits
-                      ? <>Pay <span className="font-semibold text-foreground">₦500 for 3 days</span> to unlock unlimited access to <span className="font-semibold text-foreground">500+ AI tools</span>.</>
-                      : <><span className="font-semibold text-foreground">{tool.name}</span> requires an upgrade. Pay ₦500 for 3 days of unlimited access.</>
-                    }
+              <div className="flex items-center gap-3">
+                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${showCredits ? "bg-destructive/15 border border-destructive/20" : "bg-primary/15 border border-primary/20"}`}>
+                  {showCredits ? <AlertCircle className="w-6 h-6 text-destructive" /> : <CreditCard className="w-6 h-6 text-primary" />}
+                </div>
+                <div>
+                  <h3 className="font-heading font-bold text-foreground whitespace-nowrap">
+                    {showCredits ? "Views Limit Reached" : "Pro Access Required"}
+                  </h3>
+                  <p className="text-xs text-muted-foreground whitespace-nowrap">
+                    NEURON VIEW Pro is $5/month
                   </p>
-                  <div className="glass-card p-3 space-y-1 text-xs text-muted-foreground">
-                    <p className="font-heading font-semibold text-foreground text-center text-sm whitespace-nowrap">Pay ₦500 via Bank Transfer</p>
-                    <p className="whitespace-nowrap"><span className="text-foreground font-medium">Bank:</span> PalmPay</p>
-                    <p className="whitespace-nowrap"><span className="text-foreground font-medium">Account:</span> 8033962964</p>
-                    <p className="whitespace-nowrap"><span className="text-foreground font-medium">Name:</span> MARIAM AINA ADEKANMBI</p>
-                  </div>
-                  <div className="flex flex-col gap-2 pt-1">
-                    <a href="https://wa.me/2348033962964?text=Hi%2C%20I%20want%20to%20pay%20%E2%82%A6500%20for%20NEURON%20VIEW%20Premium%20(3%20days).%20Please%20send%20me%20the%20activation%20code."
-                      target="_blank" rel="noopener noreferrer"
-                      className="w-full py-3 rounded-xl text-sm font-semibold gradient-primary text-primary-foreground text-center hover:opacity-90 transition active:scale-[0.97]">
-                      💬 Pay via WhatsApp
-                    </a>
-                    <a href="mailto:adekanmbiadekanmbi5@gmail.com?subject=NEURON%20VIEW%20Premium%20Payment&body=Hi%2C%20I%20want%20to%20pay%20%E2%82%A6500%20for%20NEURON%20VIEW%20Premium%20(3%20days).%20Please%20send%20me%20the%20activation%20code."
-                      className="w-full py-3 rounded-xl text-sm font-medium border border-border bg-muted/30 text-foreground text-center hover:bg-muted/50 transition active:scale-[0.97]">
-                      ✉️ Pay via Email
-                    </a>
-                    <button onClick={() => setShowCodeInput(true)}
-                      className="w-full py-3 rounded-xl text-sm font-semibold bg-secondary/15 text-secondary border border-secondary/20 text-center hover:bg-secondary/25 transition active:scale-[0.97]">
-                      🔑 I Have an Activation Code
-                    </button>
-                    <Link to="/pricing" onClick={closeAll}
-                      className="w-full py-2 text-sm text-primary text-center hover:underline">
-                      View Plans & Pricing
-                    </Link>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="text-center space-y-3">
-                    <div className="w-12 h-12 rounded-2xl bg-secondary/15 border border-secondary/20 flex items-center justify-center mx-auto">
-                       <Zap className="w-6 h-6 text-secondary" />
-                    </div>
-                    <h3 className="font-heading font-bold text-foreground">Enter Activation Code</h3>
-                    <p className="text-xs text-muted-foreground">Enter the code you received after payment.</p>
-                  </div>
-                  <div className="space-y-3">
-                    <input
-                      type="text"
-                      value={activationCode}
-                      onChange={(e) => { setActivationCode(e.target.value); setCodeError(""); }}
-                      placeholder="Enter activation code"
-                      className="w-full px-4 py-3 rounded-xl bg-muted/50 border border-border text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                    />
-                    {codeError && <p className="text-xs text-destructive">{codeError}</p>}
-                    <button onClick={handleActivate} disabled={activating || !activationCode.trim()}
-                      className="w-full py-3 rounded-xl text-sm font-semibold gradient-primary text-primary-foreground text-center hover:opacity-90 transition active:scale-[0.97] disabled:opacity-60 flex items-center justify-center gap-2">
-                      {activating && <Loader2 className="w-4 h-4 animate-spin" />}
-                      Activate Premium
-                    </button>
-
-                    <button onClick={() => { setShowCodeInput(false); setCodeError(""); }}
-                      className="w-full py-2 text-sm text-muted-foreground text-center hover:text-foreground transition">
-                      ← Back
-                    </button>
-                  </div>
-                </>
-              )}
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                {showCredits
+                  ? <>Subscribe for <span className="font-semibold text-foreground">$5/month</span> to unlock more AI tool views, analytics, saved tools, and AI assistant support.</>
+                  : <><span className="font-semibold text-foreground">{tool.name}</span> is available with the $5/month Pro plan.</>
+                }
+              </p>
+              <div className="glass-card p-3 space-y-1 text-xs text-muted-foreground">
+                <p className="font-heading font-semibold text-foreground text-sm whitespace-nowrap">Simple Pro Plan</p>
+                <p><span className="text-foreground font-medium">Price:</span> $5/month</p>
+                <p><span className="text-foreground font-medium">Includes:</span> AI tools, analytics, favorites, and assistant access</p>
+              </div>
+              <div className="flex flex-col gap-2 pt-1">
+                <Link to="/pricing" onClick={closeAll}
+                  className="w-full py-3 rounded-xl text-sm font-semibold gradient-primary text-primary-foreground text-center hover:opacity-90 transition active:scale-[0.97]">
+                  Subscribe for $5/month
+                </Link>
+                <a href="https://wa.me/2348033962964?text=Hi%2C%20I%20want%20to%20subscribe%20to%20NEURON%20VIEW%20Pro%20for%20%245%2Fmonth."
+                  target="_blank" rel="noopener noreferrer"
+                  className="w-full py-3 rounded-xl text-sm font-medium border border-border bg-muted/30 text-foreground text-center hover:bg-muted/50 transition active:scale-[0.97]">
+                  Ask support on WhatsApp
+                </a>
+              </div>
             </motion.div>
           </motion.div>
         )}

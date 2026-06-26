@@ -2,9 +2,9 @@ import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
-  User, Mail, LogOut, BookOpen, Info, Heart, CreditCard, Pencil, Check, X,
+  Mail, LogOut, BookOpen, Info, Heart, CreditCard, Pencil, Check, X,
   Camera, Phone, Settings as SettingsIcon, Bell, BarChart3, Bookmark,
-  Share2, Globe, MessageCircle, Sparkles,
+  Share2, Globe, MessageCircle, Sparkles, Calendar,
 } from "lucide-react";
 import Layout from "@/components/Layout";
 import { useFavorites } from "@/hooks/useFavorites";
@@ -75,12 +75,12 @@ export default function Profile() {
 
   return (
     <Layout>
-      <div className="px-4 pt-6 pb-4 space-y-6 max-w-md mx-auto">
+      <div className="px-4 sm:px-8 pt-6 pb-6 space-y-6 max-w-5xl mx-auto">
         {/* S25-style header card */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          className="glass-card p-5 space-y-5"
+          className="glass-card p-5 sm:p-6 space-y-5"
         >
           {/* Top row: avatar + identity + Get in touch */}
           <div className="flex items-start justify-between gap-3">
@@ -98,10 +98,10 @@ export default function Profile() {
                   <img
                     src={user.avatar}
                     alt={user.name}
-                    className="w-20 h-20 rounded-full object-cover ring-2 ring-primary/40"
+                    className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover ring-2 ring-primary/40"
                   />
                 ) : (
-                  <div className="w-20 h-20 rounded-full gradient-primary flex items-center justify-center ring-2 ring-primary/40 text-2xl font-heading font-bold text-primary-foreground">
+                  <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full gradient-primary flex items-center justify-center ring-2 ring-primary/40 text-3xl font-heading font-bold text-primary-foreground">
                     {initial}
                   </div>
                 )}
@@ -210,8 +210,54 @@ export default function Profile() {
           )}
         </motion.div>
 
+        {/* S25-inspired profile preview card */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.08 }}
+          className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-zinc-200 via-zinc-500 to-zinc-950 p-5 sm:p-8 min-h-[360px] shadow-2xl"
+        >
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_10%,rgba(255,255,255,0.4),transparent_28%),radial-gradient(circle_at_25%_80%,rgba(0,0,0,0.5),transparent_35%)]" />
+          <div className="relative mx-auto max-w-4xl rounded-[2rem] bg-black/55 border border-white/15 backdrop-blur-xl p-5 sm:p-8 text-white shadow-2xl">
+            <div className="flex items-center justify-between gap-3 mb-8">
+              <h2 className="font-heading text-2xl">NEURON</h2>
+              <div className="flex items-center gap-4 text-xs text-white/70">
+                <span>AI TOOLS</span>
+                <span className="px-3 py-1 rounded-full bg-white text-black font-semibold">TODAY</span>
+                <span>PRO $5/MONTH</span>
+              </div>
+            </div>
+            <div className="grid md:grid-cols-[1fr_280px] gap-8 items-center">
+              <div className="space-y-4">
+                {[
+                  { time: "2 MIN", title: "Browse", desc: "Search thousands of AI websites and apps by category." },
+                  { time: "5 MIN", title: "Compare", desc: "View pricing, features, ratings, and global usage analytics." },
+                  { time: "NOW", title: "Launch", desc: "Open tools instantly and save your favorite platforms." },
+                ].map((item, index) => (
+                  <div key={item.title} className="rounded-2xl border border-white/15 bg-white/5 p-4 flex items-center gap-3">
+                    <span className="text-[10px] text-white/60 w-12">{item.time}</span>
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold">{item.title}</p>
+                      <p className="text-xs text-white/60">{item.desc}</p>
+                    </div>
+                    <Check className="w-4 h-4 text-primary" />
+                  </div>
+                ))}
+              </div>
+              <div className="rounded-[1.75rem] overflow-hidden bg-gradient-to-br from-zinc-800 to-black border border-white/10 min-h-[260px] p-5 flex flex-col justify-end">
+                <div className="mb-auto flex justify-between text-xs text-white/60">
+                  <span>PROFILE</span>
+                  <Calendar className="w-4 h-4" />
+                </div>
+                <p className="text-xs text-primary mb-2">WEEK 1</p>
+                <h3 className="font-heading text-3xl leading-tight">Finding your Best AI Tool</h3>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
         {/* Menu list */}
-        <div className="space-y-2">
+        <div className="grid sm:grid-cols-2 gap-3">
           {menuItems.map((item, i) => {
             const Icon = item.icon;
             return (

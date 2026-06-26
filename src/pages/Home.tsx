@@ -1,16 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Search, TrendingUp, Clock, Crown, BarChart3, Users, Sparkles } from "lucide-react";
 import Layout from "@/components/Layout";
 import ToolCard from "@/components/ToolCard";
 import { categories, getUserTier, tools } from "@/data/tools";
 import { useFavorites } from "@/hooks/useFavorites";
 import neuronLogo from "@/assets/neuron-logo-new.png";
+import { aiGalleryImages } from "@/assets/aiGallery";
 
 export default function Home() {
   const [query, setQuery] = useState("");
   const [activeCat, setActiveCat] = useState<string>("All");
+  const [activeSlide, setActiveSlide] = useState(0);
   const { isFavorite, toggleFavorite } = useFavorites();
   const trending = [...tools].sort((a, b) => b.views - a.views).slice(0, 6);
   const recent = [...tools].sort((a, b) => new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime()).slice(0, 6);
@@ -18,9 +20,16 @@ export default function Home() {
   const searchResults = query.length > 1 ? tools.filter(t => t.name.toLowerCase().includes(query.toLowerCase()) || t.shortDescription.toLowerCase().includes(query.toLowerCase())).slice(0, 10) : [];
   const tier = getUserTier();
 
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setActiveSlide((current) => (current + 1) % aiGalleryImages.length);
+    }, 3600);
+    return () => window.clearInterval(timer);
+  }, []);
+
   return (
     <Layout>
-      <div className="px-4 pt-6 pb-4 space-y-8">
+      <div className="px-4 sm:px-8 pt-6 pb-6 space-y-8 max-w-6xl mx-auto">
         {/* Header bar */}
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -37,26 +46,63 @@ export default function Home() {
         </motion.div>
 
         {/* Hero */}
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="text-center space-y-5 pt-2">
-          <span className="inline-block text-[11px] tracking-wider uppercase px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
-            {tools.length}+ AI Tools Directory
-          </span>
-          <h1 className="text-4xl sm:text-5xl font-heading font-bold text-foreground leading-tight">
-            Discover the <span className="gradient-text">Best AI Tools</span>
-          </h1>
-          <p className="text-sm text-muted-foreground max-w-md mx-auto">
-            Find the perfect AI tools for your workflow. Browse, compare, and discover cutting-edge AI solutions trusted by students and professionals worldwide.
-          </p>
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="grid lg:grid-cols-[1fr_420px] items-center gap-8 pt-2 min-h-[430px]">
+          <div className="text-center lg:text-left space-y-5">
+            <span className="inline-block text-[11px] tracking-wider uppercase px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
+              {tools.length}+ AI Tools Directory
+            </span>
+            <h1 className="text-4xl sm:text-6xl font-heading font-bold text-foreground leading-tight">
+              Discover the <span className="gradient-text">Best AI Tools</span>
+            </h1>
+            <p className="text-sm sm:text-base text-muted-foreground max-w-xl mx-auto lg:mx-0">
+              Find the perfect AI tools for your workflow. Browse, compare, and discover cutting-edge AI solutions trusted by students and professionals worldwide.
+            </p>
 
-          {/* Search */}
-          <div className="relative max-w-md mx-auto pt-2">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-            <input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search AI tools..."
-              className="w-full bg-muted/40 border border-border rounded-full py-3.5 pl-12 pr-4 text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 focus:ring-primary/50 focus:border-primary/30 transition"
-            />
+            {/* Search */}
+            <div className="relative max-w-xl mx-auto lg:mx-0 pt-2">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search AI tools..."
+                className="w-full bg-muted/40 border border-border rounded-full py-3.5 pl-12 pr-4 text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 focus:ring-primary/50 focus:border-primary/30 transition"
+              />
+            </div>
+          </div>
+
+          <div className="relative h-[320px] sm:h-[380px] rounded-[2rem] overflow-hidden border border-border/40 bg-card/50 shadow-2xl shadow-primary/10">
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={aiGalleryImages[activeSlide].src}
+                src={aiGalleryImages[activeSlide].src}
+                alt={aiGalleryImages[activeSlide].alt}
+                className="absolute inset-0 w-full h-full object-cover"
+                initial={{ opacity: 0, x: 40, scale: 1.08 }}
+                animate={{ opacity: 1, x: 0, scale: 1 }}
+                exit={{ opacity: 0, x: -40, scale: 1.02 }}
+                transition={{ duration: 0.75, ease: "easeOut" }}
+              />
+            </AnimatePresence>
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_15%,hsl(var(--primary)/0.18),transparent_35%)]" />
+            <motion.div
+              animate={{ y: [0, -8, 0], opacity: [0.92, 1, 0.92] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute bottom-5 left-5 right-5 glass-card p-4"
+            >
+              <p className="text-xs text-primary uppercase tracking-wider">AI character live</p>
+              <p className="text-lg font-heading font-bold text-foreground">Explore smarter tools faster</p>
+            </motion.div>
+            <div className="absolute top-4 right-4 flex gap-1.5">
+              {aiGalleryImages.map((slide, index) => (
+                <button
+                  key={slide.src}
+                  onClick={() => setActiveSlide(index)}
+                  className={`w-2 h-2 rounded-full transition ${index === activeSlide ? "bg-primary w-6" : "bg-foreground/30"}`}
+                  aria-label={`Show AI image ${index + 1}`}
+                />
+              ))}
+            </div>
           </div>
         </motion.div>
 
