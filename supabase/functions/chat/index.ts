@@ -111,8 +111,8 @@ serve(async (req) => {
           { role: "system", content: systemContent },
           ...messages,
         ],
-        reasoning: { effort: "medium" },
       }),
+
     });
 
     if (!response.ok) {
