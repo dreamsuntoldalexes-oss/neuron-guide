@@ -144,7 +144,9 @@ export default function Pricing() {
           <h2 className="text-lg font-heading font-bold text-foreground mb-3 flex items-center gap-2">
             <CreditCard className="w-5 h-5 text-primary" /> Backend Pricing
           </h2>
-          <p className="text-xs text-muted-foreground mb-3">The Pro subscription plan is stored in Supabase at ${proPrice}/month. Use contact support until Stripe keys are added.</p>
+          <p className="text-xs text-muted-foreground mb-3">
+            The Pro subscription plan is stored in Supabase at ${proPrice}/month. Use contact support until Stripe keys are added.
+          </p>
           <div className="space-y-2">
             {contactMethods.map((c) => {
               const Icon = c.icon;
