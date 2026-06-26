@@ -156,8 +156,15 @@ export default function Chatbot() {
         content: m.content,
       }));
 
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
+      let { data: { session } } = await supabase.auth.getSession();
+
+      if (session?.expires_at && session.expires_at * 1000 < Date.now() + 60_000) {
+        const refreshed = await supabase.auth.refreshSession();
+        session = refreshed.data.session;
+      }
+
+      const accessToken = session?.access_token;
+      if (!accessToken) {
         const errMsg: Message = {
           id: crypto.randomUUID(),
           role: "assistant",
@@ -168,14 +175,24 @@ export default function Chatbot() {
         return;
       }
 
-      const { data, error } = await supabase.functions.invoke("chat", {
-        body: { messages: chatMessages, mode },
-        headers: { Authorization: `Bearer ${session.access_token}` },
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ messages: chatMessages, mode }),
       });
 
-      if (error) {
-        console.error("Chat error:", error);
-        throw new Error("Failed to get response");
+      const data = await response.json().catch(() => null);
+
+      if (!response.ok) {
+        console.error("Chat error:", data || response.statusText);
+        if (response.status === 401) {
+          throw new Error("Please sign in again to continue chatting.");
+        }
+        throw new Error(data?.error || "Failed to get response");
       }
       
       if (data?.error) {
