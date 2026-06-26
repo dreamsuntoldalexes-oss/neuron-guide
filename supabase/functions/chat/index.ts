@@ -121,26 +121,35 @@ serve(async (req) => {
 - If the student's answers are incomplete, score what they answered and ask if they want to continue.`;
     }
 
-    const gatewayPayload: Record<string, unknown> = {
-      model: "google/gemini-3-flash-preview",
-      messages: [
-        { role: "system", content: systemContent },
-        ...safeMessages,
-      ],
-    };
+    const baseMessages = [
+      { role: "system", content: systemContent },
+      ...safeMessages,
+    ];
 
     // Keep the payload intentionally small and do not pass unsupported client options.
+    const modelCandidates = ["google/gemini-3-flash-preview", "google/gemini-2.5-flash"];
+    let response: Response | null = null;
+    let lastGatewayError = "";
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "X-Lovable-AIG-SDK": "neuron-view-edge-function",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(gatewayPayload),
+    for (const model of modelCandidates) {
+      response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${LOVABLE_API_KEY}`,
+          "X-Lovable-AIG-SDK": "neuron-view-edge-function",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ model, messages: baseMessages }),
+      });
 
-    });
+      if (response.ok || response.status !== 400) break;
+      lastGatewayError = await response.text();
+      console.error("AI gateway model retry:", model, response.status, lastGatewayError);
+    }
+
+    if (!response) {
+      return jsonResponse({ error: "AI service is unavailable. Please try again." }, 502);
+    }
 
     if (!response.ok) {
       if (response.status === 429) {
@@ -155,7 +164,7 @@ serve(async (req) => {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      const errText = await response.text();
+      const errText = lastGatewayError || await response.text();
       console.error("AI gateway error:", response.status, errText);
       return jsonResponse({ error: "The AI service rejected the request. Please try again." }, 502);
     }
