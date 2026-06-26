@@ -85,7 +85,7 @@ function t(
     dateAdded: `2024-${String(Math.floor(Math.random() * 12) + 1).padStart(2, "0")}-${String(Math.floor(Math.random() * 28) + 1).padStart(2, "0")}`,
     features: features || [`${cat} automation`, "AI-powered processing", "Team collaboration", "API access"],
     pros: pros || ["Easy to use", "High quality output", "Regular updates"],
-    cons: cons || ["Pro access is $5/month", "Learning curve for beginners"],
+    cons: cons || ["Full access is $5/month", "Learning curve for beginners"],
     views: views || Math.floor(Math.random() * 12000) + 500,
     tier,
   };
@@ -100,7 +100,7 @@ const baseTools: AITool[] = [
   t("rytr", "Rytr", "Writing", "Affordable AI writing assistant with 30+ use cases and tones.", "https://rytr.me", "$5/month", 4.1, "free", 4500),
   t("wordtune", "Wordtune", "Writing", "AI writing companion for rewriting, editing, and improving text clarity.", "https://wordtune.com", "$5/month", 4.3, "pro", 5200),
   t("quillbot", "QuillBot", "Writing", "AI paraphrasing and grammar checking tool used by millions.", "https://quillbot.com", "$5/month", 4.2, "pro", 7100),
-  t("grammarly", "Grammarly", "Writing", "AI writing assistant for grammar, clarity, tone, and plagiarism detection.", "https://grammarly.com", "$5/month", 4.6, "enterprise", 12000, ["Grammar check", "Tone detection", "Plagiarism detection", "Browser extension"], ["Widely used", "Great accuracy", "Multi-platform"], ["Free version limited", "Premium is pricey"]),
+  t("grammarly", "Grammarly", "Writing", "AI writing assistant for grammar, clarity, tone, and plagiarism detection.", "https://grammarly.com", "$5/month", 4.6, "enterprise", 12000, ["Grammar check", "Tone detection", "Plagiarism detection", "Browser extension"], ["Widely used", "Great accuracy", "Multi-platform"], ["Starter access is limited", "Full access is $5/month"]),
   t("sudowrite", "Sudowrite", "Writing", "AI writing partner designed for fiction authors and creative writing.", "https://sudowrite.com", "$5/month", 4.3, "pro", 3800),
   t("anyword", "Anyword", "Writing", "AI copywriting platform with predictive performance scoring.", "https://anyword.com", "$5/month", 4.1, "pro", 2900),
   t("frase", "Frase", "Writing", "AI SEO content optimization tool for research and writing.", "https://frase.io", "$5/month", 4.2, "pro", 4100),
@@ -675,7 +675,7 @@ function generateAdditionalTools(): AITool[] {
         const rating = Math.round((3.8 + Math.random() * 0.9) * 10) / 10;
         const tier = tierOptions[count % 3];
         const views = 500 + Math.floor(Math.random() * 7500);
-        extra.push(t(id, name, cat, tmpl.desc, `https://${tmpl.domain}${n}.com`, `Free / Pro $${8 + (count % 20)}/mo`, rating, tier, views));
+        extra.push(t(id, name, cat, tmpl.desc, `https://${tmpl.domain}${n}.com`, "$5/month", rating, tier, views));
         count++;
       }
     }
