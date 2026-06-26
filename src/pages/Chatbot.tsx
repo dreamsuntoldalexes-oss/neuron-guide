@@ -229,7 +229,10 @@ export default function Chatbot() {
   };
 
   const startExam = () => {
-    const prompt = `Exam mode. Subject: ${examSubject || "please ask me for subject"}. Topic: ${examTopic || "please ask me for topic"}. Number of questions: ${examCount || "10"}. Create the exam questions now. Do not show the answers yet. After I answer, mark my answers, score me, and then show the correct answers with short explanations.`;
+    const count = Math.min(Math.max(Number.parseInt(examCount || "10", 10) || 10, 1), 50);
+    const prompt = examSubject.trim() && examTopic.trim()
+      ? `Exam mode. Subject: ${examSubject.trim()}. Topic: ${examTopic.trim()}. Number of questions: ${count}. Create the exam questions now. Do not show the answers yet. After I answer with numbered responses, mark my answers, score me, and then show the correct answers with short explanations.`
+      : "Exam mode. Please ask me for the subject, topic, number of questions, and question type before creating the exam.";
     send(prompt);
   };
 
@@ -242,7 +245,8 @@ export default function Chatbot() {
   const showWelcome = activeChat?.messages.length === 0;
 
   return (
-    <div className="h-screen bg-background flex overflow-hidden p-2 sm:p-4 gap-3">
+    <div className="h-screen bg-background overflow-hidden p-3 sm:p-6">
+      <div className="mx-auto flex h-full max-w-7xl gap-4">
       {/* ─── SIDEBAR (mobile overlay + desktop persistent) ─── */}
       <AnimatePresence>
         {sidebarOpen && (
@@ -258,8 +262,8 @@ export default function Chatbot() {
 
       <motion.aside
         className={`
-          fixed lg:relative z-50 lg:z-auto h-[calc(100%-1rem)] sm:h-[calc(100%-2rem)] lg:h-full
-          w-72 bg-card/80 backdrop-blur-xl border border-border/50 rounded-3xl overflow-hidden
+          fixed lg:relative z-50 lg:z-auto h-[calc(100%-1.5rem)] sm:h-[calc(100%-3rem)] lg:h-full
+          w-72 bg-card/80 backdrop-blur-xl border border-border/50 rounded-[2rem] overflow-hidden
           flex flex-col
           transition-transform duration-300
           ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
@@ -379,7 +383,7 @@ export default function Chatbot() {
                 className="text-center max-w-lg space-y-6"
               >
                 <motion.div
-                  className="relative w-28 h-28 mx-auto rounded-full overflow-hidden border border-primary/30 shadow-[0_0_40px_hsl(var(--primary)/0.25)]"
+                  className="relative w-32 h-32 mx-auto rounded-[2rem] overflow-hidden border border-primary/30 shadow-[0_0_50px_hsl(var(--primary)/0.25)]"
                   animate={{ y: [0, -6, 0] }}
                   transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                 >
@@ -468,8 +472,8 @@ export default function Chatbot() {
                   className={`flex gap-3 ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                 >
                   {msg.role === "assistant" && (
-                    <div className="w-8 h-8 rounded-full bg-primary/15 border border-primary/20 flex items-center justify-center flex-shrink-0 mt-1">
-                      <Bot className="w-4 h-4 text-primary" />
+                    <div className="w-9 h-9 rounded-full overflow-hidden bg-primary/15 border border-primary/20 flex items-center justify-center flex-shrink-0 mt-1">
+                      <img src={aiGalleryImages[0].src} alt="AI" className="w-full h-full object-cover" />
                     </div>
                   )}
                   <div
@@ -503,7 +507,7 @@ export default function Chatbot() {
                   className="flex gap-3"
                 >
                   <div className="w-8 h-8 rounded-full bg-primary/15 border border-primary/20 flex items-center justify-center flex-shrink-0">
-                    <Bot className="w-4 h-4 text-primary" />
+                    <img src={aiGalleryImages[0].src} alt="AI" className="w-full h-full object-cover rounded-full" />
                   </div>
                   <div className="bg-muted/50 border border-border/30 rounded-2xl rounded-bl-md px-4 py-3">
                     <div className="flex items-center gap-2">
@@ -562,6 +566,7 @@ export default function Chatbot() {
             NEURON VIEW AI can make mistakes. Verify important information.
           </p>
         </div>
+      </div>
       </div>
     </div>
   );

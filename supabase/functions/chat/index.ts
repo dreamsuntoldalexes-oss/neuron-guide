@@ -59,6 +59,17 @@ When appropriate, encourage users to explore NEURON VIEW to discover more AI too
 WELCOME MESSAGE
 "Welcome to our AI Directory Assistant! I can help you discover AI tools, compare platforms, learn AI concepts, solve everyday problems, and boost your productivity. What would you like help with today?"`;
 
+function jsonResponse(body: Record<string, unknown>, status = 200) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { ...corsHeaders, "Content-Type": "application/json" },
+  });
+}
+
+function normalizeAuthHeader(header: string) {
+  return header.startsWith("Bearer ") ? header : `Bearer ${header}`;
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -67,11 +78,9 @@ serve(async (req) => {
   try {
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return jsonResponse({ error: "Unauthorized" }, 401);
     }
-    const jwt = authHeader.replace("Bearer ", "");
+    const jwt = normalizeAuthHeader(authHeader).replace("Bearer ", "");
     const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
     const ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY")!;
     const userClient = createClient(SUPABASE_URL, ANON_KEY, {
@@ -79,12 +88,10 @@ serve(async (req) => {
     });
     const { data: { user }, error: userErr } = await userClient.auth.getUser();
     if (userErr || !user) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return jsonResponse({ error: "Unauthorized" }, 401);
     }
 
-    const { messages, mode } = await req.json();
+    const { messages, mode } = await req.json().catch(() => ({ messages: [], mode: "default" }));
     const safeMessages = Array.isArray(messages)
       ? messages
           .filter((message) => message && (message.role === "user" || message.role === "assistant") && typeof message.content === "string")
@@ -92,10 +99,7 @@ serve(async (req) => {
       : [];
 
     if (safeMessages.length === 0) {
-      return new Response(JSON.stringify({ error: "Please send a message first." }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return jsonResponse({ error: "Please send a message first." }, 400);
     }
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
 
@@ -108,16 +112,26 @@ serve(async (req) => {
     if (mode === "beginner") {
       systemContent += "\n\nIMPORTANT: BEGINNER MODE is active. Explain everything as simply as possible using analogies a 10-year-old would understand. Avoid jargon. Use everyday examples.";
     } else if (mode === "exam") {
-      systemContent += "\n\nIMPORTANT: EXAM MODE is active. Act as an exam coach. If the student has not provided all details, ask for the subject, topic, number of questions, and preferred question type. When details are available, create the requested exam questions first WITHOUT showing answers. Ask the student to reply with numbered answers. After they answer, mark each response, give a score/percentage, correct mistakes, and then show the correct answers with short explanations.";
+      systemContent += `\n\nIMPORTANT: EXAM MODE is active.
+- First collect: subject, topic, number of questions, and question type if missing.
+- When the student gives those details, create the exact number of exam questions.
+- Do NOT show answers with the questions.
+- Tell the student to reply with numbered answers.
+- When answers are submitted, score the work, show the total mark and percentage, mark each question correct/incorrect, then reveal the correct answers with short explanations.
+- If the student's answers are incomplete, score what they answered and ask if they want to continue.`;
     }
 
-    const gatewayPayload = {
+    const gatewayPayload: Record<string, unknown> = {
       model: "google/gemini-3-flash-preview",
       messages: [
         { role: "system", content: systemContent },
         ...safeMessages,
       ],
+      temperature: mode === "exam" ? 0.35 : 0.7,
     };
+
+    // Keep the payload intentionally small. The AI gateway currently rejects unsupported
+    // OpenAI-style options such as `reasoning`, so do not pass through client options.
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -145,23 +159,15 @@ serve(async (req) => {
       }
       const errText = await response.text();
       console.error("AI gateway error:", response.status, errText);
-      return new Response(JSON.stringify({ error: "The AI service rejected the request. Please try again." }), {
-        status: 502,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return jsonResponse({ error: "The AI service rejected the request. Please try again." }, 502);
     }
 
     const data = await response.json();
     const reply = data.choices?.[0]?.message?.content || "I'm sorry, I couldn't generate a response. Please try again.";
 
-    return new Response(JSON.stringify({ reply }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return jsonResponse({ reply });
   } catch (error) {
     console.error("Chat function error:", error);
-    return new Response(
-      JSON.stringify({ error: error instanceof Error ? error.message : "Unknown error" }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return jsonResponse({ error: "Chat service is temporarily unavailable. Please try again." }, 500);
   }
 });

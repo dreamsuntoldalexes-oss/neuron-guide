@@ -23,7 +23,7 @@ export default function Home() {
   useEffect(() => {
     const timer = window.setInterval(() => {
       setActiveSlide((current) => (current + 1) % aiGalleryImages.length);
-    }, 4200);
+    }, 3600);
     return () => window.clearInterval(timer);
   }, []);
 
@@ -77,15 +77,16 @@ export default function Home() {
                 src={aiGalleryImages[activeSlide].src}
                 alt={aiGalleryImages[activeSlide].alt}
                 className="absolute inset-0 w-full h-full object-cover"
-                initial={{ opacity: 0, scale: 1.08 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.98 }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
+                initial={{ opacity: 0, x: 40, scale: 1.08 }}
+                animate={{ opacity: 1, x: 0, scale: 1 }}
+                exit={{ opacity: 0, x: -40, scale: 1.02 }}
+                transition={{ duration: 0.75, ease: "easeOut" }}
               />
             </AnimatePresence>
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/15 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_15%,hsl(var(--primary)/0.18),transparent_35%)]" />
             <motion.div
-              animate={{ y: [0, -8, 0] }}
+              animate={{ y: [0, -8, 0], opacity: [0.92, 1, 0.92] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
               className="absolute bottom-5 left-5 right-5 glass-card p-4"
             >

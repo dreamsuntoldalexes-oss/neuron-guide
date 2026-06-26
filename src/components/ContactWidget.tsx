@@ -41,7 +41,7 @@ export default function ContactWidget() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-background/40 backdrop-blur-sm z-[-1]"
+            className="fixed inset-0 bg-background/55 backdrop-blur-sm z-[-1]"
             onClick={() => setOpen(false)}
           />
         )}
@@ -49,22 +49,23 @@ export default function ContactWidget() {
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0, x: 24, scale: 0.96 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            exit={{ opacity: 0, x: 24, scale: 0.96 }}
-            className="glass-card p-4 mb-2 w-[min(22rem,calc(100vw-2rem))] space-y-4"
+            initial={{ opacity: 0, x: 360 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 360 }}
+            transition={{ type: "spring", damping: 28, stiffness: 260 }}
+            className="fixed right-0 top-0 h-dvh w-[min(25rem,100vw)] rounded-l-[2rem] rounded-r-none border-y-0 border-r-0 bg-card/95 backdrop-blur-2xl p-5 shadow-2xl space-y-5 overflow-y-auto"
           >
             <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="text-sm font-heading font-bold text-foreground">Contact Support</p>
-                <p className="text-xs text-muted-foreground">Choose how you want to send your message.</p>
+                <p className="text-lg font-heading font-bold text-foreground">Contact NEURON VIEW</p>
+                <p className="text-xs text-muted-foreground">Fill your name, message, and choose the medium to send instantly.</p>
               </div>
               <button onClick={() => setOpen(false)} className="p-1 rounded-full hover:bg-muted transition" aria-label="Close contact form">
                 <X className="w-4 h-4 text-muted-foreground" />
               </button>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-3">
               <input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -98,11 +99,18 @@ export default function ContactWidget() {
                   );
                 })}
               </div>
-              <a href={sendHref} target="_blank" rel="noopener noreferrer" className="w-full py-3 rounded-xl gradient-primary text-primary-foreground text-sm font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition">
+              <a href={sendHref} target="_blank" rel="noopener noreferrer" className="w-full py-3.5 rounded-xl gradient-primary text-primary-foreground text-sm font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition">
                 <Send className="w-4 h-4" />
                 {medium === "call" ? "Call 08033962964" : "Send message"}
               </a>
             </div>
+
+            <button
+              onClick={() => { setOpen(false); navigate("/chatbot"); }}
+              className="w-full py-3.5 rounded-xl bg-primary/15 border border-primary/30 text-primary text-sm font-semibold flex items-center justify-center gap-2 hover:bg-primary/25 transition"
+            >
+              <Sparkles className="w-4 h-4" /> Open AI Assistant
+            </button>
 
             <div className="grid grid-cols-2 gap-2 border-t border-border/40 pt-3">
             {contacts.map((c) => {

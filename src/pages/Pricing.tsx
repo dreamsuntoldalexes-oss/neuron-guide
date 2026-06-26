@@ -2,51 +2,26 @@ import { motion } from "framer-motion";
 import { CreditCard, Zap, Mail, Phone, MessageCircle, Crown, Check, Sparkles } from "lucide-react";
 import Layout from "@/components/Layout";
 import { setUserTier, getUserTier, type UserTier } from "@/data/tools";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "@/hooks/use-toast";
-
-const plans: { name: string; tier: UserTier; price: string; period: string; features: string[]; popular: boolean }[] = [
-  {
-    name: "Free",
-    tier: "free",
-    price: "$0",
-    period: "forever",
-    features: ["Browse free AI tools", "Save up to 5 favorites", "Basic AI assistant", "Standard tool info"],
-    popular: false,
-  },
-  {
-    name: "Pro",
-    tier: "pro",
-    price: "$5",
-    period: "per month",
-    features: [
-      "Unlimited access to 11,000+ AI tools",
-      "Unlimited favorites",
-      "Advanced AI assistant",
-      "Per-tool usage analytics",
-      "Priority tool updates",
-      "Exclusive tutorials",
-    ],
-    popular: true,
-  },
-];
+import { supabase } from "@/integrations/supabase/client";
 
 const contactMethods = [
   {
     icon: Mail,
-    label: "Email to Pay",
+    label: "Email Support",
     subtitle: "adekanmbiadekanmbi5@gmail.com",
     href: "mailto:adekanmbiadekanmbi5@gmail.com?subject=NEURON%20VIEW%20Pro%20%245%2Fmonth&body=Hi%2C%20I%20want%20to%20subscribe%20to%20Pro%20at%20%245%2Fmonth.",
   },
   {
     icon: MessageCircle,
-    label: "WhatsApp to Pay",
+    label: "WhatsApp Support",
     subtitle: "08033962964",
     href: "https://wa.me/2348033962964?text=Hi%2C%20I%20want%20to%20subscribe%20to%20NEURON%20VIEW%20Pro%20at%20%245%2Fmonth.",
   },
   {
     icon: Phone,
-    label: "Call to Pay",
+    label: "Call Support",
     subtitle: "08033962964",
     href: "tel:08033962964",
   },
@@ -54,6 +29,46 @@ const contactMethods = [
 
 export default function Pricing() {
   const [currentTier, setCurrentTier] = useState<UserTier>(getUserTier());
+  const [proPrice, setProPrice] = useState(5);
+  const [proFeatures, setProFeatures] = useState<string[]>([
+    "Unlimited access to 11,000+ AI tools",
+    "Unlimited favorites",
+    "Advanced AI assistant",
+    "Per-tool usage analytics",
+    "Priority tool updates",
+    "Exclusive tutorials",
+  ]);
+
+  useEffect(() => {
+    supabase
+      .from("pricing_plans")
+      .select("price_usd, features")
+      .eq("id", "pro_monthly")
+      .maybeSingle()
+      .then(({ data }) => {
+        if (data?.price_usd) setProPrice(Number(data.price_usd));
+        if (data?.features?.length) setProFeatures(data.features);
+      });
+  }, []);
+
+  const plans = useMemo(() => [
+    {
+      name: "Free",
+      tier: "free" as UserTier,
+      price: "$0",
+      period: "forever",
+      features: ["Browse free AI tools", "Save up to 5 favorites", "Basic AI assistant", "Standard tool info"],
+      popular: false,
+    },
+    {
+      name: "Pro",
+      tier: "pro" as UserTier,
+      price: `$${proPrice}`,
+      period: "per month",
+      features: proFeatures,
+      popular: true,
+    },
+  ], [proFeatures, proPrice]);
 
   const handleSelectPlan = (tier: UserTier, planName: string) => {
     if (tier === "free") {
@@ -64,7 +79,7 @@ export default function Pricing() {
     }
     toast({
       title: "Stripe checkout coming soon",
-      description: "Card payments at $5/month will be enabled shortly. For now, contact us below to upgrade.",
+      description: `The backend plan is ready at $${proPrice}/month. Stripe checkout will be enabled when keys are added.`,
     });
   };
 
@@ -73,9 +88,9 @@ export default function Pricing() {
       <div className="px-4 pt-6 pb-4 space-y-8 max-w-md mx-auto">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center">
           <h1 className="text-2xl font-heading font-bold text-foreground flex items-center justify-center gap-2">
-            <Zap className="w-6 h-6 text-primary" /> Upgrade & Pay
+            <Zap className="w-6 h-6 text-primary" /> Upgrade
           </h1>
-          <p className="text-sm text-muted-foreground mt-1">Simple pricing. Cancel anytime.</p>
+          <p className="text-sm text-muted-foreground mt-1">Simple $5/month pricing. Stripe checkout will be connected later.</p>
           <p className="text-xs text-primary mt-2 flex items-center justify-center gap-1">
             <Crown className="w-3 h-3" /> Current plan: <span className="font-bold capitalize">{currentTier}</span>
           </p>
@@ -118,7 +133,7 @@ export default function Pricing() {
                   }`}
                 >
                   <Sparkles className="w-4 h-4" />
-                  {isCurrent ? "Current Plan" : plan.tier === "free" ? "Switch to Free" : "Subscribe — $5/month"}
+                  {isCurrent ? "Current Plan" : plan.tier === "free" ? "Switch to Free" : `Subscribe — $${proPrice}/month`}
                 </button>
               </motion.div>
             );
@@ -127,9 +142,9 @@ export default function Pricing() {
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
           <h2 className="text-lg font-heading font-bold text-foreground mb-3 flex items-center gap-2">
-            <CreditCard className="w-5 h-5 text-primary" /> How to Pay
+            <CreditCard className="w-5 h-5 text-primary" /> Backend Pricing
           </h2>
-          <p className="text-xs text-muted-foreground mb-3">Stripe card checkout is being set up. For now, contact us to subscribe.</p>
+          <p className="text-xs text-muted-foreground mb-3">The Pro subscription plan is stored in Supabase at ${proPrice}/month. Use contact support until Stripe keys are added.</p>
           <div className="space-y-2">
             {contactMethods.map((c) => {
               const Icon = c.icon;
