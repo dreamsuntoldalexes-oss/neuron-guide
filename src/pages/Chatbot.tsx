@@ -32,7 +32,7 @@ type Mode = "default" | "beginner" | "exam";
 const MODE_CONFIG: Record<Mode, { label: string; icon: typeof BookOpen; desc: string }> = {
   default: { label: "Standard", icon: BookOpen, desc: "Balanced explanations" },
   beginner: { label: "Beginner", icon: GraduationCap, desc: "Simple, easy to understand" },
-  exam: { label: "Exam", icon: Zap, desc: "Short, direct answers" },
+  exam: { label: "Exam", icon: Zap, desc: "Create exams and score answers" },
 };
 
 const SUGGESTIONS = [
@@ -42,6 +42,7 @@ const SUGGESTIONS = [
   "Recommend the best AI writing tool",
   "Help me study for WAEC Biology",
   "What AI tools can help with coding?",
+  "Exam: Biology, photosynthesis, 10 questions",
 ];
 
 // ─── LocalStorage helpers ───
@@ -208,7 +209,7 @@ export default function Chatbot() {
       const errMsg: Message = {
         id: crypto.randomUUID(),
         role: "assistant",
-        content: "I'm having trouble connecting right now. Please try again! 🔄",
+        content: err instanceof Error ? `I'm having trouble connecting right now: ${err.message}` : "I'm having trouble connecting right now. Please try again! 🔄",
       };
       updateChat(activeId, (c) => ({ ...c, messages: [...c.messages, errMsg] }));
     } finally {
@@ -508,7 +509,7 @@ export default function Chatbot() {
                 mode === "beginner"
                   ? "Ask me anything — I'll explain it simply..."
                   : mode === "exam"
-                  ? "Paste your exam question here..."
+                  ? "Tell me subject, topic, number of questions, then answer when I ask..."
                   : "Ask about academics, AI tools, anything..."
               }
               rows={1}

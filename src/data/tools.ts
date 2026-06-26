@@ -81,11 +81,11 @@ function t(
   return {
     id, name, category: cat, shortDescription: desc,
     description: `${name} is a leading ${cat.toLowerCase()} AI tool. ${desc}`,
-    pricing, websiteUrl: url, icon: "", logo: getLogo(domain), rating,
+    pricing: "$5/month", websiteUrl: url, icon: "", logo: getLogo(domain), rating,
     dateAdded: `2024-${String(Math.floor(Math.random() * 12) + 1).padStart(2, "0")}-${String(Math.floor(Math.random() * 28) + 1).padStart(2, "0")}`,
     features: features || [`${cat} automation`, "AI-powered processing", "Team collaboration", "API access"],
     pros: pros || ["Easy to use", "High quality output", "Regular updates"],
-    cons: cons || ["Paid plans for advanced features", "Learning curve for beginners"],
+    cons: cons || ["Pro access is $5/month", "Learning curve for beginners"],
     views: views || Math.floor(Math.random() * 12000) + 500,
     tier,
   };

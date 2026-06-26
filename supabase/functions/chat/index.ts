@@ -96,17 +96,18 @@ serve(async (req) => {
     if (mode === "beginner") {
       systemContent += "\n\nIMPORTANT: BEGINNER MODE is active. Explain everything as simply as possible using analogies a 10-year-old would understand. Avoid jargon. Use everyday examples.";
     } else if (mode === "exam") {
-      systemContent += "\n\nIMPORTANT: EXAM MODE is active. Give concise, direct answers structured like model exam answers. Be brief but complete. Use bullet points.";
+      systemContent += "\n\nIMPORTANT: EXAM MODE is active. Act as an exam coach. If the student has not provided all details, ask for the subject, topic, number of questions, and preferred question type. When details are available, create the requested exam questions first WITHOUT showing answers. Ask the student to reply with numbered answers. After they answer, mark each response, give a score/percentage, correct mistakes, and then show the correct answers with short explanations.";
     }
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        "Lovable-API-Key": LOVABLE_API_KEY,
+        "X-Lovable-AIG-SDK": "neuron-view-edge-function",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "openai/gpt-5",
+        model: "google/gemini-3-flash-preview",
         messages: [
           { role: "system", content: systemContent },
           ...messages,
@@ -130,7 +131,10 @@ serve(async (req) => {
       }
       const errText = await response.text();
       console.error("AI gateway error:", response.status, errText);
-      throw new Error(`AI gateway returned ${response.status}`);
+      return new Response(JSON.stringify({ error: "The AI service rejected the request. Please try again." }), {
+        status: 502,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     const data = await response.json();
