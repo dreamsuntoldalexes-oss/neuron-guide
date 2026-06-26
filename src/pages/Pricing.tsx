@@ -70,7 +70,7 @@ export default function Pricing() {
     },
   ], [proFeatures, proPrice]);
 
-  const handleSelectPlan = (tier: UserTier, planName: string) => {
+  const handleSelectPlan = (tier: UserTier) => {
     if (tier === "free") {
       setUserTier("free");
       setCurrentTier("free");
@@ -126,7 +126,7 @@ export default function Pricing() {
                   ))}
                 </ul>
                 <button
-                  onClick={() => handleSelectPlan(plan.tier, plan.name)}
+                  onClick={() => handleSelectPlan(plan.tier)}
                   disabled={isCurrent}
                   className={`w-full py-2.5 rounded-xl font-heading font-semibold text-sm flex items-center justify-center gap-2 transition active:scale-[0.98] ${
                     isCurrent ? "bg-muted text-muted-foreground cursor-not-allowed" : "text-primary-foreground gradient-primary hover:opacity-90"
