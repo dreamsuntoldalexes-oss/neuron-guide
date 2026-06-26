@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Send, Bot, User, Sparkles, Plus, Trash2, MessageSquare,
+  Send, User, Sparkles, Plus, Trash2, MessageSquare,
   ChevronLeft, ChevronRight, BookOpen, Zap, GraduationCap,
   Menu, X
 } from "lucide-react";
