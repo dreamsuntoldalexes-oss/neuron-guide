@@ -2,10 +2,12 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft, Star, Heart, ExternalLink, Check, X, Eye } from "lucide-react";
 import Layout from "@/components/Layout";
+import Seo from "@/components/Seo";
 import ToolCard from "@/components/ToolCard";
 import ToolUsageChart from "@/components/ToolUsageChart";
 import { tools, getSimilarTools } from "@/data/tools";
 import { useFavorites } from "@/hooks/useFavorites";
+
 
 export default function ToolDetail() {
   const { id } = useParams();
@@ -28,7 +30,27 @@ export default function ToolDetail() {
 
   return (
     <Layout>
+      <Seo
+        title={`${tool.name} — ${tool.category} AI Tool | NEURON VIEW`}
+        description={tool.shortDescription}
+        path={`/tools/${tool.id}`}
+        image={tool.logo}
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          name: tool.name,
+          description: tool.shortDescription,
+          applicationCategory: tool.category,
+          operatingSystem: "Web",
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: tool.rating,
+            ratingCount: Math.max(1, tool.views || 1),
+          },
+        }}
+      />
       <div className="px-4 pt-4 pb-6 space-y-6 max-w-2xl mx-auto">
+
         {/* Back */}
         <button onClick={() => (window.history.length > 1 ? navigate(-1) : navigate("/tools"))}
           className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition">

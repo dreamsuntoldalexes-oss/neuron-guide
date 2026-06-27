@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
+import Seo from "@/components/Seo";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, Sparkles, Brain, Zap, BookOpen, Users, Star, MessageSquare, Search, Layers, RefreshCw, Bot, Compass, GitCompare, Rocket, LayoutDashboard } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -49,6 +50,7 @@ export default function Index() {
 
   return (
     <div className="min-h-screen relative overflow-hidden flex flex-col bg-background">
+      <Seo title="NEURON VIEW — Discover 500+ AI Tools" description="Explore, compare, and use powerful AI tools for productivity, creativity, and growth." path="/welcome" />
       {/* AI human + computer fusion background */}
       <img
         src={aiBg}
