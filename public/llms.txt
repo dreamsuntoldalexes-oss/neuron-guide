@@ -1,0 +1,19 @@
+# NEURON VIEW
+
+> AI tools directory to discover, compare, and master 500+ AI tools across 21+ categories for productivity, creativity, and growth.
+
+NEURON VIEW helps people find the right AI tool fast. Browse a categorized directory, compare features, read usage analytics, and chat with an AI study/assistant.
+
+## Pages
+
+- [Welcome](/welcome): Landing page introducing NEURON VIEW and its features.
+- [Home](/home): Main hub with search, featured AI tools, and stats.
+- [Tools](/tools): Full directory of 500+ AI tools across 21+ categories.
+- [How it works](/how-it-works): 3-step guide to browsing, comparing, and using AI tools.
+- [Tutorials](/tutorials): Video tutorials for getting started with popular AI tools.
+- [Pricing](/pricing): Pro plan at $5/month with full access.
+- [AI Assistant](/chatbot): Academic-focused AI chatbot with study and exam modes.
+
+## Optional
+
+- [Analytics](/analytics): Usage trends and engagement charts for AI tools.
