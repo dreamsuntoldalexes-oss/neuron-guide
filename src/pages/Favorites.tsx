@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import Seo from "@/components/Seo";
 import { Heart, Trash2 } from "lucide-react";
 import Layout from "@/components/Layout";
 import ToolCard from "@/components/ToolCard";
@@ -11,6 +12,7 @@ export default function Favorites() {
 
   return (
     <Layout>
+      <Seo title="My Favorites — NEURON VIEW" description="Your saved AI tools, in one place." path="/favorites" />
       <div className="px-4 pt-6 pb-4 space-y-4">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-2">
           <Heart className="w-5 h-5 text-neon-pink" />

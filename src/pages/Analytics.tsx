@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import Seo from "@/components/Seo";
 import { Link } from "react-router-dom";
 import { TrendingUp, Eye, Users, Sparkles, ArrowUpRight, Activity, Star } from "lucide-react";
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
@@ -30,6 +31,7 @@ const leaders = [...tools].sort((a, b) => b.views - a.views).slice(0, 3);
 export default function Analytics() {
   return (
     <Layout>
+      <Seo title="AI Tool Analytics — NEURON VIEW" description="Live engagement and usage analytics across the NEURON VIEW AI tools directory." path="/analytics" />
       <div className="px-4 pt-6 pb-8 space-y-6 max-w-2xl mx-auto">
         <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}>
           <p className="text-xs text-primary uppercase tracking-wider">NEURON VIEW · Live</p>

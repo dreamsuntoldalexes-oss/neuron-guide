@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
+import Seo from "@/components/Seo";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Send, User, Sparkles, Plus, Trash2, MessageSquare,
@@ -246,6 +247,7 @@ export default function Chatbot() {
 
   return (
     <div className="h-screen bg-background overflow-hidden p-3 sm:p-6">
+      <Seo title="AI Assistant — NEURON VIEW Study Coach" description="Chat with NEURON VIEW's academic AI assistant. Get help with study, exam practice, and concept explanations." path="/chatbot" />
       <div className="mx-auto flex h-full max-w-7xl gap-4">
       {/* ─── SIDEBAR (mobile overlay + desktop persistent) ─── */}
       <AnimatePresence>

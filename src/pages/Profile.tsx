@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import Seo from "@/components/Seo";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
@@ -75,6 +76,7 @@ export default function Profile() {
 
   return (
     <Layout>
+      <Seo title="Profile — NEURON VIEW" description="Manage your NEURON VIEW profile, subscription, and preferences." path="/profile" />
       <div className="px-4 sm:px-8 pt-6 pb-6 space-y-6 max-w-5xl mx-auto">
         {/* S25-style header card */}
         <motion.div

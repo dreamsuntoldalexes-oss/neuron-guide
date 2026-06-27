@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import Seo from "@/components/Seo";
 import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Search, SlidersHorizontal, Crown } from "lucide-react";
@@ -56,6 +57,7 @@ export default function Tools() {
 
   return (
     <Layout>
+      <Seo title="All AI Tools — NEURON VIEW Directory" description="Browse the full directory of 500+ AI tools across 21+ categories. Filter, compare, and find the right tool fast." path="/tools" />
       <div className="px-4 pt-6 pb-4 space-y-4">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center justify-between">
           <div className="flex items-center gap-2">

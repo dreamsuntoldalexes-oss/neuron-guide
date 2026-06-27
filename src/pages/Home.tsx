@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Seo from "@/components/Seo";
 import { Link } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { Search, TrendingUp, Clock, Crown, BarChart3, Users, Sparkles } from "lucide-react";
@@ -29,6 +30,7 @@ export default function Home() {
 
   return (
     <Layout>
+      <Seo title="Home — NEURON VIEW AI Tools Hub" description="Search 500+ AI tools, browse categories, and discover trending picks updated daily." path="/home" />
       <div className="px-4 sm:px-8 pt-6 pb-6 space-y-8 max-w-6xl mx-auto">
         {/* Header bar */}
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-between">
