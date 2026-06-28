@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import NeuralBackground from "@/components/NeuralBackground";
 
 const messages = [
-  "Welcome to NEURON VIEW ✨",
+  "Welcome to Neuron Guide ✨",
   "Igniting neural pathways…",
   "Awakening 11,400+ AI minds 🧠",
   "Fusing human creativity with machine intelligence",
@@ -35,7 +35,7 @@ export default function Splash() {
     const checkSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        // Source-of-truth tier/credits from DB. Overwrite any client-tampered cache.
+        // Hydrate cache from DB profile — DO NOT overwrite user-edited name/avatar/email
         const { data: profile } = await supabase
           .from("profiles")
           .select("tier, credits, premium_expiry")
@@ -44,22 +44,20 @@ export default function Splash() {
         const existing = (() => {
           try { return JSON.parse(localStorage.getItem("ai-tools-user") || "{}"); } catch { return {}; }
         })();
+        const meta = (session.user.user_metadata || {}) as Record<string, string>;
         localStorage.setItem("ai-tools-user", JSON.stringify({
-          name: existing.name || "User",
-          email: session.user.email ?? existing.email ?? "",
-          avatar: existing.avatar || "",
+          name: existing.name || meta.full_name || meta.name || session.user.email?.split("@")[0] || "User",
+          email: existing.email || session.user.email || "",
+          avatar: existing.avatar || meta.avatar_url || "",
           tier: profile?.tier || "free",
           premiumExpiry: profile?.premium_expiry || null,
         }));
         localStorage.setItem("ai-tools-credits", String(profile?.credits ?? 3));
         setDestination("/home");
       } else {
-        localStorage.removeItem("ai-tools-user");
-        localStorage.removeItem("ai-tools-credits");
         setDestination("/welcome");
       }
     };
-
 
     checkSession();
   }, []);
@@ -112,7 +110,7 @@ export default function Splash() {
         >
           <motion.img
             src={neuronLogo}
-            alt="NEURON VIEW"
+            alt="Neuron Guide"
             className="w-28 h-28 sm:w-36 sm:h-36"
             animate={{ rotate: [0, 4, -4, 0] }}
             transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
@@ -121,7 +119,7 @@ export default function Splash() {
         </motion.div>
 
         <h1 className="text-3xl sm:text-5xl font-heading font-bold gradient-text mb-2 text-center">
-          NEURON VIEW
+          Neuron Guide
         </h1>
         <p className="text-[11px] sm:text-sm text-muted-foreground tracking-[0.25em] uppercase mb-8 text-center">
           AI Tools Directory

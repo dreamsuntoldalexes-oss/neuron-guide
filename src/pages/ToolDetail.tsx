@@ -31,7 +31,7 @@ export default function ToolDetail() {
   return (
     <Layout>
       <Seo
-        title={`${tool.name} — ${tool.category} AI Tool | NEURON VIEW`}
+        title={`${tool.name} — ${tool.category} AI Tool | Neuron Guide`}
         description={tool.shortDescription}
         path={`/tools/${tool.id}`}
         image={tool.logo}
@@ -49,10 +49,11 @@ export default function ToolDetail() {
           },
         }}
       />
-      <div className="px-4 pt-4 pb-6 space-y-6 max-w-2xl mx-auto">
+      <div className="px-4 sm:px-8 lg:px-12 pt-4 pb-10 space-y-6 max-w-3xl mx-auto">
 
         {/* Back */}
         <button onClick={() => (window.history.length > 1 ? navigate(-1) : navigate("/tools"))}
+          aria-label="Go back"
           className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition">
           <ArrowLeft className="w-4 h-4" /> Back
         </button>
@@ -61,9 +62,10 @@ export default function ToolDetail() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass-card p-6 space-y-4">
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-4">
-              <img src={tool.logo} alt={tool.name} className="w-14 h-14 rounded-xl object-contain bg-muted/50 p-1.5" onError={(e) => { (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(tool.name)}&background=6366f1&color=fff&size=64`; }} />
+              <img src={tool.logo} alt={`${tool.name} logo`} loading="lazy" className="w-16 h-16 rounded-2xl object-contain bg-white/90 p-2 ring-1 ring-border" onError={(e) => { (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(tool.name)}&background=10b981&color=fff&size=128&bold=true`; }} />
               <div>
                 <h1 className="text-2xl font-heading font-bold text-foreground">{tool.name}</h1>
+                <p className="text-xs text-muted-foreground">{tool.category} AI Tool</p>
                 <div className="flex items-center gap-3 mt-1">
                   <span className="text-xs px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">{tool.category}</span>
                   <div className="flex items-center gap-1">
@@ -77,12 +79,16 @@ export default function ToolDetail() {
               </div>
             </div>
             <button onClick={() => toggleFavorite(tool.id)}
+              aria-label={isFavorite(tool.id) ? `Remove ${tool.name} from favorites` : `Add ${tool.name} to favorites`}
               className="p-2 rounded-xl border border-border hover:border-primary/30 transition">
               <Heart className={`w-5 h-5 ${isFavorite(tool.id) ? "fill-neon-pink text-neon-pink" : "text-muted-foreground"}`} />
             </button>
           </div>
 
-          <p className="text-muted-foreground leading-relaxed">{tool.description}</p>
+          {/* 3-paragraph description */}
+          <div className="space-y-3 text-sm text-muted-foreground leading-relaxed whitespace-pre-line">
+            {tool.description}
+          </div>
 
           <div className="flex flex-wrap gap-3">
             <div className="glass-card px-4 py-2 text-sm">
@@ -92,11 +98,17 @@ export default function ToolDetail() {
           </div>
 
           <div className="flex gap-3">
-            <a href={tool.websiteUrl} target="_blank" rel="noopener noreferrer"
-              className="flex-1 py-3 rounded-xl font-heading font-semibold text-primary-foreground gradient-primary flex items-center justify-center gap-2 hover:opacity-90 transition active:scale-[0.98]">
+            <a
+              href={tool.websiteUrl || `https://www.google.com/search?q=${encodeURIComponent(tool.name)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Visit ${tool.name} website`}
+              className="flex-1 py-3 rounded-xl font-heading font-semibold text-primary-foreground gradient-primary flex items-center justify-center gap-2 hover:opacity-90 transition active:scale-[0.98]"
+            >
               Visit Website <ExternalLink className="w-4 h-4" />
             </a>
             <button onClick={() => toggleFavorite(tool.id)}
+              aria-label={isFavorite(tool.id) ? "Unsave tool" : "Save tool"}
               className={`px-4 py-3 rounded-xl border font-medium text-sm transition ${
                 isFavorite(tool.id) ? "border-neon-pink/30 bg-neon-pink/10 text-neon-pink" : "border-border bg-muted/50 text-foreground hover:border-primary/30"
               }`}>

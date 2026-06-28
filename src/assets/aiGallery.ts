@@ -11,7 +11,7 @@ import aiPhoneScan from "./ai-phone-scan.jpg";
 export const aiGalleryImages = [
   {
     src: aiCharacterMain,
-    alt: "Main glowing AI character for NEURON VIEW",
+    alt: "Main glowing AI character for Neuron Guide",
   },
   {
     src: aiPhoneCharacter,
@@ -27,7 +27,7 @@ export const aiGalleryImages = [
   },
   {
     src: aiCharacterCircuit,
-    alt: "Glowing AI humanoid character for NEURON VIEW",
+    alt: "Glowing AI humanoid character for Neuron Guide",
   },
   {
     src: aiRobotHand,

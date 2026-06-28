@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Seo from "@/components/Seo";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -28,6 +28,38 @@ export default function Profile() {
 
   const [user, setUser] = useState(getUser);
   const [draft, setDraft] = useState({ name: user.name, email: user.email });
+
+  // Hydrate from Supabase session + profiles table so the user never sees stale defaults
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session || cancelled) return;
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("tier, credits, premium_expiry")
+        .eq("id", session.user.id)
+        .maybeSingle();
+      if (cancelled) return;
+      const meta = (session.user.user_metadata || {}) as Record<string, string>;
+      setUser((prev: any) => {
+        const merged = {
+          ...prev,
+          name: prev.name && prev.name !== "User" ? prev.name : (meta.full_name || meta.name || session.user.email?.split("@")[0] || "User"),
+          email: session.user.email || prev.email,
+          avatar: prev.avatar || meta.avatar_url || "",
+          tier: profile?.tier || prev.tier || "free",
+        };
+        localStorage.setItem("ai-tools-user", JSON.stringify(merged));
+        return merged;
+      });
+      setDraft((d) => ({
+        name: d.name && d.name !== "User" ? d.name : (meta.full_name || meta.name || session.user.email?.split("@")[0] || "User"),
+        email: session.user.email || d.email,
+      }));
+    })();
+    return () => { cancelled = true; };
+  }, []);
 
   const handleSave = () => {
     const updated = { ...user, name: draft.name, email: draft.email };
@@ -76,8 +108,8 @@ export default function Profile() {
 
   return (
     <Layout>
-      <Seo title="Profile — NEURON VIEW" description="Manage your NEURON VIEW profile, subscription, and preferences." path="/profile" />
-      <div className="px-4 sm:px-8 pt-6 pb-6 space-y-6 max-w-5xl mx-auto">
+      <Seo title="Profile — Neuron Guide" description="Manage your Neuron Guide profile, subscription, and preferences." path="/profile" />
+      <div className="px-5 sm:px-10 lg:px-16 pt-6 pb-16 space-y-8 max-w-5xl mx-auto">
         {/* S25-style header card */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
@@ -168,7 +200,7 @@ export default function Profile() {
               <BarChart3 className="w-4 h-4 text-accent" />
             </button>
             <button
-              onClick={() => navigator.share?.({ title: "NEURON VIEW", url: window.location.origin }).catch(() => {})}
+              onClick={() => navigator.share?.({ title: "Neuron Guide", url: window.location.origin }).catch(() => {})}
               className="w-10 h-10 rounded-full bg-muted/50 border border-border flex items-center justify-center hover:border-primary/30 transition"
               title="Share"
             >
@@ -259,7 +291,7 @@ export default function Profile() {
         </motion.div>
 
         {/* Menu list */}
-        <div className="grid sm:grid-cols-2 gap-3">
+        <div className="grid sm:grid-cols-2 gap-4 pt-2">
           {menuItems.map((item, i) => {
             const Icon = item.icon;
             return (
@@ -269,7 +301,8 @@ export default function Profile() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.04 }}
                 onClick={item.onClick}
-                className="w-full glass-card p-4 flex items-center justify-between hover:border-primary/20 transition"
+                aria-label={item.label}
+                className="w-full glass-card p-5 flex items-center justify-between hover:border-primary/20 transition"
               >
                 <div className="flex items-center gap-3">
                   <Icon className="w-5 h-5 text-muted-foreground" />
@@ -286,11 +319,14 @@ export default function Profile() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
           onClick={handleLogout}
-          className="w-full glass-card p-4 flex items-center gap-3 text-destructive hover:border-destructive/30 transition"
+          aria-label="Log out of your account"
+          className="w-full glass-card p-5 mt-2 flex items-center gap-3 text-destructive hover:border-destructive/30 transition"
         >
           <LogOut className="w-5 h-5" />
           <span className="text-sm font-medium">Log Out</span>
         </motion.button>
+
+        <div className="h-6" />
       </div>
     </Layout>
   );

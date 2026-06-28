@@ -31,12 +31,12 @@ const leaders = [...tools].sort((a, b) => b.views - a.views).slice(0, 3);
 export default function Analytics() {
   return (
     <Layout>
-      <Seo title="AI Tool Analytics — NEURON VIEW" description="Live engagement and usage analytics across the NEURON VIEW AI tools directory." path="/analytics" />
+      <Seo title="AI Tool Analytics — Neuron Guide" description="Live engagement and usage analytics across the Neuron Guide AI tools directory." path="/analytics" />
       <div className="px-4 pt-6 pb-8 space-y-6 max-w-2xl mx-auto">
         <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}>
-          <p className="text-xs text-primary uppercase tracking-wider">NEURON VIEW · Live</p>
+          <p className="text-xs text-primary uppercase tracking-wider">Neuron Guide · Live</p>
           <h1 className="text-3xl font-heading font-bold text-foreground">Site Analytics</h1>
-          <p className="text-sm text-muted-foreground mt-1">See how active NEURON VIEW is — real engagement across {tools.length}+ AI tools this week.</p>
+          <p className="text-sm text-muted-foreground mt-1">See how active Neuron Guide is — real engagement across {tools.length}+ AI tools this week.</p>
         </motion.div>
 
         {/* Stat row */}
@@ -126,7 +126,7 @@ export default function Analytics() {
         </motion.div>
 
         <p className="text-center text-[11px] text-muted-foreground pt-2">
-          NEURON VIEW is growing fast — join {tools.length}+ AI tools in your pocket today.
+          Neuron Guide is growing fast — join {tools.length}+ AI tools in your pocket today.
         </p>
       </div>
     </Layout>

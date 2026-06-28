@@ -153,7 +153,7 @@ export default function ToolCard({ tool, index = 0, isFavorite, onToggleFavorite
                     {showCredits ? "Views Limit Reached" : "Pro Access Required"}
                   </h3>
                   <p className="text-xs text-muted-foreground whitespace-nowrap">
-                    NEURON VIEW Pro is $5/month
+                    Neuron Guide Pro is $5/month
                   </p>
                 </div>
               </div>

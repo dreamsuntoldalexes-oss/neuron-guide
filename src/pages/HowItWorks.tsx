@@ -21,7 +21,7 @@ const tips = [
 export default function HowItWorks() {
   return (
     <Layout>
-      <Seo title="How It Works — NEURON VIEW" description="Browse AI tools, compare features, and start using them instantly in three simple steps." path="/how-it-works" />
+      <Seo title="How It Works — Neuron Guide" description="Browse AI tools, compare features, and start using them instantly in three simple steps." path="/how-it-works" />
       <div className="px-4 pt-6 pb-4 space-y-8 max-w-2xl mx-auto">
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
           <div className="flex items-center gap-2 mb-1">

@@ -70,6 +70,13 @@ function getLogo(domain: string): string {
   return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
 }
 
+// Deterministic 75% paid distribution
+function isPaidById(id: string): boolean {
+  let hash = 0;
+  for (let i = 0; i < id.length; i++) hash = (hash * 31 + id.charCodeAt(i)) >>> 0;
+  return (hash % 100) < 75;
+}
+
 // Compact tool builder
 function t(
   id: string, name: string, cat: string, desc: string,
@@ -78,16 +85,22 @@ function t(
   views?: number, features?: string[], pros?: string[], cons?: string[]
 ): AITool {
   const domain = url.replace(/https?:\/\//, "").replace(/\/.*$/, "");
+  // Override tier based on the 75% paid distribution unless explicit enterprise
+  const finalTier: "free" | "pro" | "enterprise" =
+    tier === "enterprise" ? "enterprise" : (isPaidById(id) ? "pro" : "free");
+  const paragraph1 = `${name} is a ${cat.toLowerCase()} AI platform built to help individuals and teams move faster. ${desc} It combines a polished interface with reliable model output so you can ship work without wrestling with prompts or tooling.`;
+  const paragraph2 = `Inside ${name} you'll find a focused workflow for ${cat.toLowerCase()} tasks: clean inputs, smart defaults, and instant results. It's used by students, freelancers, and businesses around the world to cut hours of manual effort down to minutes — and to explore creative directions that would normally take days.`;
+  const paragraph3 = `Pricing is straightforward and transparent at $5/month for full Pro access, so you can try the workflow before committing. Whether you're learning, prototyping, or building production deliverables, ${name} gives you a dependable foundation in the ${cat.toLowerCase()} space.`;
   return {
     id, name, category: cat, shortDescription: desc,
-    description: `${name} is a leading ${cat.toLowerCase()} AI tool. ${desc}`,
+    description: `${paragraph1}\n\n${paragraph2}\n\n${paragraph3}`,
     pricing: "$5/month", websiteUrl: url, icon: "", logo: getLogo(domain), rating,
     dateAdded: `2024-${String(Math.floor(Math.random() * 12) + 1).padStart(2, "0")}-${String(Math.floor(Math.random() * 28) + 1).padStart(2, "0")}`,
     features: features || [`${cat} automation`, "AI-powered processing", "Team collaboration", "API access"],
     pros: pros || ["Easy to use", "High quality output", "Regular updates"],
     cons: cons || ["Full access is $5/month", "Learning curve for beginners"],
     views: views || Math.floor(Math.random() * 12000) + 500,
-    tier,
+    tier: finalTier,
   };
 }
 

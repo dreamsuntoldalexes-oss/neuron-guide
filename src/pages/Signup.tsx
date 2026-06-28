@@ -25,8 +25,13 @@ export default function Signup() {
         options: { data: { full_name: name }, emailRedirectTo: window.location.origin },
       });
       if (error) throw error;
-      localStorage.setItem("ai-tools-user", JSON.stringify({ name: "User", email: "userr@gmail.com", avatar: "" }));
-      toast({ title: "Account created!", description: "Welcome to NEURON VIEW 🎉" });
+      localStorage.setItem("ai-tools-user", JSON.stringify({
+        name: name || data.user?.email?.split("@")[0] || "User",
+        email: data.user?.email || email,
+        avatar: "",
+        tier: "free",
+      }));
+      toast({ title: "Account created!", description: "Welcome to Neuron Guide 🎉" });
       navigate("/home");
     } catch (error: any) {
       toast({ title: "Signup failed", description: error.message, variant: "destructive" });

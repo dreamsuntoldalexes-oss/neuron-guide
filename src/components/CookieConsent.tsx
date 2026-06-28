@@ -41,7 +41,7 @@ export default function CookieConsent() {
             </div>
             <div className="space-y-3">
               <div>
-                <h2 className="text-sm font-heading font-bold text-foreground">Cookies on NEURON VIEW</h2>
+                <h2 className="text-sm font-heading font-bold text-foreground">Cookies on Neuron Guide</h2>
                 <p className="text-xs text-muted-foreground leading-relaxed mt-1">
                   We use cookies to remember your choices, improve the AI tools directory experience, and keep the app working smoothly.
                 </p>
