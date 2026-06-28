@@ -141,7 +141,7 @@ export default function ToolCard({ tool, index = 0, isFavorite, onToggleFavorite
               className="glass-card p-6 max-w-sm w-full space-y-4 relative"
               onClick={(e) => e.stopPropagation()}
             >
-              <button onClick={closeAll} className="absolute top-3 right-3 p-1 rounded-lg hover:bg-muted transition">
+              <button onClick={closeAll} aria-label="Close dialog" className="absolute top-3 right-3 p-1 rounded-lg hover:bg-muted transition">
                 <X className="w-4 h-4 text-muted-foreground" />
               </button>
 
