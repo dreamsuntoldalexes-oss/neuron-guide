@@ -48,7 +48,7 @@ export default function VideoTutorial() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Seo title="Video Tutorials — NEURON VIEW" description="Watch tutorials for the most popular AI tools and learn how to use them effectively." path="/tutorials" />
+      <Seo title="Video Tutorials — Neuron Guide" description="Watch tutorials for the most popular AI tools and learn how to use them effectively." path="/tutorials" />
       {/* Top bar */}
       <div className="sticky top-0 z-40 bg-background/90 backdrop-blur-lg border-b border-border/30">
         <div className="flex items-center gap-3 px-3 py-2.5">

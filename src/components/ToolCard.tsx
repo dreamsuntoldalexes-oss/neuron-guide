@@ -87,6 +87,7 @@ export default function ToolCard({ tool, index = 0, isFavorite, onToggleFavorite
           {onToggleFavorite && !locked && (
             <button
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); onToggleFavorite(tool.id); }}
+              aria-label={isFavorite ? `Remove ${tool.name} from favorites` : `Add ${tool.name} to favorites`}
               className="p-1.5 rounded-lg hover:bg-muted transition-colors"
             >
               <Heart
@@ -140,7 +141,7 @@ export default function ToolCard({ tool, index = 0, isFavorite, onToggleFavorite
               className="glass-card p-6 max-w-sm w-full space-y-4 relative"
               onClick={(e) => e.stopPropagation()}
             >
-              <button onClick={closeAll} className="absolute top-3 right-3 p-1 rounded-lg hover:bg-muted transition">
+              <button onClick={closeAll} aria-label="Close dialog" className="absolute top-3 right-3 p-1 rounded-lg hover:bg-muted transition">
                 <X className="w-4 h-4 text-muted-foreground" />
               </button>
 
@@ -153,7 +154,7 @@ export default function ToolCard({ tool, index = 0, isFavorite, onToggleFavorite
                     {showCredits ? "Views Limit Reached" : "Pro Access Required"}
                   </h3>
                   <p className="text-xs text-muted-foreground whitespace-nowrap">
-                    NEURON VIEW Pro is $5/month
+                    Neuron Guide Pro is $5/month
                   </p>
                 </div>
               </div>

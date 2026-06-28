@@ -47,7 +47,7 @@ CREATE POLICY "Users can view their own subscriptions"
 INSERT INTO public.pricing_plans (id, name, price_usd, interval, is_active, features)
 VALUES (
   'pro_monthly',
-  'NEURON VIEW Pro',
+  'Neuron Guide Pro',
   5.00,
   'month',
   true,

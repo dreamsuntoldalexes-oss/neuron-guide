@@ -86,7 +86,7 @@ export default function Pricing() {
 
   return (
     <Layout>
-      <Seo title="Pricing — NEURON VIEW Pro $5/month" description="Unlock unlimited access to 500+ AI tools, exam mode, and pro features for $5/month." path="/pricing" />
+      <Seo title="Pricing — Neuron Guide Pro $5/month" description="Unlock unlimited access to 500+ AI tools, exam mode, and pro features for $5/month." path="/pricing" />
       <div className="px-4 pt-6 pb-4 space-y-8 max-w-md mx-auto">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center">
           <h1 className="text-2xl font-heading font-bold text-foreground flex items-center justify-center gap-2">

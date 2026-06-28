@@ -1,12 +1,12 @@
-# NEURON VIEW
+# Neuron Guide
 
 > AI tools directory to discover, compare, and master 500+ AI tools across 21+ categories for productivity, creativity, and growth.
 
-NEURON VIEW helps people find the right AI tool fast. Browse a categorized directory, compare features, read usage analytics, and chat with an AI study/assistant.
+Neuron Guide helps people find the right AI tool fast. Browse a categorized directory, compare features, read usage analytics, and chat with an AI study/assistant.
 
 ## Pages
 
-- [Welcome](/welcome): Landing page introducing NEURON VIEW and its features.
+- [Welcome](/welcome): Landing page introducing Neuron Guide and its features.
 - [Home](/home): Main hub with search, featured AI tools, and stats.
 - [Tools](/tools): Full directory of 500+ AI tools across 21+ categories.
 - [How it works](/how-it-works): 3-step guide to browsing, comparing, and using AI tools.

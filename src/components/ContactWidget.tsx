@@ -25,7 +25,7 @@ export default function ContactWidget() {
   const [medium, setMedium] = useState<"whatsapp" | "email" | "call">("whatsapp");
   const navigate = useNavigate();
 
-  const contactText = encodeURIComponent(`Hi NEURON VIEW, my name is ${name || "User"}. ${message || "I need support."}`);
+  const contactText = encodeURIComponent(`Hi Neuron Guide, my name is ${name || "User"}. ${message || "I need support."}`);
   const sendHref =
     medium === "whatsapp"
       ? `https://wa.me/2348033962964?text=${contactText}`
@@ -57,7 +57,7 @@ export default function ContactWidget() {
           >
             <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="text-lg font-heading font-bold text-foreground">Contact NEURON VIEW</p>
+                <p className="text-lg font-heading font-bold text-foreground">Contact Neuron Guide</p>
                 <p className="text-xs text-muted-foreground">Fill your name, message, and choose the medium to send instantly.</p>
               </div>
               <button onClick={() => setOpen(false)} className="p-1 rounded-full hover:bg-muted transition" aria-label="Close contact form">

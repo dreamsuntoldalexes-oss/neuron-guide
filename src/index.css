@@ -165,3 +165,40 @@
     display: none;
   }
 }
+
+/* Appearance customization classes */
+.no-hover-fx *:hover { transform: none !important; }
+.no-glow-fx [class*="shadow-"], .no-glow-fx [class*="glow-"] { box-shadow: none !important; }
+.no-float-fx .animate-pulse, .no-float-fx [class*="floating"] { animation: none !important; }
+.no-transitions-fx * { transition-duration: 0s !important; animation-duration: 0s !important; }
+.ui-compact .glass-card, .ui-compact section, .ui-compact main { padding: 0.5rem !important; }
+.ui-compact h1 { font-size: 1.5rem !important; }
+.ui-compact h2 { font-size: 1.125rem !important; }
+
+.cursor-style-glow, .cursor-style-glow * { cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><circle cx='14' cy='14' r='5' fill='%2310b981' opacity='0.6'/><circle cx='14' cy='14' r='2' fill='%23ffffff'/></svg>") 14 14, auto; }
+.cursor-style-ai-dot, .cursor-style-ai-dot * { cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'><circle cx='8' cy='8' r='4' fill='%2310b981'/></svg>") 8 8, auto; }
+.cursor-style-neon, .cursor-style-neon * { cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><circle cx='16' cy='16' r='10' fill='none' stroke='%2310b981' stroke-width='2'/></svg>") 16 16, auto; }
+
+.bg-style-mesh body, body.bg-style-mesh {
+  background-image:
+    radial-gradient(at 27% 37%, hsl(var(--primary) / 0.18) 0px, transparent 50%),
+    radial-gradient(at 97% 21%, hsl(var(--neon-purple) / 0.15) 0px, transparent 50%),
+    radial-gradient(at 52% 99%, hsl(var(--accent) / 0.15) 0px, transparent 50%);
+}
+body.bg-style-aurora {
+  background: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--primary) / 0.05) 50%, hsl(var(--neon-purple) / 0.05) 100%);
+}
+body.bg-style-animated {
+  background: linear-gradient(120deg, hsl(var(--background)), hsl(var(--primary) / 0.06), hsl(var(--neon-purple) / 0.06), hsl(var(--background)));
+  background-size: 300% 300%;
+  animation: bgShift 18s ease infinite;
+}
+@keyframes bgShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+body.bg-style-minimal { background: hsl(var(--background)); }
+body.bg-style-glass::before {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background: radial-gradient(ellipse at top, hsl(var(--primary) / 0.06), transparent 60%);
+}

@@ -53,7 +53,7 @@ export default function Settings() {
     setPermission(result);
     if (result === "granted") {
       toast({ title: "Notifications enabled", description: "You'll be alerted when new AI images are added." });
-      new Notification("NEURON VIEW", { body: "🔔 You're all set! We'll notify you about new AI images & tools." });
+      new Notification("Neuron Guide", { body: "🔔 You're all set! We'll notify you about new AI images & tools." });
     } else {
       toast({ title: "Permission denied", description: "Enable notifications in your browser settings." });
     }
@@ -86,7 +86,7 @@ export default function Settings() {
     {
       title: "Appearance",
       items: [
-        { key: "darkMode", icon: Moon, label: "Dark Mode", desc: "NEURON VIEW shines best in the dark." },
+        { key: "darkMode", icon: Moon, label: "Dark Mode", desc: "Neuron Guide shines best in the dark." },
         { key: "reduceMotion", icon: Shield, label: "Reduce Motion", desc: "Tone down animations & background effects." },
       ],
     },
@@ -187,7 +187,7 @@ export default function Settings() {
           <Globe className="w-5 h-5 text-accent" />
           <div className="flex-1">
             <p className="text-sm font-medium text-foreground">Version</p>
-            <p className="text-xs text-muted-foreground">NEURON VIEW v1.0.0 · Built with ⚡</p>
+            <p className="text-xs text-muted-foreground">Neuron Guide v1.0.0 · Built with ⚡</p>
           </div>
         </motion.section>
       </div>

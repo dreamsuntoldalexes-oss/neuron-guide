@@ -50,7 +50,7 @@ export default function Index() {
 
   return (
     <div className="min-h-screen relative overflow-hidden flex flex-col bg-background">
-      <Seo title="NEURON VIEW — Discover 500+ AI Tools" description="Explore, compare, and use powerful AI tools for productivity, creativity, and growth." path="/welcome" />
+      <Seo title="Neuron Guide — Discover 500+ AI Tools" description="Explore, compare, and use powerful AI tools for productivity, creativity, and growth." path="/welcome" />
       {/* AI human + computer fusion background */}
       <img
         src={aiBg}
@@ -75,8 +75,8 @@ export default function Index() {
         className="sticky top-0 z-30 flex items-center justify-between px-5 py-3 bg-background/40 backdrop-blur-xl border-b border-border/30"
       >
         <Link to="/" className="flex items-center gap-2">
-          <img src={neuronLogo} alt="NEURON VIEW" className="w-10 h-10 drop-shadow-[0_0_10px_hsl(var(--primary)/0.5)]" />
-          <span className="font-heading font-bold text-lg text-foreground">NEURON VIEW</span>
+          <img src={neuronLogo} alt="Neuron Guide" className="w-10 h-10 drop-shadow-[0_0_10px_hsl(var(--primary)/0.5)]" />
+          <span className="font-heading font-bold text-lg text-foreground">Neuron Guide</span>
         </Link>
         <div className="flex items-center gap-2">
           <Link
@@ -104,10 +104,10 @@ export default function Index() {
           className="text-center max-w-xl space-y-3"
         >
           <h1 className="text-3xl sm:text-5xl font-heading font-bold text-foreground leading-tight">
-            Discover the Best <span className="gradient-text">AI Tools</span> in One Place
+            Discover the Best <span className="gradient-text">AI Tools</span> for Every Need
           </h1>
           <p className="text-muted-foreground text-base sm:text-lg">
-            Explore, compare, and use powerful AI tools for productivity, creativity, and growth.
+            Your gateway to thousands of AI platforms — explore, compare, and launch productivity, creativity, and growth tools in seconds.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
             <Link
@@ -142,7 +142,7 @@ export default function Index() {
                   handleSubmit();
                 }
               }}
-              placeholder="Ask NEURON VIEW to find the perfect AI tool..."
+              placeholder="Ask Neuron Guide to find the perfect AI tool..."
               className="w-full bg-transparent text-foreground placeholder:text-muted-foreground/60 resize-none outline-none text-sm min-h-[60px] focus:ring-0"
               rows={2}
             />
@@ -194,6 +194,9 @@ export default function Index() {
                   key={aiGalleryImages[activeSlide].src}
                   src={aiGalleryImages[activeSlide].src}
                   alt={aiGalleryImages[activeSlide].alt}
+                  loading="lazy"
+                  decoding="async"
+                  onError={(e) => { (e.target as HTMLImageElement).src = aiGalleryImages[0].src; }}
                   className="absolute inset-0 w-full h-full object-cover"
                   initial={{ opacity: 0, scale: 1.08, x: 24 }}
                   animate={{ opacity: 1, scale: 1, x: 0 }}
@@ -203,7 +206,7 @@ export default function Index() {
               </AnimatePresence>
               <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
               <div className="absolute bottom-4 left-4 right-4 glass-card p-3">
-                <p className="text-xs text-primary uppercase tracking-wider">NEURON VIEW AI</p>
+                <p className="text-xs text-primary uppercase tracking-wider">Neuron Guide AI</p>
                 <p className="font-heading font-bold text-foreground">Animated AI character assistant</p>
               </div>
               <div className="absolute top-4 right-4 flex gap-1.5">
@@ -211,8 +214,8 @@ export default function Index() {
                   <button
                     key={slide.src}
                     onClick={() => setActiveSlide(index)}
+                    aria-label={`Show AI character ${index + 1} of ${aiGalleryImages.length}`}
                     className={`h-2 rounded-full transition-all ${activeSlide === index ? "w-6 bg-primary" : "w-2 bg-white/40"}`}
-                    aria-label={`Show AI character ${index + 1}`}
                   />
                 ))}
               </div>
@@ -243,7 +246,7 @@ export default function Index() {
           className="mt-14 w-full max-w-2xl"
         >
           <h2 className="text-xl sm:text-2xl font-heading font-bold text-foreground text-center mb-6">
-            Why Students Love <span className="gradient-text">NEURON VIEW</span>
+            Why Students Love <span className="gradient-text">Neuron Guide</span>
           </h2>
           <div className="grid grid-cols-2 gap-3 sm:gap-4">
             {features.map((f, i) => (
@@ -312,7 +315,7 @@ export default function Index() {
           className="mt-16 w-full max-w-3xl"
         >
           <h2 className="text-xl sm:text-2xl font-heading font-bold text-foreground text-center mb-6">
-            A glimpse inside <span className="gradient-text">NEURON VIEW</span>
+            A glimpse inside <span className="gradient-text">Neuron Guide</span>
           </h2>
           <div className="relative rounded-2xl overflow-hidden glass-card p-4 sm:p-6 shadow-[0_0_60px_hsl(var(--primary)/0.15)]">
             <div className="flex items-center gap-1.5 mb-4">

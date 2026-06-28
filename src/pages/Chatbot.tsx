@@ -8,6 +8,9 @@ import {
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
+import "katex/dist/katex.min.css";
 import { supabase } from "@/integrations/supabase/client";
 import neuronLogo from "@/assets/neuron-logo-new.png";
 import { aiGalleryImages } from "@/assets/aiGallery";
@@ -174,7 +177,7 @@ export default function Chatbot() {
         const errMsg: Message = {
           id: crypto.randomUUID(),
           role: "assistant",
-          content: "Please [sign in](/login) to chat with NEURON VIEW AI. 🔐",
+          content: "Please [sign in](/login) to chat with Neuron Guide AI. 🔐",
         };
         updateChat(activeId, (c) => ({ ...c, messages: [...c.messages, errMsg] }));
         setIsTyping(false);
@@ -247,7 +250,7 @@ export default function Chatbot() {
 
   return (
     <div className="h-screen bg-background overflow-hidden p-3 sm:p-6">
-      <Seo title="AI Assistant — NEURON VIEW Study Coach" description="Chat with NEURON VIEW's academic AI assistant. Get help with study, exam practice, and concept explanations." path="/chatbot" />
+      <Seo title="AI Assistant — Neuron Guide Study Coach" description="Chat with Neuron Guide's academic AI assistant. Get help with study, exam practice, and concept explanations." path="/chatbot" />
       <div className="mx-auto flex h-full max-w-7xl gap-4">
       {/* ─── SIDEBAR (mobile overlay + desktop persistent) ─── */}
       <AnimatePresence>
@@ -276,7 +279,7 @@ export default function Chatbot() {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <img src={neuronLogo} alt="" className="w-8 h-8" />
-              <span className="font-heading font-bold text-foreground text-sm">NEURON VIEW AI</span>
+              <span className="font-heading font-bold text-foreground text-sm">Neuron Guide AI</span>
             </div>
             <button onClick={() => setSidebarOpen(false)} className="lg:hidden p-1 rounded-lg hover:bg-muted transition">
               <X className="w-4 h-4 text-muted-foreground" />
@@ -339,15 +342,15 @@ export default function Chatbot() {
         {/* Top bar */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-border/30 bg-card/40 backdrop-blur-xl">
           <div className="flex items-center gap-3">
-            <button onClick={() => navigate(-1)} className="p-1.5 rounded-lg hover:bg-muted transition lg:hidden">
+            <button onClick={() => (window.history.length > 1 ? navigate(-1) : navigate("/home"))} aria-label="Go back" className="p-1.5 rounded-lg hover:bg-muted transition">
               <ArrowLeft className="w-5 h-5 text-muted-foreground" />
             </button>
-            <button onClick={() => setSidebarOpen(true)} className="p-1.5 rounded-lg hover:bg-muted transition lg:hidden">
+            <button onClick={() => setSidebarOpen(true)} aria-label="Open chat list" className="p-1.5 rounded-lg hover:bg-muted transition lg:hidden">
               <Menu className="w-5 h-5 text-muted-foreground" />
             </button>
             <div className="hidden lg:flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-secondary animate-pulse" />
-              <span className="text-xs text-muted-foreground">NEURON VIEW AI — Online</span>
+              <span className="text-xs text-muted-foreground">Neuron Guide AI — Online</span>
             </div>
           </div>
 
@@ -389,12 +392,12 @@ export default function Chatbot() {
                   animate={{ y: [0, -6, 0] }}
                   transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                 >
-                  <img src={aiGalleryImages[0].src} alt="NEURON VIEW AI character" className="w-full h-full object-cover" />
+                  <img src={aiGalleryImages[0].src} alt="Neuron Guide AI character" className="w-full h-full object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent" />
                 </motion.div>
                 <div>
                   <h1 className="text-2xl sm:text-3xl font-heading font-bold text-foreground">
-                    NEURON VIEW AI
+                    Neuron Guide AI
                   </h1>
                   <p className="text-muted-foreground text-sm mt-1">Your Smart Study Companion ✨</p>
                 </div>
@@ -486,8 +489,8 @@ export default function Chatbot() {
                     }`}
                   >
                     {msg.role === "assistant" ? (
-                  <div className="prose prose-sm prose-invert max-w-none text-foreground text-sm [&>p]:mb-2 [&>ul]:mb-2 [&>ol]:mb-2 [&>h1]:text-lg [&>h2]:text-base [&>h3]:text-sm [&_code]:bg-muted [&_code]:px-1 [&_code]:rounded [&_pre]:bg-muted/80 [&_pre]:rounded-xl [&_pre]:p-3 [&_pre]:overflow-x-auto [&_a]:text-primary [&_strong]:text-foreground">
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
+                  <div className="prose prose-sm prose-invert max-w-none text-foreground text-sm [&>p]:mb-2 [&>ul]:mb-2 [&>ol]:mb-2 [&>h1]:text-lg [&>h2]:text-base [&>h3]:text-sm [&_code]:bg-muted [&_code]:px-1 [&_code]:rounded [&_pre]:bg-muted/80 [&_pre]:rounded-xl [&_pre]:p-3 [&_pre]:overflow-x-auto [&_a]:text-primary [&_strong]:text-foreground [&_.katex-display]:my-3 [&_.katex-display]:overflow-x-auto">
+                        <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeKatex]}>{msg.content}</ReactMarkdown>
                       </div>
                     ) : (
                       <p className="text-sm text-foreground whitespace-pre-wrap">{msg.content}</p>
@@ -565,7 +568,7 @@ export default function Chatbot() {
             </button>
           </form>
           <p className="text-center text-[10px] text-muted-foreground/40 mt-2 max-w-3xl mx-auto">
-            NEURON VIEW AI can make mistakes. Verify important information.
+            Neuron Guide AI can make mistakes. Verify important information.
           </p>
         </div>
       </div>

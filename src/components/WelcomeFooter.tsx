@@ -8,7 +8,7 @@ const WHATSAPP = "https://wa.me/2348033962964";
 export default function WelcomeFooter() {
   return (
     <footer className="relative z-10 mt-10 border-t border-border/40 bg-card/30 backdrop-blur-xl">
-      <div className="max-w-6xl mx-auto px-5 py-10 grid grid-cols-1 sm:grid-cols-3 gap-8">
+      <div className="max-w-7xl mx-auto px-5 sm:px-10 lg:px-20 xl:px-28 py-10 grid grid-cols-1 sm:grid-cols-3 gap-8">
         {/* Quick Links */}
         <div>
           <h4 className="text-sm font-heading font-bold text-foreground mb-3">Quick Links</h4>
@@ -75,7 +75,7 @@ export default function WelcomeFooter() {
       </div>
 
       <div className="border-t border-border/30 px-5 py-4 text-center text-[11px] text-muted-foreground">
-        © {new Date().getFullYear()} NEURON VIEW. Crafted for curious minds.
+        © {new Date().getFullYear()} Neuron Guide. Crafted for curious minds.
       </div>
     </footer>
   );

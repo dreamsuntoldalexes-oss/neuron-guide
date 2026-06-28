@@ -30,14 +30,14 @@ export default function Home() {
 
   return (
     <Layout>
-      <Seo title="Home — NEURON VIEW AI Tools Hub" description="Search 500+ AI tools, browse categories, and discover trending picks updated daily." path="/home" />
+      <Seo title="Home — Neuron Guide AI Tools Hub" description="Search 500+ AI tools, browse categories, and discover trending picks updated daily." path="/home" />
       <div className="px-4 sm:px-8 pt-6 pb-6 space-y-8 max-w-6xl mx-auto">
         {/* Header bar */}
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img src={neuronLogo} alt="NEURON VIEW" className="w-9 h-9 rounded-xl ring-1 ring-primary/30" />
+            <img src={neuronLogo} alt="Neuron Guide" className="w-9 h-9 rounded-xl ring-1 ring-primary/30" />
             <div className="leading-tight">
-              <p className="text-sm font-semibold text-foreground">NEURON VIEW</p>
+              <p className="text-sm font-semibold text-foreground">Neuron Guide</p>
               <p className="text-[10px] text-primary">Available for you</p>
             </div>
           </div>
@@ -54,7 +54,7 @@ export default function Home() {
               {tools.length}+ AI Tools Directory
             </span>
             <h1 className="text-4xl sm:text-6xl font-heading font-bold text-foreground leading-tight">
-              Discover the <span className="gradient-text">Best AI Tools</span>
+              Discover the <span className="gradient-text">Best AI Tools</span> for Every Need
             </h1>
             <p className="text-sm sm:text-base text-muted-foreground max-w-xl mx-auto lg:mx-0">
               Find the perfect AI tools for your workflow. Browse, compare, and discover cutting-edge AI solutions trusted by students and professionals worldwide.

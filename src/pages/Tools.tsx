@@ -57,11 +57,11 @@ export default function Tools() {
 
   return (
     <Layout>
-      <Seo title="All AI Tools — NEURON VIEW Directory" description="Browse the full directory of 500+ AI tools across 21+ categories. Filter, compare, and find the right tool fast." path="/tools" />
+      <Seo title="All AI Tools — Neuron Guide Directory" description="Browse the full directory of 500+ AI tools across 21+ categories. Filter, compare, and find the right tool fast." path="/tools" />
       <div className="px-4 pt-6 pb-4 space-y-4">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img src={neuronLogo} alt="NEURON VIEW" className="w-7 h-7 rounded-lg" />
+            <img src={neuronLogo} alt="Neuron Guide" className="w-7 h-7 rounded-lg" />
             <h1 className="text-2xl font-heading font-bold text-foreground">All AI Tools</h1>
           </div>
           <span className="text-xs text-muted-foreground">{tools.length} tools</span>
