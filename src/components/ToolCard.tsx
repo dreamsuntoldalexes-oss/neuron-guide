@@ -87,6 +87,7 @@ export default function ToolCard({ tool, index = 0, isFavorite, onToggleFavorite
           {onToggleFavorite && !locked && (
             <button
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); onToggleFavorite(tool.id); }}
+              aria-label={isFavorite ? `Remove ${tool.name} from favorites` : `Add ${tool.name} to favorites`}
               className="p-1.5 rounded-lg hover:bg-muted transition-colors"
             >
               <Heart
