@@ -54,7 +54,7 @@ export default function Home() {
               {tools.length}+ AI Tools Directory
             </span>
             <h1 className="text-4xl sm:text-6xl font-heading font-bold text-foreground leading-tight">
-              Discover the <span className="gradient-text">Best AI Tools</span>
+              Discover the <span className="gradient-text">Best AI Tools</span> for Every Need
             </h1>
             <p className="text-sm sm:text-base text-muted-foreground max-w-xl mx-auto lg:mx-0">
               Find the perfect AI tools for your workflow. Browse, compare, and discover cutting-edge AI solutions trusted by students and professionals worldwide.
