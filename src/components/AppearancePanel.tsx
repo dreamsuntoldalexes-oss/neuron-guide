@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Palette, X, RotateCcw, Type, Sun, Moon, Monitor, Sparkles, Square, Circle, MousePointer2 } from "lucide-react";
+import { Palette, X, RotateCcw, Search, Sun, Moon, Monitor, MousePointer2 } from "lucide-react";
 import {
   useAppearance, FONT_OPTIONS, ACCENT_PRESETS, GRADIENT_PRESETS,
   ThemeMode, BgStyle, ShadowLevel, ReadingWidth, CursorStyle, FontWeight,
