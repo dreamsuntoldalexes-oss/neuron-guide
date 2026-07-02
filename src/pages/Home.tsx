@@ -11,22 +11,22 @@ import neuronLogo from "@/assets/neuron-logo-new.png";
 import { aiGalleryImages } from "@/assets/aiGallery";
 
 export default function Home() {
-  const [query, setQuery] = useState("");
   const [activeCat, setActiveCat] = useState<string>("All");
   const [activeSlide, setActiveSlide] = useState(0);
   const { isFavorite, toggleFavorite } = useFavorites();
   const trending = [...tools].sort((a, b) => b.views - a.views).slice(0, 6);
   const recent = [...tools].sort((a, b) => new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime()).slice(0, 6);
   const featured = (activeCat === "All" ? trending : tools.filter(t => t.category === activeCat)).slice(0, 8);
-  const searchResults = query.length > 1 ? tools.filter(t => t.name.toLowerCase().includes(query.toLowerCase()) || t.shortDescription.toLowerCase().includes(query.toLowerCase())).slice(0, 10) : [];
   const tier = getUserTier();
+  const slideCount = aiGalleryImages.length;
 
   useEffect(() => {
+    if (slideCount === 0) return;
     const timer = window.setInterval(() => {
-      setActiveSlide((current) => (current + 1) % aiGalleryImages.length);
+      setActiveSlide((current) => (current + 1) % slideCount);
     }, 3600);
     return () => window.clearInterval(timer);
-  }, []);
+  }, [slideCount]);
 
   return (
     <Layout>
