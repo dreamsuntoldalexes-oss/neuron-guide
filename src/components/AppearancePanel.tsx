@@ -32,6 +32,12 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 export default function AppearancePanel({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { state, set, reset } = useAppearance();
+  const [fontQuery, setFontQuery] = useState("");
+  const filteredFonts = useMemo(() => {
+    const q = fontQuery.trim().toLowerCase();
+    const list = q ? FONT_OPTIONS.filter((f) => f.toLowerCase().includes(q)) : FONT_OPTIONS;
+    return list.slice(0, 200);
+  }, [fontQuery]);
 
   return (
     <AnimatePresence>
