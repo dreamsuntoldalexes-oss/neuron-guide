@@ -105,21 +105,10 @@ export default function Home() {
           </div>
         </motion.div>
 
-        {query.length > 1 ? (
-          <div className="space-y-3">
-            <h2 className="text-lg font-heading font-semibold text-foreground">
-              Results for "{query}" ({searchResults.length})
-            </h2>
-            <div className="grid gap-3 sm:grid-cols-2">
-              {searchResults.map((tool, i) => (
-                <ToolCard key={tool.id} tool={tool} index={i} isFavorite={isFavorite(tool.id)} onToggleFavorite={toggleFavorite} />
-              ))}
-              {searchResults.length === 0 && (
-                <p className="text-muted-foreground text-sm py-8 text-center col-span-full">No tools found.</p>
-              )}
-            </div>
-          </div>
-        ) : (
+        <></>
+        {(
+          <></>
+        ) || (
           <>
             {/* Stats teaser → Analytics */}
             <Link to="/analytics" className="block">
