@@ -84,16 +84,35 @@ export default function AppearancePanel({ open, onClose }: { open: boolean; onCl
                 </div>
               </Section>
 
-              <Section title="Font Family">
-                <select
-                  value={state.fontFamily}
-                  onChange={(e) => set("fontFamily", e.target.value)}
-                  className="w-full bg-muted/40 border border-border rounded-xl py-2.5 px-3 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
-                >
-                  {FONT_OPTIONS.map((f) => <option key={f} value={f}>{f}</option>)}
-                </select>
+              <Section title={`Font Family — ${FONT_OPTIONS.length}+ Google Fonts`}>
+                <div className="relative mb-2">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <input
+                    type="text"
+                    value={fontQuery}
+                    onChange={(e) => setFontQuery(e.target.value)}
+                    placeholder="Search fonts..."
+                    className="w-full bg-muted/40 border border-border rounded-xl py-2 pl-9 pr-3 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                    aria-label="Search fonts"
+                  />
+                </div>
+                <div className="max-h-56 overflow-y-auto rounded-xl border border-border/40 bg-muted/20 divide-y divide-border/30">
+                  {filteredFonts.map((f) => (
+                    <button
+                      key={f}
+                      onClick={() => set("fontFamily", f)}
+                      className={`w-full text-left px-3 py-2 text-sm transition ${state.fontFamily === f ? "bg-primary/15 text-primary" : "text-foreground hover:bg-muted/40"}`}
+                      style={{ fontFamily: `"${f}", sans-serif` }}
+                    >
+                      {f}
+                    </button>
+                  ))}
+                  {filteredFonts.length === 0 && (
+                    <p className="text-xs text-muted-foreground p-3 text-center">No fonts found</p>
+                  )}
+                </div>
                 <p className="text-xs text-muted-foreground mt-2" style={{ fontFamily: `"${state.fontFamily}"` }}>
-                  The quick brown fox jumps over the lazy dog.
+                  Preview: The quick brown fox jumps over the lazy dog.
                 </p>
               </Section>
 
