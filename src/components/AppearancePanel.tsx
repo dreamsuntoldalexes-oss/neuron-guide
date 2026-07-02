@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Palette, X, RotateCcw, Type, Sun, Moon, Monitor, Sparkles, Square, Circle, MousePointer2 } from "lucide-react";
+import { Palette, X, RotateCcw, Search, Sun, Moon, Monitor, MousePointer2 } from "lucide-react";
 import {
   useAppearance, FONT_OPTIONS, ACCENT_PRESETS, GRADIENT_PRESETS,
   ThemeMode, BgStyle, ShadowLevel, ReadingWidth, CursorStyle, FontWeight,
@@ -32,6 +32,12 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 export default function AppearancePanel({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { state, set, reset } = useAppearance();
+  const [fontQuery, setFontQuery] = useState("");
+  const filteredFonts = useMemo(() => {
+    const q = fontQuery.trim().toLowerCase();
+    const list = q ? FONT_OPTIONS.filter((f) => f.toLowerCase().includes(q)) : FONT_OPTIONS;
+    return list.slice(0, 200);
+  }, [fontQuery]);
 
   return (
     <AnimatePresence>
@@ -78,16 +84,35 @@ export default function AppearancePanel({ open, onClose }: { open: boolean; onCl
                 </div>
               </Section>
 
-              <Section title="Font Family">
-                <select
-                  value={state.fontFamily}
-                  onChange={(e) => set("fontFamily", e.target.value)}
-                  className="w-full bg-muted/40 border border-border rounded-xl py-2.5 px-3 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
-                >
-                  {FONT_OPTIONS.map((f) => <option key={f} value={f}>{f}</option>)}
-                </select>
+              <Section title={`Font Family — ${FONT_OPTIONS.length}+ Google Fonts`}>
+                <div className="relative mb-2">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <input
+                    type="text"
+                    value={fontQuery}
+                    onChange={(e) => setFontQuery(e.target.value)}
+                    placeholder="Search fonts..."
+                    className="w-full bg-muted/40 border border-border rounded-xl py-2 pl-9 pr-3 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                    aria-label="Search fonts"
+                  />
+                </div>
+                <div className="max-h-56 overflow-y-auto rounded-xl border border-border/40 bg-muted/20 divide-y divide-border/30">
+                  {filteredFonts.map((f) => (
+                    <button
+                      key={f}
+                      onClick={() => set("fontFamily", f)}
+                      className={`w-full text-left px-3 py-2 text-sm transition ${state.fontFamily === f ? "bg-primary/15 text-primary" : "text-foreground hover:bg-muted/40"}`}
+                      style={{ fontFamily: `"${f}", sans-serif` }}
+                    >
+                      {f}
+                    </button>
+                  ))}
+                  {filteredFonts.length === 0 && (
+                    <p className="text-xs text-muted-foreground p-3 text-center">No fonts found</p>
+                  )}
+                </div>
                 <p className="text-xs text-muted-foreground mt-2" style={{ fontFamily: `"${state.fontFamily}"` }}>
-                  The quick brown fox jumps over the lazy dog.
+                  Preview: The quick brown fox jumps over the lazy dog.
                 </p>
               </Section>
 
