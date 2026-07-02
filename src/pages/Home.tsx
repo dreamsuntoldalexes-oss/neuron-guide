@@ -105,84 +105,76 @@ export default function Home() {
           </div>
         </motion.div>
 
-        <></>
-        {(
-          <></>
-        ) || (
-          <>
-            {/* Stats teaser → Analytics */}
-            <Link to="/analytics" className="block">
-              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="glass-card-hover p-4 grid grid-cols-3 gap-2 text-center">
-                <div className="space-y-0.5">
-                  <p className="text-xl font-heading font-bold text-primary">{tools.length}+</p>
-                  <p className="text-[10px] text-muted-foreground uppercase tracking-wide">AI Tools</p>
-                </div>
-                <div className="space-y-0.5 border-x border-border/40">
-                  <p className="text-xl font-heading font-bold text-accent">12k+</p>
-                  <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Active Users</p>
-                </div>
-                <div className="space-y-0.5">
-                  <p className="text-xl font-heading font-bold text-secondary">98%</p>
-                  <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Satisfaction</p>
-                </div>
-                <p className="col-span-3 text-[10px] text-primary flex items-center justify-center gap-1 pt-1">
-                  <BarChart3 className="w-3 h-3" /> View live analytics dashboard →
-                </p>
-              </motion.div>
-            </Link>
+        <>
+          {/* Stats teaser → Analytics */}
+          <Link to="/analytics" className="block">
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="glass-card-hover p-4 grid grid-cols-3 gap-2 text-center">
+              <div className="space-y-0.5">
+                <p className="text-xl font-heading font-bold text-primary">{tools.length}+</p>
+                <p className="text-[10px] text-muted-foreground uppercase tracking-wide">AI Tools</p>
+              </div>
+              <div className="space-y-0.5 border-x border-border/40">
+                <p className="text-xl font-heading font-bold text-accent">12k+</p>
+                <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Active Users</p>
+              </div>
+              <div className="space-y-0.5">
+                <p className="text-xl font-heading font-bold text-secondary">98%</p>
+                <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Satisfaction</p>
+              </div>
+              <p className="col-span-3 text-[10px] text-primary flex items-center justify-center gap-1 pt-1">
+                <BarChart3 className="w-3 h-3" /> View live analytics dashboard →
+              </p>
+            </motion.div>
+          </Link>
 
-            {/* Category chips */}
-            <div className="flex flex-wrap justify-center gap-2">
-              {["All", ...categories.filter(c => c !== "All")].slice(0, 14).map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setActiveCat(cat)}
-                  className={`px-3.5 py-1.5 rounded-full text-xs transition whitespace-nowrap border ${
-                    activeCat === cat
-                      ? "gradient-primary text-primary-foreground border-transparent shadow-md shadow-primary/20"
-                      : "bg-muted/40 border-border text-foreground hover:border-primary/30"
-                  }`}
-                >
-                  {cat}
-                </button>
+          <div className="flex flex-wrap justify-center gap-2">
+            {["All", ...categories.filter(c => c !== "All")].slice(0, 14).map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setActiveCat(cat)}
+                className={`px-3.5 py-1.5 rounded-full text-xs transition whitespace-nowrap border ${
+                  activeCat === cat
+                    ? "gradient-primary text-primary-foreground border-transparent shadow-md shadow-primary/20"
+                    : "bg-muted/40 border-border text-foreground hover:border-primary/30"
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          <div className="space-y-3">
+            <div className="flex items-end justify-between">
+              <div>
+                <h2 className="text-xl font-heading font-bold text-foreground flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-primary" /> Featured AI Tools
+                </h2>
+                <p className="text-xs text-muted-foreground">Discover the most innovative AI platforms trusted by modern teams.</p>
+              </div>
+              <Link to="/tools" className="text-xs text-primary hover:underline whitespace-nowrap">View All</Link>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {featured.map((tool, i) => (
+                <ToolCard key={tool.id} tool={tool} index={i} isFavorite={isFavorite(tool.id)} onToggleFavorite={toggleFavorite} />
               ))}
             </div>
+          </div>
 
-            {/* Featured */}
-            <div className="space-y-3">
-              <div className="flex items-end justify-between">
-                <div>
-                  <h2 className="text-xl font-heading font-bold text-foreground flex items-center gap-2">
-                    <Sparkles className="w-4 h-4 text-primary" /> Featured AI Tools
-                  </h2>
-                  <p className="text-xs text-muted-foreground">Discover the most innovative AI platforms trusted by modern teams.</p>
-                </div>
-                <Link to="/tools" className="text-xs text-primary hover:underline whitespace-nowrap">View All</Link>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Clock className="w-4 h-4 text-accent" />
+                <h2 className="text-lg font-heading font-semibold text-foreground">Recently Added</h2>
               </div>
-              <div className="grid gap-3 sm:grid-cols-2">
-                {featured.map((tool, i) => (
-                  <ToolCard key={tool.id} tool={tool} index={i} isFavorite={isFavorite(tool.id)} onToggleFavorite={toggleFavorite} />
-                ))}
-              </div>
+              <Link to="/tools?sort=newest" className="text-xs text-primary hover:underline">View all</Link>
             </div>
-
-            {/* Recent */}
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Clock className="w-4 h-4 text-accent" />
-                  <h2 className="text-lg font-heading font-semibold text-foreground">Recently Added</h2>
-                </div>
-                <Link to="/tools?sort=newest" className="text-xs text-primary hover:underline">View all</Link>
-              </div>
-              <div className="grid gap-3 sm:grid-cols-2">
-                {recent.map((tool, i) => (
-                  <ToolCard key={tool.id} tool={tool} index={i} isFavorite={isFavorite(tool.id)} onToggleFavorite={toggleFavorite} />
-                ))}
-              </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {recent.map((tool, i) => (
+                <ToolCard key={tool.id} tool={tool} index={i} isFavorite={isFavorite(tool.id)} onToggleFavorite={toggleFavorite} />
+              ))}
             </div>
-          </>
-        )}
+          </div>
+        </>
       </div>
     </Layout>
   );
