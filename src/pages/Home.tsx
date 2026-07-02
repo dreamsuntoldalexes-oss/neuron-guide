@@ -60,16 +60,13 @@ export default function Home() {
               Find the perfect AI tools for your workflow. Browse, compare, and discover cutting-edge AI solutions trusted by students and professionals worldwide.
             </p>
 
-            {/* Search */}
-            <div className="relative max-w-xl mx-auto lg:mx-0 pt-2">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-              <input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search AI tools..."
-                className="w-full bg-muted/40 border border-border rounded-full py-3.5 pl-12 pr-4 text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 focus:ring-primary/50 focus:border-primary/30 transition"
-              />
-            </div>
+            <Link
+              to="/tools"
+              className="inline-flex items-center gap-2 mt-2 px-5 py-3 rounded-full gradient-primary text-primary-foreground text-sm font-semibold shadow-lg shadow-primary/30 hover:opacity-90 transition"
+            >
+              <Search className="w-4 h-4" />
+              Browse all AI tools
+            </Link>
           </div>
 
           <div className="relative h-[320px] sm:h-[380px] rounded-[2rem] overflow-hidden border border-border/40 bg-card/50 shadow-2xl shadow-primary/10">
