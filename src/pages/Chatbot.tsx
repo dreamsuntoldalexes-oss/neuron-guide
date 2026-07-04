@@ -457,8 +457,8 @@ export default function Chatbot() {
                 </div>
 
                 <p className="text-xs text-muted-foreground leading-relaxed max-w-md mx-auto">
-                  I can help with academics, recommend AI tools, explain concepts step-by-step, 
-                  and guide you on using AI for productivity. Ask me anything!
+                  I can help with academics, recommend AI tools, and generate images.
+                  Try <code className="text-primary bg-primary/10 px-1.5 rounded">/image your prompt</code> to create an AI image you can download.
                 </p>
 
                 {/* Mode pills */}
