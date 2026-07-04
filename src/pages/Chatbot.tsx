@@ -543,16 +543,35 @@ export default function Chatbot() {
                     }`}
                   >
                     {msg.role === "assistant" ? (
-                  <div className="prose prose-sm prose-invert max-w-none text-foreground text-sm [&>p]:mb-2 [&>ul]:mb-2 [&>ol]:mb-2 [&>h1]:text-lg [&>h2]:text-base [&>h3]:text-sm [&_code]:bg-muted [&_code]:px-1 [&_code]:rounded [&_pre]:bg-muted/80 [&_pre]:rounded-xl [&_pre]:p-3 [&_pre]:overflow-x-auto [&_a]:text-primary [&_strong]:text-foreground [&_.katex-display]:my-3 [&_.katex-display]:overflow-x-auto">
-                        <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeKatex]}>{msg.content}</ReactMarkdown>
+                      <div className="space-y-3">
+                        {msg.image && (
+                          <a
+                            href={msg.image}
+                            download={`neuron-guide-${msg.id}.png`}
+                            className="block rounded-xl overflow-hidden border border-border/40 hover:border-primary/40 transition group relative"
+                            title="Click to download"
+                          >
+                            <img src={msg.image} alt="AI generated" className="w-full h-auto" />
+                            <span className="absolute bottom-2 right-2 text-[10px] px-2 py-1 rounded-md bg-background/80 backdrop-blur text-foreground opacity-0 group-hover:opacity-100 transition">
+                              ⬇ Download
+                            </span>
+                          </a>
+                        )}
+                        <div className="prose prose-sm prose-invert max-w-none text-foreground text-sm [&>p]:mb-2 [&>ul]:mb-2 [&>ol]:mb-2 [&>h1]:text-lg [&>h2]:text-base [&>h3]:text-sm [&_code]:bg-muted [&_code]:px-1 [&_code]:rounded [&_pre]:bg-muted/80 [&_pre]:rounded-xl [&_pre]:p-3 [&_pre]:overflow-x-auto [&_a]:text-primary [&_strong]:text-foreground [&_.katex-display]:my-3 [&_.katex-display]:overflow-x-auto">
+                          <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeKatex]}>{msg.content}</ReactMarkdown>
+                        </div>
                       </div>
                     ) : (
                       <p className="text-sm text-foreground whitespace-pre-wrap">{msg.content}</p>
                     )}
                   </div>
                   {msg.role === "user" && (
-                    <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center flex-shrink-0 mt-1">
-                      <User className="w-4 h-4 text-muted-foreground" />
+                    <div className="w-8 h-8 rounded-full bg-muted overflow-hidden flex items-center justify-center flex-shrink-0 mt-1 border border-border/50">
+                      {user.avatar ? (
+                        <img src={user.avatar} alt={user.name || "You"} className="w-full h-full object-cover" />
+                      ) : (
+                        <span className="text-xs font-bold text-primary">{(user.name || "U")[0].toUpperCase()}</span>
+                      )}
                     </div>
                   )}
                 </motion.div>
