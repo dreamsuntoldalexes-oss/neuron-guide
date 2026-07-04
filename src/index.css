@@ -48,7 +48,51 @@
     --neon-pink: 142 71% 55%;
     --gold: 48 96% 53%;
   }
-}
+
+  /* Light mode overrides — applied when <html> does NOT have .dark class */
+  html:not(.dark) {
+    --background: 0 0% 100%;
+    --foreground: 160 30% 10%;
+
+    --card: 160 25% 98%;
+    --card-foreground: 160 30% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 160 30% 10%;
+
+    --primary: 152 76% 38%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 173 80% 35%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 160 20% 94%;
+    --muted-foreground: 160 15% 40%;
+
+    --accent: 142 71% 40%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 160 20% 88%;
+    --input: 160 20% 94%;
+    --ring: 152 76% 38%;
+
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 160 30% 10%;
+    --sidebar-primary: 152 76% 38%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 160 20% 94%;
+    --sidebar-accent-foreground: 160 30% 10%;
+    --sidebar-border: 160 20% 88%;
+    --sidebar-ring: 152 76% 38%;
+
+    --neon-cyan: 173 80% 40%;
+    --neon-purple: 152 76% 45%;
+    --neon-pink: 330 81% 55%;
+  }
+
 
 @layer base {
   * {
