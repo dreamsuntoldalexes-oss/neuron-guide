@@ -155,21 +155,63 @@ export default function Chatbot() {
 
   // ─── Send message ───
   const send = async (text: string) => {
-    if (!text.trim() || isTyping) return;
-    const userMsg: Message = { id: crypto.randomUUID(), role: "user", content: text.trim() };
+    const trimmed = text.trim();
+    if (!trimmed || isTyping) return;
+    const userMsg: Message = { id: crypto.randomUUID(), role: "user", content: trimmed };
 
-    // Update title from first message
-    updateChat(activeId, (c) => ({
-      ...c,
-      title: c.messages.length === 0 ? text.trim().slice(0, 40) : c.title,
-      messages: [...c.messages, userMsg],
-    }));
+    // Track first questions & update title from first 3
+    updateChat(activeId, (c) => {
+      const questions = [...(c.questions || []), trimmed].slice(0, 3);
+      return {
+        ...c,
+        questions,
+        title: c.messages.length === 0 || (c.questions?.length || 0) < 3 ? titleFromQuestions(questions) : c.title,
+        messages: [...c.messages, userMsg],
+      };
+    });
 
     setInput("");
-    if (inputRef.current) {
-      inputRef.current.style.height = "auto";
-    }
+    if (inputRef.current) inputRef.current.style.height = "auto";
     setIsTyping(true);
+
+    // ─── /image command → image generation ───
+    const imageMatch = trimmed.match(/^\/image\s+(.+)/is) || trimmed.match(/^\/img\s+(.+)/is);
+    if (imageMatch) {
+      const prompt = imageMatch[1].trim();
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        const token = session?.access_token;
+        if (!token) throw new Error("Please sign in to generate images.");
+        const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-image`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ prompt }),
+        });
+        const data = await res.json().catch(() => null);
+        if (!res.ok) throw new Error(data?.error || "Image generation failed");
+        const botMsg: Message = {
+          id: crypto.randomUUID(),
+          role: "assistant",
+          content: `Here's your image for **"${prompt}"** — click the image to download it.`,
+          image: data.image,
+        };
+        updateChat(activeId, (c) => ({ ...c, messages: [...c.messages, botMsg] }));
+      } catch (err) {
+        const errMsg: Message = {
+          id: crypto.randomUUID(),
+          role: "assistant",
+          content: err instanceof Error ? `Image generation error: ${err.message}` : "Image generation failed. Please try again.",
+        };
+        updateChat(activeId, (c) => ({ ...c, messages: [...c.messages, errMsg] }));
+      } finally {
+        setIsTyping(false);
+      }
+      return;
+    }
 
     try {
       const chatMessages = [...(activeChat?.messages || []), userMsg].map((m) => ({
