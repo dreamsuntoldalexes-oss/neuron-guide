@@ -22,6 +22,7 @@ interface Message {
   id: string;
   role: "user" | "assistant";
   content: string;
+  image?: string; // data URL for generated images
 }
 
 interface Chat {
@@ -30,6 +31,7 @@ interface Chat {
   messages: Message[];
   createdAt: string;
   mode: "default" | "beginner" | "exam";
+  questions?: string[]; // first user prompts, used to build title
 }
 
 type Mode = "default" | "beginner" | "exam";
@@ -39,6 +41,16 @@ const MODE_CONFIG: Record<Mode, { label: string; icon: typeof BookOpen; desc: st
   beginner: { label: "Beginner", icon: GraduationCap, desc: "Simple, easy to understand" },
   exam: { label: "Exam", icon: Zap, desc: "Create exams and score answers" },
 };
+
+function titleFromQuestions(qs: string[]): string {
+  if (qs.length === 0) return "New Chat";
+  const words = qs
+    .slice(0, 3)
+    .flatMap((q) => q.split(/\s+/).filter((w) => w.length > 3))
+    .slice(0, 5)
+    .join(" ");
+  return (words || qs[0]).slice(0, 50);
+}
 
 const SUGGESTIONS = [
   "Solve 2x + 5 = 15",
