@@ -53,11 +53,11 @@ function titleFromQuestions(qs: string[]): string {
 }
 
 const SUGGESTIONS = [
+  "/image a futuristic cyberpunk city at night",
   "Solve 2x + 5 = 15",
   "Explain photosynthesis",
-  "What is demand in economics?",
   "Recommend the best AI writing tool",
-  "Help me study for WAEC Biology",
+  "/image a friendly robot studying at a desk",
   "What AI tools can help with coding?",
   "Exam: Biology, photosynthesis, 10 questions",
 ];
