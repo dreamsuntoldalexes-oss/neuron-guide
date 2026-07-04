@@ -93,7 +93,7 @@ export default function ContactWidget() {
               </div>
               <a href={sendHref} target="_blank" rel="noopener noreferrer" className="w-full py-3.5 rounded-xl gradient-primary text-primary-foreground text-sm font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition">
                 <Send className="w-4 h-4" />
-                {medium === "call" ? "Call 08033962964" : "Send message"}
+                {medium === "call" ? `Call ${PHONE}` : "Send message"}
               </a>
             </div>
 
