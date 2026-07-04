@@ -627,7 +627,7 @@ export default function Chatbot() {
                   ? "Ask me anything — I'll explain it simply..."
                   : mode === "exam"
                   ? "Tell me subject, topic, number of questions, then answer when I ask..."
-                  : "Ask about academics, AI tools, anything..."
+                  : "Ask anything, or type /image <prompt> to create an image..."
               }
               rows={1}
               className="flex-1 bg-muted/30 border border-border/50 rounded-xl py-3 px-4 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 focus:ring-primary/40 focus:border-primary/30 transition resize-none scrollbar-hide"
