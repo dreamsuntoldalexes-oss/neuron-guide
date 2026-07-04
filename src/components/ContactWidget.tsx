@@ -3,19 +3,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Headphones, X, Phone, MessageCircle, Sparkles, Mail, Send } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
+const PHONE = "08120205800";
+const WA = "2348120205800";
 const contacts = [
-  {
-    icon: Phone,
-    label: "Call Us",
-    subtitle: "08033962964",
-    href: "tel:08033962964",
-  },
-  {
-    icon: MessageCircle,
-    label: "WhatsApp",
-    subtitle: "08033962964",
-    href: "https://wa.me/2348033962964",
-  },
+  { icon: Phone, label: "Call Us", subtitle: PHONE, href: `tel:${PHONE}` },
+  { icon: MessageCircle, label: "WhatsApp", subtitle: PHONE, href: `https://wa.me/${WA}` },
 ];
 
 export default function ContactWidget() {
@@ -28,10 +20,10 @@ export default function ContactWidget() {
   const contactText = encodeURIComponent(`Hi Neuron Guide, my name is ${name || "User"}. ${message || "I need support."}`);
   const sendHref =
     medium === "whatsapp"
-      ? `https://wa.me/2348033962964?text=${contactText}`
+      ? `https://wa.me/${WA}?text=${contactText}`
       : medium === "email"
-      ? `mailto:adekanmbiadekanmbi5@gmail.com?subject=NEURON%20VIEW%20Support&body=${contactText}`
-      : "tel:08033962964";
+      ? `mailto:adekanmbiadekanmbi5@gmail.com?subject=Neuron%20Guide%20Support&body=${contactText}`
+      : `tel:${PHONE}`;
 
   return (
     <div className="fixed bottom-24 right-4 z-50 flex flex-col items-end gap-2">
