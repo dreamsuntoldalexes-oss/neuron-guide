@@ -22,6 +22,7 @@ interface Message {
   id: string;
   role: "user" | "assistant";
   content: string;
+  image?: string; // data URL for generated images
 }
 
 interface Chat {
@@ -30,6 +31,7 @@ interface Chat {
   messages: Message[];
   createdAt: string;
   mode: "default" | "beginner" | "exam";
+  questions?: string[]; // first user prompts, used to build title
 }
 
 type Mode = "default" | "beginner" | "exam";
@@ -40,12 +42,22 @@ const MODE_CONFIG: Record<Mode, { label: string; icon: typeof BookOpen; desc: st
   exam: { label: "Exam", icon: Zap, desc: "Create exams and score answers" },
 };
 
+function titleFromQuestions(qs: string[]): string {
+  if (qs.length === 0) return "New Chat";
+  const words = qs
+    .slice(0, 3)
+    .flatMap((q) => q.split(/\s+/).filter((w) => w.length > 3))
+    .slice(0, 5)
+    .join(" ");
+  return (words || qs[0]).slice(0, 50);
+}
+
 const SUGGESTIONS = [
+  "/image a futuristic cyberpunk city at night",
   "Solve 2x + 5 = 15",
   "Explain photosynthesis",
-  "What is demand in economics?",
   "Recommend the best AI writing tool",
-  "Help me study for WAEC Biology",
+  "/image a friendly robot studying at a desk",
   "What AI tools can help with coding?",
   "Exam: Biology, photosynthesis, 10 questions",
 ];
@@ -143,21 +155,63 @@ export default function Chatbot() {
 
   // ─── Send message ───
   const send = async (text: string) => {
-    if (!text.trim() || isTyping) return;
-    const userMsg: Message = { id: crypto.randomUUID(), role: "user", content: text.trim() };
+    const trimmed = text.trim();
+    if (!trimmed || isTyping) return;
+    const userMsg: Message = { id: crypto.randomUUID(), role: "user", content: trimmed };
 
-    // Update title from first message
-    updateChat(activeId, (c) => ({
-      ...c,
-      title: c.messages.length === 0 ? text.trim().slice(0, 40) : c.title,
-      messages: [...c.messages, userMsg],
-    }));
+    // Track first questions & update title from first 3
+    updateChat(activeId, (c) => {
+      const questions = [...(c.questions || []), trimmed].slice(0, 3);
+      return {
+        ...c,
+        questions,
+        title: c.messages.length === 0 || (c.questions?.length || 0) < 3 ? titleFromQuestions(questions) : c.title,
+        messages: [...c.messages, userMsg],
+      };
+    });
 
     setInput("");
-    if (inputRef.current) {
-      inputRef.current.style.height = "auto";
-    }
+    if (inputRef.current) inputRef.current.style.height = "auto";
     setIsTyping(true);
+
+    // ─── /image command → image generation ───
+    const imageMatch = trimmed.match(/^\/image\s+(.+)/is) || trimmed.match(/^\/img\s+(.+)/is);
+    if (imageMatch) {
+      const prompt = imageMatch[1].trim();
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        const token = session?.access_token;
+        if (!token) throw new Error("Please sign in to generate images.");
+        const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-image`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ prompt }),
+        });
+        const data = await res.json().catch(() => null);
+        if (!res.ok) throw new Error(data?.error || "Image generation failed");
+        const botMsg: Message = {
+          id: crypto.randomUUID(),
+          role: "assistant",
+          content: `Here's your image for **"${prompt}"** — click the image to download it.`,
+          image: data.image,
+        };
+        updateChat(activeId, (c) => ({ ...c, messages: [...c.messages, botMsg] }));
+      } catch (err) {
+        const errMsg: Message = {
+          id: crypto.randomUUID(),
+          role: "assistant",
+          content: err instanceof Error ? `Image generation error: ${err.message}` : "Image generation failed. Please try again.",
+        };
+        updateChat(activeId, (c) => ({ ...c, messages: [...c.messages, errMsg] }));
+      } finally {
+        setIsTyping(false);
+      }
+      return;
+    }
 
     try {
       const chatMessages = [...(activeChat?.messages || []), userMsg].map((m) => ({
@@ -403,8 +457,8 @@ export default function Chatbot() {
                 </div>
 
                 <p className="text-xs text-muted-foreground leading-relaxed max-w-md mx-auto">
-                  I can help with academics, recommend AI tools, explain concepts step-by-step, 
-                  and guide you on using AI for productivity. Ask me anything!
+                  I can help with academics, recommend AI tools, and generate images.
+                  Try <code className="text-primary bg-primary/10 px-1.5 rounded">/image your prompt</code> to create an AI image you can download.
                 </p>
 
                 {/* Mode pills */}
@@ -489,16 +543,35 @@ export default function Chatbot() {
                     }`}
                   >
                     {msg.role === "assistant" ? (
-                  <div className="prose prose-sm prose-invert max-w-none text-foreground text-sm [&>p]:mb-2 [&>ul]:mb-2 [&>ol]:mb-2 [&>h1]:text-lg [&>h2]:text-base [&>h3]:text-sm [&_code]:bg-muted [&_code]:px-1 [&_code]:rounded [&_pre]:bg-muted/80 [&_pre]:rounded-xl [&_pre]:p-3 [&_pre]:overflow-x-auto [&_a]:text-primary [&_strong]:text-foreground [&_.katex-display]:my-3 [&_.katex-display]:overflow-x-auto">
-                        <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeKatex]}>{msg.content}</ReactMarkdown>
+                      <div className="space-y-3">
+                        {msg.image && (
+                          <a
+                            href={msg.image}
+                            download={`neuron-guide-${msg.id}.png`}
+                            className="block rounded-xl overflow-hidden border border-border/40 hover:border-primary/40 transition group relative"
+                            title="Click to download"
+                          >
+                            <img src={msg.image} alt="AI generated" className="w-full h-auto" />
+                            <span className="absolute bottom-2 right-2 text-[10px] px-2 py-1 rounded-md bg-background/80 backdrop-blur text-foreground opacity-0 group-hover:opacity-100 transition">
+                              ⬇ Download
+                            </span>
+                          </a>
+                        )}
+                        <div className="prose prose-sm prose-invert max-w-none text-foreground text-sm [&>p]:mb-2 [&>ul]:mb-2 [&>ol]:mb-2 [&>h1]:text-lg [&>h2]:text-base [&>h3]:text-sm [&_code]:bg-muted [&_code]:px-1 [&_code]:rounded [&_pre]:bg-muted/80 [&_pre]:rounded-xl [&_pre]:p-3 [&_pre]:overflow-x-auto [&_a]:text-primary [&_strong]:text-foreground [&_.katex-display]:my-3 [&_.katex-display]:overflow-x-auto">
+                          <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeKatex]}>{msg.content}</ReactMarkdown>
+                        </div>
                       </div>
                     ) : (
                       <p className="text-sm text-foreground whitespace-pre-wrap">{msg.content}</p>
                     )}
                   </div>
                   {msg.role === "user" && (
-                    <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center flex-shrink-0 mt-1">
-                      <User className="w-4 h-4 text-muted-foreground" />
+                    <div className="w-8 h-8 rounded-full bg-muted overflow-hidden flex items-center justify-center flex-shrink-0 mt-1 border border-border/50">
+                      {user.avatar ? (
+                        <img src={user.avatar} alt={user.name || "You"} className="w-full h-full object-cover" />
+                      ) : (
+                        <span className="text-xs font-bold text-primary">{(user.name || "U")[0].toUpperCase()}</span>
+                      )}
                     </div>
                   )}
                 </motion.div>
@@ -554,7 +627,7 @@ export default function Chatbot() {
                   ? "Ask me anything — I'll explain it simply..."
                   : mode === "exam"
                   ? "Tell me subject, topic, number of questions, then answer when I ask..."
-                  : "Ask about academics, AI tools, anything..."
+                  : "Ask anything, or type /image <prompt> to create an image..."
               }
               rows={1}
               className="flex-1 bg-muted/30 border border-border/50 rounded-xl py-3 px-4 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 focus:ring-primary/40 focus:border-primary/30 transition resize-none scrollbar-hide"

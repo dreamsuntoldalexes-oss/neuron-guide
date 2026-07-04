@@ -28,9 +28,32 @@ export default function Home() {
     return () => window.clearInterval(timer);
   }, [slideCount]);
 
+  const currentSlide = aiGalleryImages[activeSlide];
+
   return (
     <Layout>
       <Seo title="Home — Neuron Guide AI Tools Hub" description="Search 500+ AI tools, browse categories, and discover trending picks updated daily." path="/home" />
+
+      {/* Blurred hero background from current slide */}
+      {currentSlide && (
+        <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+          <AnimatePresence mode="wait">
+            <motion.img
+              key={currentSlide.src}
+              src={currentSlide.src}
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover"
+              style={{ filter: "blur(60px) saturate(1.2)", opacity: 0.28, transform: "scale(1.15)" }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.28 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 1.2 }}
+            />
+          </AnimatePresence>
+          <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/85 to-background" />
+        </div>
+      )}
+
       <div className="px-4 sm:px-8 pt-6 pb-6 space-y-8 max-w-6xl mx-auto">
         {/* Header bar */}
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-between">
@@ -72,9 +95,9 @@ export default function Home() {
           <div className="relative h-[320px] sm:h-[380px] rounded-[2rem] overflow-hidden border border-border/40 bg-card/50 shadow-2xl shadow-primary/10">
             <AnimatePresence mode="wait">
               <motion.img
-                key={aiGalleryImages[activeSlide].src}
-                src={aiGalleryImages[activeSlide].src}
-                alt={aiGalleryImages[activeSlide].alt}
+                key={currentSlide?.src}
+                src={currentSlide?.src}
+                alt={currentSlide?.alt}
                 className="absolute inset-0 w-full h-full object-cover"
                 initial={{ opacity: 0, x: 40, scale: 1.08 }}
                 animate={{ opacity: 1, x: 0, scale: 1 }}
@@ -84,14 +107,21 @@ export default function Home() {
             </AnimatePresence>
             <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_15%,hsl(var(--primary)/0.18),transparent_35%)]" />
-            <motion.div
-              animate={{ y: [0, -8, 0], opacity: [0.92, 1, 0.92] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute bottom-5 left-5 right-5 glass-card p-4"
-            >
-              <p className="text-xs text-primary uppercase tracking-wider">AI character live</p>
-              <p className="text-lg font-heading font-bold text-foreground">Explore smarter tools faster</p>
-            </motion.div>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentSlide?.src + "-quote"}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.6 }}
+                className="absolute bottom-5 left-5 right-5 glass-card p-4"
+              >
+                <p className="text-xs text-primary uppercase tracking-wider">AI inspiration</p>
+                <p className="text-lg font-heading font-bold text-foreground">
+                  {(currentSlide as any)?.quote || "Explore smarter tools faster"}
+                </p>
+              </motion.div>
+            </AnimatePresence>
             <div className="absolute top-4 right-4 flex gap-1.5">
               {aiGalleryImages.map((slide, index) => (
                 <button
