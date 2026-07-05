@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Send, User, Sparkles, Plus, Trash2, MessageSquare,
   ChevronLeft, ChevronRight, BookOpen, Zap, GraduationCap,
-  Menu, X
+  Menu, X, Mic, Square, Volume2, Loader2
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -22,7 +22,8 @@ interface Message {
   id: string;
   role: "user" | "assistant";
   content: string;
-  image?: string; // data URL for generated images
+  image?: string; // data URL for generated images or video preview frames
+  storyboard?: string; // for /video command
 }
 
 interface Chat {
@@ -54,12 +55,11 @@ function titleFromQuestions(qs: string[]): string {
 
 const SUGGESTIONS = [
   "/image a futuristic cyberpunk city at night",
+  "/video a rocket launching from a jungle at sunrise",
   "Solve 2x + 5 = 15",
-  "Explain photosynthesis",
+  "Explain photosynthesis simply",
   "Recommend the best AI writing tool",
-  "/image a friendly robot studying at a desk",
-  "What AI tools can help with coding?",
-  "Exam: Biology, photosynthesis, 10 questions",
+  "What AI tools help with coding?",
 ];
 
 // ─── LocalStorage helpers ───
@@ -98,6 +98,12 @@ export default function Chatbot() {
   const [examCount, setExamCount] = useState("10");
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const [recording, setRecording] = useState(false);
+  const [transcribing, setTranscribing] = useState(false);
+  const [speakingId, setSpeakingId] = useState<string | null>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+  const audioElRef = useRef<HTMLAudioElement | null>(null);
 
   const activeChat = chats.find((c) => c.id === activeId) || chats[0];
   const mode = activeChat?.mode || "default";
@@ -213,7 +219,47 @@ export default function Chatbot() {
       return;
     }
 
+    // ─── /video command → video preview generation ───
+    const videoMatch = trimmed.match(/^\/video\s+(.+)/is) || trimmed.match(/^\/vid\s+(.+)/is);
+    if (videoMatch) {
+      const prompt = videoMatch[1].trim();
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        const token = session?.access_token;
+        if (!token) throw new Error("Please sign in to generate videos.");
+        const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-video`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ prompt }),
+        });
+        const data = await res.json().catch(() => null);
+        if (!res.ok) throw new Error(data?.error || "Video generation failed");
+        const botMsg: Message = {
+          id: crypto.randomUUID(),
+          role: "assistant",
+          content: `🎬 **Video preview for "${prompt}"**\n\n${data.storyboard || ""}\n\n_${data.note || "Preview frame — download and use with your favorite video generator."}_`,
+          image: data.frame,
+          storyboard: data.storyboard,
+        };
+        updateChat(activeId, (c) => ({ ...c, messages: [...c.messages, botMsg] }));
+      } catch (err) {
+        const errMsg: Message = {
+          id: crypto.randomUUID(),
+          role: "assistant",
+          content: err instanceof Error ? `Video generation error: ${err.message}` : "Video generation failed. Please try again.",
+        };
+        updateChat(activeId, (c) => ({ ...c, messages: [...c.messages, errMsg] }));
+      } finally {
+        setIsTyping(false);
+      }
+      return;
+    }
     try {
+
       const chatMessages = [...(activeChat?.messages || []), userMsg].map((m) => ({
         role: m.role,
         content: m.content,
@@ -278,6 +324,99 @@ export default function Chatbot() {
       setIsTyping(false);
     }
   };
+
+  // ─── Voice recording (STT) ───
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mime = MediaRecorder.isTypeSupported("audio/webm") ? "audio/webm" : "audio/mp4";
+      const rec = new MediaRecorder(stream, { mimeType: mime });
+      audioChunksRef.current = [];
+      rec.ondataavailable = (e) => { if (e.data.size > 0) audioChunksRef.current.push(e.data); };
+      rec.onstop = async () => {
+        stream.getTracks().forEach((t) => t.stop());
+        const blob = new Blob(audioChunksRef.current, { type: mime });
+        if (blob.size < 1500) { setTranscribing(false); return; }
+        setTranscribing(true);
+        try {
+          const b64 = await new Promise<string>((resolve) => {
+            const r = new FileReader();
+            r.onload = () => resolve(String(r.result));
+            r.readAsDataURL(blob);
+          });
+          const { data: { session } } = await supabase.auth.getSession();
+          const token = session?.access_token;
+          if (!token) throw new Error("Please sign in to use voice input.");
+          const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/stt`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ audio: b64, mime }),
+          });
+          const data = await res.json().catch(() => null);
+          if (!res.ok) throw new Error(data?.error || "Transcription failed");
+          const text = (data?.text || "").trim();
+          if (text) {
+            // Auto-send the transcribed prompt
+            send(text);
+          }
+        } catch (err) {
+          console.error(err);
+          alert(err instanceof Error ? err.message : "Voice transcription failed.");
+        } finally {
+          setTranscribing(false);
+        }
+      };
+      mediaRecorderRef.current = rec;
+      rec.start();
+      setRecording(true);
+    } catch (err) {
+      console.error(err);
+      alert("Microphone access is needed for voice input.");
+    }
+  };
+
+  const stopRecording = () => {
+    mediaRecorderRef.current?.stop();
+    setRecording(false);
+  };
+
+  // ─── Speak assistant message (TTS) ───
+  const speak = async (msgId: string, text: string) => {
+    try {
+      if (audioElRef.current) { audioElRef.current.pause(); audioElRef.current = null; }
+      if (speakingId === msgId) { setSpeakingId(null); return; }
+      setSpeakingId(msgId);
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.access_token;
+      if (!token) throw new Error("Please sign in to use voice output.");
+      // Strip markdown/latex for cleaner speech
+      const clean = text.replace(/```[\s\S]*?```/g, " ").replace(/[#*_>`~]/g, "").replace(/\$\$?[^$]*\$\$?/g, " ").slice(0, 3500);
+      const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/tts`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ text: clean }),
+      });
+      const data = await res.json().catch(() => null);
+      if (!res.ok) throw new Error(data?.error || "TTS failed");
+      const audio = new Audio(data.audio);
+      audioElRef.current = audio;
+      audio.onended = () => setSpeakingId(null);
+      await audio.play();
+    } catch (err) {
+      console.error(err);
+      setSpeakingId(null);
+      alert(err instanceof Error ? err.message : "Voice output failed.");
+    }
+  };
+
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -560,7 +699,16 @@ export default function Chatbot() {
                         <div className="prose prose-sm prose-invert max-w-none text-foreground text-sm [&>p]:mb-2 [&>ul]:mb-2 [&>ol]:mb-2 [&>h1]:text-lg [&>h2]:text-base [&>h3]:text-sm [&_code]:bg-muted [&_code]:px-1 [&_code]:rounded [&_pre]:bg-muted/80 [&_pre]:rounded-xl [&_pre]:p-3 [&_pre]:overflow-x-auto [&_a]:text-primary [&_strong]:text-foreground [&_.katex-display]:my-3 [&_.katex-display]:overflow-x-auto">
                           <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeKatex]}>{msg.content}</ReactMarkdown>
                         </div>
+                        <button
+                          onClick={() => speak(msg.id, msg.content)}
+                          className="flex items-center gap-1 text-[10px] text-muted-foreground hover:text-primary transition mt-1"
+                          aria-label={speakingId === msg.id ? "Stop reading" : "Read aloud"}
+                        >
+                          {speakingId === msg.id ? <Square className="w-3 h-3" /> : <Volume2 className="w-3 h-3" />}
+                          {speakingId === msg.id ? "Stop" : "Read aloud"}
+                        </button>
                       </div>
+
                     ) : (
                       <p className="text-sm text-foreground whitespace-pre-wrap">{msg.content}</p>
                     )}
@@ -627,11 +775,20 @@ export default function Chatbot() {
                   ? "Ask me anything — I'll explain it simply..."
                   : mode === "exam"
                   ? "Tell me subject, topic, number of questions, then answer when I ask..."
-                  : "Ask anything, or type /image <prompt> to create an image..."
+                  : "Ask anything, type /image or /video <prompt>, or tap the mic to speak..."
               }
               rows={1}
               className="flex-1 bg-muted/30 border border-border/50 rounded-xl py-3 px-4 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 focus:ring-primary/40 focus:border-primary/30 transition resize-none scrollbar-hide"
             />
+            <button
+              type="button"
+              onClick={recording ? stopRecording : startRecording}
+              disabled={isTyping || transcribing}
+              aria-label={recording ? "Stop recording" : "Record voice message"}
+              className={`p-3 rounded-xl border transition active:scale-95 flex-shrink-0 ${recording ? "bg-destructive/20 border-destructive/40 text-destructive animate-pulse" : "bg-muted/40 border-border/50 text-muted-foreground hover:text-foreground"} disabled:opacity-40`}
+            >
+              {transcribing ? <Loader2 className="w-4 h-4 animate-spin" /> : recording ? <Square className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+            </button>
             <button
               type="submit"
               disabled={!input.trim() || isTyping}

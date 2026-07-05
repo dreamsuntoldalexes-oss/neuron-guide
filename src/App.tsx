@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import Splash from "./pages/Splash";
 import Index from "./pages/Index";
@@ -39,7 +39,7 @@ function AnimatedRoutes() {
         <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
         <Route path="/signup" element={<PageTransition><Signup /></PageTransition>} />
         <Route path="/home" element={<PageTransition><Home /></PageTransition>} />
-        <Route path="/tools" element={<PageTransition><Tools /></PageTransition>} />
+        <Route path="/tools" element={<Navigate to="/home" replace />} />
         <Route path="/tools/:id" element={<PageTransition><ToolDetail /></PageTransition>} />
         <Route path="/favorites" element={<PageTransition><Favorites /></PageTransition>} />
         <Route path="/chatbot" element={<PageTransition><Chatbot /></PageTransition>} />
