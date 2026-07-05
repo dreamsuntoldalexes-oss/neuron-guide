@@ -102,8 +102,8 @@ export default function Profile() {
     { icon: BookOpen, label: "How It Works", value: "", onClick: () => navigate("/how-it-works") },
     { icon: SettingsIcon, label: "Settings", value: "", onClick: () => navigate("/settings") },
     { icon: Bell, label: "Notifications", value: "Manage", onClick: () => navigate("/settings") },
-    { icon: Info, label: "About Us", value: "", onClick: () => window.open("https://wa.me/2348033962964?text=Hi%20NEURON%20VIEW!%20Tell%20me%20more%20about%20you.", "_blank") },
-    { icon: Phone, label: "Call Us", value: "08033962964", onClick: () => window.open("tel:08033962964") },
+    { icon: Info, label: "About Us", value: "", onClick: () => window.open("https://wa.me/2348120205800?text=Hi%20NEURON%20VIEW!%20Tell%20me%20more%20about%20you.", "_blank") },
+    { icon: Phone, label: "Call Us", value: "08120205800", onClick: () => window.open("tel:08120205800") },
   ];
 
   return (
@@ -171,7 +171,7 @@ export default function Profile() {
             </div>
 
             <button
-              onClick={() => window.open("https://wa.me/2348033962964?text=Hi%20NEURON%20VIEW!", "_blank")}
+              onClick={() => window.open("https://wa.me/2348120205800?text=Hi%20NEURON%20VIEW!", "_blank")}
               className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-full gradient-primary text-primary-foreground text-xs font-semibold shadow-md hover:opacity-90 transition whitespace-nowrap"
             >
               Get in touch
@@ -207,7 +207,7 @@ export default function Profile() {
               <Share2 className="w-4 h-4 text-foreground" />
             </button>
             <button
-              onClick={() => window.open("https://wa.me/2348033962964?text=Hi%20NEURON%20VIEW!", "_blank")}
+              onClick={() => window.open("https://wa.me/2348120205800?text=Hi%20NEURON%20VIEW!", "_blank")}
               className="sm:hidden flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-full gradient-primary text-primary-foreground text-xs font-semibold shadow-md hover:opacity-90 transition whitespace-nowrap"
             >
               <MessageCircle className="w-3.5 h-3.5" /> Get in touch
