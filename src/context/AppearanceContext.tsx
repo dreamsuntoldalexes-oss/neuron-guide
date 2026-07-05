@@ -1,4 +1,5 @@
-import { createContext, useContext, useEffect, useMemo, useState, ReactNode } from "react";
+import { createContext, useContext, useEffect, useMemo, useRef, useState, ReactNode } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 export type ThemeMode = "light" | "dark" | "auto";
 export type BgStyle = "solid" | "gradient" | "glass" | "mesh" | "aurora" | "animated" | "minimal";
@@ -299,10 +300,50 @@ export function AppearanceProvider({ children }: { children: ReactNode }) {
     } catch {}
     return DEFAULT_STATE;
   });
+  const hydratedRef = useRef(false);
+  const userIdRef = useRef<string | null>(null);
 
   useEffect(() => {
     applyTheme(state);
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {}
+  }, [state]);
+
+  // Hydrate from Supabase profile on sign-in, then sync changes back.
+  useEffect(() => {
+    const load = async (userId: string) => {
+      try {
+        const { data } = await supabase.from("profiles").select("appearance").eq("id", userId).maybeSingle();
+        const remote = (data?.appearance ?? {}) as Partial<AppearanceState>;
+        if (remote && Object.keys(remote).length > 0) {
+          setState((s) => ({ ...s, ...remote }));
+        }
+      } catch (e) { console.warn("appearance hydrate failed", e); }
+      finally { hydratedRef.current = true; }
+    };
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user?.id) { userIdRef.current = session.user.id; load(session.user.id); }
+      else { hydratedRef.current = true; }
+    });
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
+      if (session?.user?.id && session.user.id !== userIdRef.current) {
+        userIdRef.current = session.user.id;
+        load(session.user.id);
+      }
+      if (!session) userIdRef.current = null;
+    });
+    return () => sub.subscription.unsubscribe();
+  }, []);
+
+  // Push to backend (debounced) once hydrated and user is signed in.
+  useEffect(() => {
+    if (!hydratedRef.current || !userIdRef.current) return;
+    const uid = userIdRef.current;
+    const timeout = setTimeout(async () => {
+      try {
+        await supabase.from("profiles").upsert({ id: uid, appearance: state as never }, { onConflict: "id" });
+      } catch (e) { console.warn("appearance sync failed", e); }
+    }, 500);
+    return () => clearTimeout(timeout);
   }, [state]);
 
   useEffect(() => {
