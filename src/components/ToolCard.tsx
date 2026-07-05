@@ -174,7 +174,7 @@ export default function ToolCard({ tool, index = 0, isFavorite, onToggleFavorite
                   className="w-full py-3 rounded-xl text-sm font-semibold gradient-primary text-primary-foreground text-center hover:opacity-90 transition active:scale-[0.97]">
                   Subscribe for $5/month
                 </Link>
-                <a href="https://wa.me/2348033962964?text=Hi%2C%20I%20want%20to%20subscribe%20to%20NEURON%20VIEW%20Pro%20for%20%245%2Fmonth."
+                <a href="https://wa.me/2348120205800?text=Hi%2C%20I%20want%20to%20subscribe%20to%20NEURON%20VIEW%20Pro%20for%20%245%2Fmonth."
                   target="_blank" rel="noopener noreferrer"
                   className="w-full py-3 rounded-xl text-sm font-medium border border-border bg-muted/30 text-foreground text-center hover:bg-muted/50 transition active:scale-[0.97]">
                   Ask support on WhatsApp

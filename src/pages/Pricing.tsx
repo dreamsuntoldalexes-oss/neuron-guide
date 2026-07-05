@@ -17,14 +17,14 @@ const contactMethods = [
   {
     icon: MessageCircle,
     label: "WhatsApp Support",
-    subtitle: "08033962964",
-    href: "https://wa.me/2348033962964?text=Hi%2C%20I%20want%20to%20subscribe%20to%20NEURON%20VIEW%20Pro%20at%20%245%2Fmonth.",
+    subtitle: "08120205800",
+    href: "https://wa.me/2348120205800?text=Hi%2C%20I%20want%20to%20subscribe%20to%20NEURON%20VIEW%20Pro%20at%20%245%2Fmonth.",
   },
   {
     icon: Phone,
     label: "Call Support",
-    subtitle: "08033962964",
-    href: "tel:08033962964",
+    subtitle: "08120205800",
+    href: "tel:08120205800",
   },
 ];
 

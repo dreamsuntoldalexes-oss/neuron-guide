@@ -2,8 +2,8 @@ import { Link } from "react-router-dom";
 import { Mail, Phone, MessageCircle, Twitter, Facebook, Instagram, Linkedin } from "lucide-react";
 
 const EMAIL = "adekanmbiadekanmbi5@gmail.com";
-const PHONE = "08033962964";
-const WHATSAPP = "https://wa.me/2348033962964";
+const PHONE = "08120205800";
+const WHATSAPP = "https://wa.me/2348120205800";
 
 export default function WelcomeFooter() {
   return (
