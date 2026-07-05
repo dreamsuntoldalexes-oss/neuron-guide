@@ -55,12 +55,11 @@ function titleFromQuestions(qs: string[]): string {
 
 const SUGGESTIONS = [
   "/image a futuristic cyberpunk city at night",
+  "/video a rocket launching from a jungle at sunrise",
   "Solve 2x + 5 = 15",
-  "Explain photosynthesis",
+  "Explain photosynthesis simply",
   "Recommend the best AI writing tool",
-  "/image a friendly robot studying at a desk",
-  "What AI tools can help with coding?",
-  "Exam: Biology, photosynthesis, 10 questions",
+  "What AI tools help with coding?",
 ];
 
 // ─── LocalStorage helpers ───
