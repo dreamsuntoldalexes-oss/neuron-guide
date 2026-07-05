@@ -259,7 +259,7 @@ export default function Chatbot() {
       }
       return;
     }
-
+    try {
 
       const chatMessages = [...(activeChat?.messages || []), userMsg].map((m) => ({
         role: m.role,
