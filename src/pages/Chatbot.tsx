@@ -700,7 +700,16 @@ export default function Chatbot() {
                         <div className="prose prose-sm prose-invert max-w-none text-foreground text-sm [&>p]:mb-2 [&>ul]:mb-2 [&>ol]:mb-2 [&>h1]:text-lg [&>h2]:text-base [&>h3]:text-sm [&_code]:bg-muted [&_code]:px-1 [&_code]:rounded [&_pre]:bg-muted/80 [&_pre]:rounded-xl [&_pre]:p-3 [&_pre]:overflow-x-auto [&_a]:text-primary [&_strong]:text-foreground [&_.katex-display]:my-3 [&_.katex-display]:overflow-x-auto">
                           <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeKatex]}>{msg.content}</ReactMarkdown>
                         </div>
+                        <button
+                          onClick={() => speak(msg.id, msg.content)}
+                          className="flex items-center gap-1 text-[10px] text-muted-foreground hover:text-primary transition mt-1"
+                          aria-label={speakingId === msg.id ? "Stop reading" : "Read aloud"}
+                        >
+                          {speakingId === msg.id ? <Square className="w-3 h-3" /> : <Volume2 className="w-3 h-3" />}
+                          {speakingId === msg.id ? "Stop" : "Read aloud"}
+                        </button>
                       </div>
+
                     ) : (
                       <p className="text-sm text-foreground whitespace-pre-wrap">{msg.content}</p>
                     )}
@@ -767,11 +776,20 @@ export default function Chatbot() {
                   ? "Ask me anything — I'll explain it simply..."
                   : mode === "exam"
                   ? "Tell me subject, topic, number of questions, then answer when I ask..."
-                  : "Ask anything, or type /image <prompt> to create an image..."
+                  : "Ask anything, type /image or /video <prompt>, or tap the mic to speak..."
               }
               rows={1}
               className="flex-1 bg-muted/30 border border-border/50 rounded-xl py-3 px-4 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 focus:ring-primary/40 focus:border-primary/30 transition resize-none scrollbar-hide"
             />
+            <button
+              type="button"
+              onClick={recording ? stopRecording : startRecording}
+              disabled={isTyping || transcribing}
+              aria-label={recording ? "Stop recording" : "Record voice message"}
+              className={`p-3 rounded-xl border transition active:scale-95 flex-shrink-0 ${recording ? "bg-destructive/20 border-destructive/40 text-destructive animate-pulse" : "bg-muted/40 border-border/50 text-muted-foreground hover:text-foreground"} disabled:opacity-40`}
+            >
+              {transcribing ? <Loader2 className="w-4 h-4 animate-spin" /> : recording ? <Square className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+            </button>
             <button
               type="submit"
               disabled={!input.trim() || isTyping}
