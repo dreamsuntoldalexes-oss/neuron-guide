@@ -99,6 +99,12 @@ export default function Chatbot() {
   const [examCount, setExamCount] = useState("10");
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const [recording, setRecording] = useState(false);
+  const [transcribing, setTranscribing] = useState(false);
+  const [speakingId, setSpeakingId] = useState<string | null>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+  const audioElRef = useRef<HTMLAudioElement | null>(null);
 
   const activeChat = chats.find((c) => c.id === activeId) || chats[0];
   const mode = activeChat?.mode || "default";
