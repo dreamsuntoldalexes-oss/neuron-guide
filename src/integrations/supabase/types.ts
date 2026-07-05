@@ -49,6 +49,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          appearance: Json
           created_at: string
           credits: number
           id: string
@@ -57,6 +58,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          appearance?: Json
           created_at?: string
           credits?: number
           id: string
@@ -65,6 +67,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          appearance?: Json
           created_at?: string
           credits?: number
           id?: string
