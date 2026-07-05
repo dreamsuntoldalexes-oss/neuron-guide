@@ -326,6 +326,99 @@ export default function Chatbot() {
     }
   };
 
+  // ─── Voice recording (STT) ───
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mime = MediaRecorder.isTypeSupported("audio/webm") ? "audio/webm" : "audio/mp4";
+      const rec = new MediaRecorder(stream, { mimeType: mime });
+      audioChunksRef.current = [];
+      rec.ondataavailable = (e) => { if (e.data.size > 0) audioChunksRef.current.push(e.data); };
+      rec.onstop = async () => {
+        stream.getTracks().forEach((t) => t.stop());
+        const blob = new Blob(audioChunksRef.current, { type: mime });
+        if (blob.size < 1500) { setTranscribing(false); return; }
+        setTranscribing(true);
+        try {
+          const b64 = await new Promise<string>((resolve) => {
+            const r = new FileReader();
+            r.onload = () => resolve(String(r.result));
+            r.readAsDataURL(blob);
+          });
+          const { data: { session } } = await supabase.auth.getSession();
+          const token = session?.access_token;
+          if (!token) throw new Error("Please sign in to use voice input.");
+          const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/stt`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ audio: b64, mime }),
+          });
+          const data = await res.json().catch(() => null);
+          if (!res.ok) throw new Error(data?.error || "Transcription failed");
+          const text = (data?.text || "").trim();
+          if (text) {
+            // Auto-send the transcribed prompt
+            send(text);
+          }
+        } catch (err) {
+          console.error(err);
+          alert(err instanceof Error ? err.message : "Voice transcription failed.");
+        } finally {
+          setTranscribing(false);
+        }
+      };
+      mediaRecorderRef.current = rec;
+      rec.start();
+      setRecording(true);
+    } catch (err) {
+      console.error(err);
+      alert("Microphone access is needed for voice input.");
+    }
+  };
+
+  const stopRecording = () => {
+    mediaRecorderRef.current?.stop();
+    setRecording(false);
+  };
+
+  // ─── Speak assistant message (TTS) ───
+  const speak = async (msgId: string, text: string) => {
+    try {
+      if (audioElRef.current) { audioElRef.current.pause(); audioElRef.current = null; }
+      if (speakingId === msgId) { setSpeakingId(null); return; }
+      setSpeakingId(msgId);
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.access_token;
+      if (!token) throw new Error("Please sign in to use voice output.");
+      // Strip markdown/latex for cleaner speech
+      const clean = text.replace(/```[\s\S]*?```/g, " ").replace(/[#*_>`~]/g, "").replace(/\$\$?[^$]*\$\$?/g, " ").slice(0, 3500);
+      const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/tts`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ text: clean }),
+      });
+      const data = await res.json().catch(() => null);
+      if (!res.ok) throw new Error(data?.error || "TTS failed");
+      const audio = new Audio(data.audio);
+      audioElRef.current = audio;
+      audio.onended = () => setSpeakingId(null);
+      await audio.play();
+    } catch (err) {
+      console.error(err);
+      setSpeakingId(null);
+      alert(err instanceof Error ? err.message : "Voice output failed.");
+    }
+  };
+
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
