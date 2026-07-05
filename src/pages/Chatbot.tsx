@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Send, User, Sparkles, Plus, Trash2, MessageSquare,
   ChevronLeft, ChevronRight, BookOpen, Zap, GraduationCap,
-  Menu, X
+  Menu, X, Mic, Square, Volume2, Loader2
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -22,7 +22,8 @@ interface Message {
   id: string;
   role: "user" | "assistant";
   content: string;
-  image?: string; // data URL for generated images
+  image?: string; // data URL for generated images or video preview frames
+  storyboard?: string; // for /video command
 }
 
 interface Chat {
