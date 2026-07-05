@@ -220,7 +220,47 @@ export default function Chatbot() {
       return;
     }
 
-    try {
+    // ─── /video command → video preview generation ───
+    const videoMatch = trimmed.match(/^\/video\s+(.+)/is) || trimmed.match(/^\/vid\s+(.+)/is);
+    if (videoMatch) {
+      const prompt = videoMatch[1].trim();
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        const token = session?.access_token;
+        if (!token) throw new Error("Please sign in to generate videos.");
+        const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-video`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ prompt }),
+        });
+        const data = await res.json().catch(() => null);
+        if (!res.ok) throw new Error(data?.error || "Video generation failed");
+        const botMsg: Message = {
+          id: crypto.randomUUID(),
+          role: "assistant",
+          content: `🎬 **Video preview for "${prompt}"**\n\n${data.storyboard || ""}\n\n_${data.note || "Preview frame — download and use with your favorite video generator."}_`,
+          image: data.frame,
+          storyboard: data.storyboard,
+        };
+        updateChat(activeId, (c) => ({ ...c, messages: [...c.messages, botMsg] }));
+      } catch (err) {
+        const errMsg: Message = {
+          id: crypto.randomUUID(),
+          role: "assistant",
+          content: err instanceof Error ? `Video generation error: ${err.message}` : "Video generation failed. Please try again.",
+        };
+        updateChat(activeId, (c) => ({ ...c, messages: [...c.messages, errMsg] }));
+      } finally {
+        setIsTyping(false);
+      }
+      return;
+    }
+
+
       const chatMessages = [...(activeChat?.messages || []), userMsg].map((m) => ({
         role: m.role,
         content: m.content,
