@@ -39,7 +39,7 @@ function AnimatedRoutes() {
         <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
         <Route path="/signup" element={<PageTransition><Signup /></PageTransition>} />
         <Route path="/home" element={<PageTransition><Home /></PageTransition>} />
-        <Route path="/tools" element={<Navigate to="/home" replace />} />
+        <Route path="/tools" element={<PageTransition><Tools /></PageTransition>} />
         <Route path="/tools/:id" element={<PageTransition><ToolDetail /></PageTransition>} />
         <Route path="/favorites" element={<PageTransition><Favorites /></PageTransition>} />
         <Route path="/chatbot" element={<PageTransition><Chatbot /></PageTransition>} />
