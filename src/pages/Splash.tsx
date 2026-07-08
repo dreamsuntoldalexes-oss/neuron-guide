@@ -111,7 +111,7 @@ export default function Splash() {
           <motion.img
             src={neuronLogo}
             alt="Neuron Guide"
-            className="w-28 h-28 sm:w-36 sm:h-36"
+            className="w-28 h-28 sm:w-36 sm:h-36 rounded-full object-cover ring-2 ring-primary/40 shadow-[0_0_40px_hsl(var(--primary)/0.5)]"
             animate={{ rotate: [0, 4, -4, 0] }}
             transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
           />
