@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import Seo from "@/components/Seo";
 import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -25,11 +25,18 @@ export default function Tools() {
   const { isFavorite, toggleFavorite } = useFavorites();
   const categoryCounts = useMemo(() => getCategoryCounts(), []);
 
+  // Debounce search so typing doesn't re-filter 11k rows per keystroke
+  const [debouncedQuery, setDebouncedQuery] = useState("");
+  useEffect(() => {
+    const id = setTimeout(() => setDebouncedQuery(query), 150);
+    return () => clearTimeout(id);
+  }, [query]);
+
   const filtered = useMemo(() => {
     let result = category === "All" ? [...tools] : tools.filter((t) => t.category === category);
     if (tierFilter !== "all") result = result.filter((t) => t.tier === tierFilter);
-    if (query) {
-      const q = query.toLowerCase();
+    if (debouncedQuery) {
+      const q = debouncedQuery.toLowerCase();
       result = result.filter((t) => t.name.toLowerCase().includes(q) || t.description.toLowerCase().includes(q));
     }
     switch (sortBy) {
@@ -39,7 +46,27 @@ export default function Tools() {
       case "name": result.sort((a, b) => a.name.localeCompare(b.name)); break;
     }
     return result;
-  }, [query, category, sortBy, tierFilter]);
+  }, [debouncedQuery, category, sortBy, tierFilter]);
+
+  // Progressive rendering — never mount thousands of cards at once
+  const PAGE_SIZE = 48;
+  const [visible, setVisible] = useState(PAGE_SIZE);
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => { setVisible(PAGE_SIZE); }, [debouncedQuery, category, sortBy, tierFilter]);
+
+  useEffect(() => {
+    const el = sentinelRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver((entries) => {
+      if (entries[0]?.isIntersecting) setVisible((v) => Math.min(v + PAGE_SIZE, filtered.length));
+    }, { rootMargin: "400px" });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [filtered.length]);
+
+  const pageTools = useMemo(() => filtered.slice(0, visible), [filtered, visible]);
+
 
   const sorts: { value: SortBy; label: string }[] = [
     { value: "popular", label: "Most Popular" },
@@ -122,12 +149,26 @@ export default function Tools() {
         </div>
 
         {/* Results */}
-        <p className="text-xs text-muted-foreground">{filtered.length} tools found</p>
+        <p className="text-xs text-muted-foreground">
+          Showing {pageTools.length} of {filtered.length} tools
+        </p>
         <div className="grid gap-3 sm:grid-cols-2">
-          {filtered.map((tool, i) => (
+          {pageTools.map((tool, i) => (
             <ToolCard key={tool.id} tool={tool} index={i} isFavorite={isFavorite(tool.id)} onToggleFavorite={toggleFavorite} />
           ))}
         </div>
+
+        <div ref={sentinelRef} aria-hidden className="h-1" />
+
+        {visible < filtered.length && (
+          <button
+            onClick={() => setVisible((v) => Math.min(v + PAGE_SIZE, filtered.length))}
+            className="w-full py-3 rounded-xl text-sm font-medium border border-border bg-muted/40 text-foreground hover:bg-muted/60 transition active:scale-[0.98]"
+          >
+            Load more tools
+          </button>
+        )}
+
       </div>
     </Layout>
   );

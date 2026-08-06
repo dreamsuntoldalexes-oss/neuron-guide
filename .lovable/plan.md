@@ -1,83 +1,39 @@
-# Neuron Guide — Rebrand, Appearance Panel & Polish
+## Why the Tools page hangs
 
-This is a large multi-area change. I'll group the work so each area ships clean.
+`src/data/tools.ts` generates **~11,400 tools**, and `src/pages/Tools.tsx` renders every filtered tool in one grid. Each `ToolCard` is a `motion.div` with an entry animation and an `<img>` that hits `google.com/s2/favicons` — so the browser tries to mount ~11,400 animated cards and fire ~11,400 favicon requests at once. That is what freezes the tab for minutes.
 
-## 1. Rebrand to "Neuron Guide"
-Replace every "NEURON VIEW" / "Neuron View" reference with **Neuron Guide** across:
-- `index.html` (title, meta, OG, JSON-LD)
-- `src/components/Seo.tsx` (default site name)
-- Splash, Login, Signup, Onboarding, Layout/Nav, WelcomeFooter, Profile, Settings, Pricing, Chatbot
-- Per-page `<Seo>` titles
-- `public/llms.txt`, `public/robots.txt` sitemap host stays the same domain
-- Hero H1 changed to: **"Discover the Best AI Tools for Every Need"** (brand stays in nav/logo)
+## Fix — three changes, frontend only
 
-## 2. Appearance Customization Panel (new)
-New floating button (right edge, all pages) → animated `Sheet` drawer.
+### 1. Paginate the Tools grid (biggest win)
 
-New files:
-- `src/context/AppearanceContext.tsx` — state + localStorage persistence + CSS variable application
-- `src/components/AppearancePanel.tsx` — the drawer UI
-- `src/components/AppearanceLauncher.tsx` — floating FAB
-- Mounted globally in `src/App.tsx`
+In `src/pages/Tools.tsx`:
+- Add `const PAGE_SIZE = 48` and a `visible` state.
+- Slice `filtered.slice(0, visible)` for the grid; reset `visible` to `PAGE_SIZE` whenever `query`, `category`, `sortBy`, or `tierFilter` changes.
+- Add a "Load more" button below the grid that adds `PAGE_SIZE` more, plus an `IntersectionObserver` sentinel so scrolling to the bottom auto-loads the next page.
+- Debounce the search input (150ms) so typing doesn't re-filter 11k rows on every keystroke.
 
-Controls (no border-radius option):
-- Font family (16 Google Fonts, lazy-loaded via injected `<link>` on selection)
-- Font size slider 12–24px (sets `html { font-size }`)
-- Font weight (Thin → Extra Bold, sets `--app-font-weight`)
-- Theme mode: Light / Dark / Auto
-- Accent color presets (10 colors → overrides `--primary` HSL)
-- Gradient theme presets (overrides `--gradient-primary` + hero glow)
-- Background style (solid/gradient/glass/mesh/aurora/animated/minimal — body class)
-- Shadow level (none/soft/medium/strong/floating — sets `--shadow-elegant`)
-- Animation toggles (hover, glow, floating, transitions, cursor)
-- Compact mode (body class shrinking padding)
-- Reading width (narrow/medium/wide/full — sets `--reading-max`)
-- Cursor style (default/glow/ai-dot/neon-ring — body class + custom cursor div)
-- **Reset to Default** button
+Result: first paint renders ~48 cards instead of ~11,400.
 
-All values applied via CSS variables on `:root` so existing tokens (`hsl(var(--primary))`) automatically inherit accent/gradient/shadow changes — buttons, links, icons, nav, inputs all update for free.
+### 2. Make `ToolCard` cheap at scale
 
-## 3. Homepage AI image slider fix
-- Verify `src/assets/aiGallery.ts` imports resolve; replace broken refs with bundled assets that exist
-- Add `loading="lazy"`, `decoding="async"`, `onError` fallback to a known asset
-- Keep auto-slide + manual dots; ensure responsive height
+In `src/components/ToolCard.tsx`:
+- Add `loading="lazy"` and `decoding="async"` to the logo `<img>`, plus explicit `width={36} height={36}`, so off-screen logos never fetch.
+- Skip the framer entry animation past the first ~24 cards: only apply `initial`/`animate` when `index < 24`, otherwise render a plain `<div>`. Motion mount cost is the second-biggest hit after images.
+- Keep the existing `onError` avatar fallback so every card still shows a logo.
 
-## 4. Auth persistence
-- Audit Splash/Login/Signup — remove code that overwrites localStorage `user` with defaults on every load
-- Use `supabase.auth.onAuthStateChange` + initial `getSession()` only; pull display data from `profiles` (extend table with `display_name`, `avatar_url`, `email` columns via migration)
-- Profile edits write to `profiles` table, not just localStorage
-- After login/signup, navigate without clearing user data; refresh restores session via Supabase's built-in `persistSession: true` (already enabled)
+### 3. Guard the other heavy pages
 
-## 5. Tools — visit button, descriptions, pricing, logos
-- `ToolDetail.tsx`: make "Visit Website" anchor with `tool.url` (or fallback `https://www.google.com/search?q=<name>`) `target="_blank" rel="noopener"`
-- Add 3-paragraph generated description block (templated from category/name/features so it works for all 500+ tools without manual copy)
-- Mark 75% of tools as paid: deterministic by `id` hash in `src/data/tools.ts` getter, badge shown on cards
-- Ensure `<img src={tool.logo}>` with `onError` fallback to a generic AI icon — show on cards and detail
+Same 3-second budget for `Home.tsx`, `Favorites.tsx`, and `Analytics.tsx`:
+- Confirm each already caps its list (Home slices per section, Favorites is user-scoped, Analytics uses top-N). Add `loading="lazy"` to any `<img>` in those lists and drop framer entry animations past index 24 the same way.
+- No changes to `src/data/tools.ts` — dataset stays at 11,400 tools, we just stop mounting them all at once.
 
-## 6. SEO findings
-- A11y: add `aria-label` to icon-only buttons (search, favorite heart, modal close, slider dots)
-- Add descriptor under H1s on Home/Chatbot
-- Sitemap: extend `scripts/generate-sitemap.ts` to iterate `tools` and emit `/tools/:id` entries
-- GSC: cannot auto-fix (requires user OAuth) — leave note in response
+## Out of scope
 
-## 7. Layout polish
-- `WelcomeFooter`: add `lg:px-16 xl:px-24` side padding
-- `Profile.tsx`: add bottom padding + gap around action buttons
-- Back arrow: shared `BackButton` component using `navigate(-1)` with history fallback to `/home`; ensure used in Chatbot and other inner pages
-- Menu/nav bar: make `Layout` nav animated entrance (framer `motion.nav initial slide-down`) and visible on every page including Chatbot
-- Page transitions: wrap route outlets in `AnimatePresence` with `initial={{y: 24, opacity: 0}} animate={{y:0, opacity:1}}` (drag-up feel)
-- Chatbot math: render LaTeX via `react-katex` + system-prompt nudge to emit `$$ ... $$` for long division / equations; install `katex react-katex`
-- Mobile: review key pages for `px-4`, stack grids, ensure FAB doesn't overlap content (`pb-24` on scroll containers)
+- Not touching backend, edge functions, or the tools dataset.
+- Not virtualizing with `react-window` yet — pagination + lazy images will comfortably hit the 3-second target on mobile. Virtualization becomes worth the complexity only if the user later wants an infinite single-scroll view.
 
 ## Technical notes
-- New deps: `katex`, `react-katex` (small, used only in Chatbot)
-- One migration: `alter table profiles add column display_name text, add column avatar_url text, add column email text;` + grants already in place
-- All appearance state lives in one context; CSS variables it writes are scoped to `:root` so no component refactor required
-- No removal of existing components — only extension
 
-## What I won't do this turn
-- Google Search Console connection (needs user OAuth) — I'll surface the connect action
-- Custom email templates (none exist yet)
-- Stripe (waiting for your key as previously agreed)
-
-Approve and I'll ship it.
+- `IntersectionObserver` sentinel pattern: a hidden `<div ref={sentinelRef} />` after the grid; on `isIntersecting` call `setVisible(v => v + PAGE_SIZE)`.
+- Debounce with a small `useEffect` + `setTimeout`, not a new dependency.
+- `categoryCounts` is already memoized via `useMemo(getCategoryCounts, [])` — leave it.

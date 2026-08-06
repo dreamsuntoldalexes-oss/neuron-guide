@@ -50,9 +50,9 @@ export default function ToolCard({ tool, index = 0, isFavorite, onToggleFavorite
   return (
     <>
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay: index * 0.03 }}
+        initial={index < 24 ? { opacity: 0, y: 20 } : false}
+        animate={index < 24 ? { opacity: 1, y: 0 } : undefined}
+        transition={{ duration: 0.4, delay: Math.min(index, 24) * 0.03 }}
         className={`glass-card-hover p-4 flex flex-col gap-3 relative ${locked ? "opacity-70 cursor-pointer" : ""}`}
         onClick={locked ? handleLockedClick : undefined}
       >
@@ -66,9 +66,14 @@ export default function ToolCard({ tool, index = 0, isFavorite, onToggleFavorite
             <img
               src={tool.logo}
               alt={tool.name}
+              width={36}
+              height={36}
+              loading="lazy"
+              decoding="async"
               className="w-9 h-9 rounded-lg object-contain bg-muted/50 p-1"
               onError={(e) => { (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(tool.name)}&background=6366f1&color=fff&size=64`; }}
             />
+
             <div>
               <h3 className="font-heading font-semibold text-foreground text-sm">{tool.name}</h3>
               <div className="flex items-center gap-1.5 mt-0.5">
