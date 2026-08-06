@@ -149,12 +149,26 @@ export default function Tools() {
         </div>
 
         {/* Results */}
-        <p className="text-xs text-muted-foreground">{filtered.length} tools found</p>
+        <p className="text-xs text-muted-foreground">
+          Showing {pageTools.length} of {filtered.length} tools
+        </p>
         <div className="grid gap-3 sm:grid-cols-2">
-          {filtered.map((tool, i) => (
+          {pageTools.map((tool, i) => (
             <ToolCard key={tool.id} tool={tool} index={i} isFavorite={isFavorite(tool.id)} onToggleFavorite={toggleFavorite} />
           ))}
         </div>
+
+        <div ref={sentinelRef} aria-hidden className="h-1" />
+
+        {visible < filtered.length && (
+          <button
+            onClick={() => setVisible((v) => Math.min(v + PAGE_SIZE, filtered.length))}
+            className="w-full py-3 rounded-xl text-sm font-medium border border-border bg-muted/40 text-foreground hover:bg-muted/60 transition active:scale-[0.98]"
+          >
+            Load more tools
+          </button>
+        )}
+
       </div>
     </Layout>
   );
