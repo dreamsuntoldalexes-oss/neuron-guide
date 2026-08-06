@@ -111,7 +111,7 @@ export default function Analytics() {
             {leaders.map((tool, i) => (
               <Link key={tool.id} to={`/tools/${tool.id}`} className="flex items-center gap-3 p-2 rounded-xl hover:bg-muted/40 transition">
                 <div className="w-7 h-7 rounded-full gradient-primary flex items-center justify-center text-xs font-bold text-primary-foreground">{i + 1}</div>
-                <img src={tool.logo} alt={tool.name} className="w-9 h-9 rounded-lg bg-muted" />
+                <img src={tool.logo} alt={tool.name} width={36} height={36} loading="lazy" decoding="async" className="w-9 h-9 rounded-lg bg-muted" />
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-foreground truncate">{tool.name}</p>
                   <p className="text-[11px] text-muted-foreground truncate">{tool.category}</p>
