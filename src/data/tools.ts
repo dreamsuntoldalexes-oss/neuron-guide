@@ -77,6 +77,30 @@ function isPaidById(id: string): boolean {
   return (hash % 100) < 75;
 }
 
+// Shared default arrays (avoid allocating thousands of duplicate arrays)
+const defaultFeaturesCache: Record<string, string[]> = {};
+function defaultFeatures(cat: string): string[] {
+  return (defaultFeaturesCache[cat] ||= [`${cat} automation`, "AI-powered processing", "Team collaboration", "API access"]);
+}
+const DEFAULT_PROS = ["Easy to use", "High quality output", "Regular updates"];
+const DEFAULT_CONS = ["Full access is $5/month", "Learning curve for beginners"];
+
+function buildDescription(name: string, cat: string, desc: string): string {
+  const c = cat.toLowerCase();
+  return [
+    `${name} is a ${c} AI platform built to help individuals and teams move faster. ${desc} It combines a polished interface with reliable model output so you can ship work without wrestling with prompts or tooling.`,
+    `Inside ${name} you'll find a focused workflow for ${c} tasks: clean inputs, smart defaults, and instant results. It's used by students, freelancers, and businesses around the world to cut hours of manual effort down to minutes — and to explore creative directions that would normally take days.`,
+    `Pricing is straightforward and transparent at $5/month for full Pro access, so you can try the workflow before committing. Whether you're learning, prototyping, or building production deliverables, ${name} gives you a dependable foundation in the ${c} space.`,
+  ].join("\n\n");
+}
+
+// Cheap deterministic pseudo-random from a string (no Math.random per tool)
+function seeded(id: string, salt: number): number {
+  let h = salt;
+  for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) >>> 0;
+  return (h % 10000) / 10000;
+}
+
 // Compact tool builder
 function t(
   id: string, name: string, cat: string, desc: string,
@@ -88,21 +112,28 @@ function t(
   // Override tier based on the 75% paid distribution unless explicit enterprise
   const finalTier: "free" | "pro" | "enterprise" =
     tier === "enterprise" ? "enterprise" : (isPaidById(id) ? "pro" : "free");
-  const paragraph1 = `${name} is a ${cat.toLowerCase()} AI platform built to help individuals and teams move faster. ${desc} It combines a polished interface with reliable model output so you can ship work without wrestling with prompts or tooling.`;
-  const paragraph2 = `Inside ${name} you'll find a focused workflow for ${cat.toLowerCase()} tasks: clean inputs, smart defaults, and instant results. It's used by students, freelancers, and businesses around the world to cut hours of manual effort down to minutes — and to explore creative directions that would normally take days.`;
-  const paragraph3 = `Pricing is straightforward and transparent at $5/month for full Pro access, so you can try the workflow before committing. Whether you're learning, prototyping, or building production deliverables, ${name} gives you a dependable foundation in the ${cat.toLowerCase()} space.`;
-  return {
+  const m = seeded(id, 7);
+  const d = seeded(id, 13);
+  const tool = {
     id, name, category: cat, shortDescription: desc,
-    description: `${paragraph1}\n\n${paragraph2}\n\n${paragraph3}`,
     pricing: "$5/month", websiteUrl: url, icon: "", logo: getLogo(domain), rating,
-    dateAdded: `2024-${String(Math.floor(Math.random() * 12) + 1).padStart(2, "0")}-${String(Math.floor(Math.random() * 28) + 1).padStart(2, "0")}`,
-    features: features || [`${cat} automation`, "AI-powered processing", "Team collaboration", "API access"],
-    pros: pros || ["Easy to use", "High quality output", "Regular updates"],
-    cons: cons || ["Full access is $5/month", "Learning curve for beginners"],
-    views: views || Math.floor(Math.random() * 12000) + 500,
+    dateAdded: `2024-${String(Math.floor(m * 12) + 1).padStart(2, "0")}-${String(Math.floor(d * 28) + 1).padStart(2, "0")}`,
+    features: features || defaultFeatures(cat),
+    pros: pros || DEFAULT_PROS,
+    cons: cons || DEFAULT_CONS,
+    views: views || Math.floor(seeded(id, 29) * 12000) + 500,
     tier: finalTier,
-  };
+  } as AITool;
+  // Long description is built only when actually read (tool detail page),
+  // instead of allocating ~12MB of strings for 11k tools at import time.
+  let cached: string | undefined;
+  Object.defineProperty(tool, "description", {
+    enumerable: true,
+    get() { return (cached ??= buildDescription(name, cat, desc)); },
+  });
+  return tool;
 }
+
 
 const baseTools: AITool[] = [
   // ===== WRITING (25) =====

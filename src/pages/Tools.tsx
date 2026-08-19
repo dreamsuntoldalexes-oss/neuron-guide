@@ -37,7 +37,7 @@ export default function Tools() {
     if (tierFilter !== "all") result = result.filter((t) => t.tier === tierFilter);
     if (debouncedQuery) {
       const q = debouncedQuery.toLowerCase();
-      result = result.filter((t) => t.name.toLowerCase().includes(q) || t.description.toLowerCase().includes(q));
+      result = result.filter((t) => t.name.toLowerCase().includes(q) || t.shortDescription.toLowerCase().includes(q) || t.category.toLowerCase().includes(q));
     }
     switch (sortBy) {
       case "rating": result.sort((a, b) => b.rating - a.rating); break;
