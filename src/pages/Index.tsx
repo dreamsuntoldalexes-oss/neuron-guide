@@ -18,13 +18,13 @@ const examplePrompts = [
 
 const features = [
   { icon: Brain, title: "Smart Discovery", desc: "AI-powered tool recommendations tailored to your needs" },
-  { icon: Zap, title: "Instant Compare", desc: "Side-by-side comparisons of 10,000+ AI tools" },
+  { icon: Zap, title: "Instant Compare", desc: "Side-by-side comparisons of 500+ real AI tools" },
   { icon: BookOpen, title: "Study Companion", desc: "Get help with assignments, past questions & concepts" },
   { icon: Users, title: "Community Picks", desc: "See what tools students and professionals love" },
 ];
 
 const stats = [
-  { value: "10,000+", label: "AI Tools" },
+  { value: "500+", label: "AI Tools" },
   { value: "21+", label: "Categories" },
   { value: "50K+", label: "Students" },
   { value: "24/7", label: "AI Support" },
@@ -281,7 +281,7 @@ export default function Index() {
           <p className="text-center text-sm text-muted-foreground mb-6">Three steps to start using AI like a pro</p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
             {[
-              { icon: Search, title: "Browse AI Tools", desc: "Discover 10,000+ tools across 21+ categories" },
+              { icon: Search, title: "Browse AI Tools", desc: "Discover 500+ real tools across 21+ categories" },
               { icon: GitCompare, title: "Compare Features", desc: "See pricing, ratings, and capabilities side-by-side" },
               { icon: Rocket, title: "Start Instantly", desc: "Launch and use any tool with a single tap" },
             ].map((step, i) => (

@@ -9,7 +9,7 @@ import NeuralBackground from "@/components/NeuralBackground";
 const messages = [
   "Welcome to Neuron Guide ✨",
   "Igniting neural pathways…",
-  "Awakening 11,400+ AI minds 🧠",
+  "Awakening hundreds of AI minds 🧠",
   "Fusing human creativity with machine intelligence",
   "Where ideas meet infinite possibility",
   "Calibrating your AI universe…",

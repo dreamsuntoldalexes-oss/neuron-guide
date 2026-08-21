@@ -32,7 +32,7 @@ export default function Pricing() {
   const [currentTier, setCurrentTier] = useState<UserTier>(getUserTier());
   const [proPrice, setProPrice] = useState(5);
   const [proFeatures, setProFeatures] = useState<string[]>([
-    "Unlimited access to 11,000+ AI tools",
+    "Unlimited access to every AI tool in the directory",
     "Unlimited favorites",
     "Advanced AI assistant",
     "Per-tool usage analytics",
