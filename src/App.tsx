@@ -23,6 +23,8 @@ import Analytics from "./pages/Analytics";
 import NotFound from "./pages/NotFound";
 import CookieConsent from "./components/CookieConsent";
 import PageTransition from "./components/PageTransition";
+import RequireAuth from "./components/RequireAuth";
+
 import { AppearanceProvider } from "./context/AppearanceContext";
 import { AppearanceLauncher } from "./components/AppearancePanel";
 
