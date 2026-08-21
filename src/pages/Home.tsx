@@ -9,6 +9,8 @@ import { categories, getUserTier, tools } from "@/data/tools";
 import { useFavorites } from "@/hooks/useFavorites";
 import neuronLogo from "@/assets/neuron-logo-new.png";
 import { aiGalleryImages } from "@/assets/aiGallery";
+import NotificationBell from "@/components/NotificationBell";
+
 
 export default function Home() {
   const [activeCat, setActiveCat] = useState<string>("All");
