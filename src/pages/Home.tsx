@@ -64,10 +64,14 @@ export default function Home() {
               <p className="text-[10px] text-primary">Available for you</p>
             </div>
           </div>
-          <Link to="/pricing" className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-full gradient-primary text-primary-foreground font-medium shadow-lg shadow-primary/20">
-            <Crown className="w-3 h-3" />
-            <span className="capitalize whitespace-nowrap">{tier === "free" ? "Upgrade" : tier}</span>
-          </Link>
+          <div className="flex items-center gap-2">
+            <NotificationBell />
+            <Link to="/pricing" className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-full gradient-primary text-primary-foreground font-medium shadow-lg shadow-primary/20">
+              <Crown className="w-3 h-3" />
+              <span className="capitalize whitespace-nowrap">{tier === "free" ? "Upgrade" : tier}</span>
+            </Link>
+          </div>
+
         </motion.div>
 
         {/* Hero */}
