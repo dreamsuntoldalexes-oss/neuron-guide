@@ -727,7 +727,17 @@ function generateAdditionalTools(): AITool[] {
   return extra;
 }
 
-const allTools: AITool[] = [...baseTools, ...generateAdditionalTools()];
+// Only real, verified AI products ship in the directory — every entry has a live
+// website URL and a real favicon logo. (The old auto-generated placeholder tools
+// pointed at domains that do not exist, so they are no longer included.)
+const seenIds = new Set<string>();
+const allTools: AITool[] = baseTools.filter((tool) => {
+  const validUrl = /^https:\/\/[a-z0-9.-]+\.[a-z]{2,}/i.test(tool.websiteUrl);
+  if (!validUrl || seenIds.has(tool.id)) return false;
+  seenIds.add(tool.id);
+  return true;
+});
+
 
 // Utility functions
 export function getSimilarTools(tool: AITool, limit = 4): AITool[] {
