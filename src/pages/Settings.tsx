@@ -5,6 +5,8 @@ import Layout from "@/components/Layout";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "@/hooks/use-toast";
 import aiBg from "@/assets/ai-fusion-bg.jpg";
+import AdminNotificationSender from "@/components/AdminNotificationSender";
+
 
 type SettingsState = {
   notifyNewImages: boolean;
