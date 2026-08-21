@@ -178,7 +178,10 @@ export default function Settings() {
           </motion.section>
         ))}
 
+        <AdminNotificationSender />
+
         <motion.section
+
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
